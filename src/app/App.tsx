@@ -56,6 +56,9 @@ import {
   ChevronDown,
   LoaderCircle,
   CircleUser,
+  UserCheck,
+  CheckCheck,
+  MapPin,
   Captions,
   TriangleAlert,
   CircleCheckBig,
@@ -246,10 +249,13 @@ function AxaHeaderLogo() {
 
 // ─── Header (exact from Figma) ────────────────────────────────────────────────
 
-function Header({ onViewStates, brand, onBrandToggle, onExit }: {
-  onViewStates: () => void;
+// NO BRAND TOGGLE AND NO VIEW STATES BUTTON. Both were activationUI's dev
+// affordances: one flipped the prototype between the DCA and AXA arms, the
+// other opened a picker of error states. Health assessments has one brand and,
+// per Janelle 2 Sep, is the happy path only on its own repo and its own link,
+// so neither has anything to point at.
+function Header({ brand, onExit }: {
   brand: BrandId;
-  onBrandToggle: (b: BrandId) => void;
   onExit: () => void;
 }) {
   return (
@@ -260,30 +266,6 @@ function Header({ onViewStates, brand, onBrandToggle, onExit }: {
           <div className="content-stretch flex items-center justify-between px-[24px] py-[8px] relative size-full">
             {brand === "axa" ? <AxaHeaderLogo /> : <Logo />}
             <div className="flex items-center gap-[12px]">
-              {/* Brand toggle — dev only */}
-              <div className="flex items-center gap-[1px] p-[2px] rounded-[9999px]" style={{ background: "rgba(255,255,255,0.15)" }}>
-                {(["dca", "axa"] as BrandId[]).map((b) => (
-                  <button
-                    key={b}
-                    onClick={() => onBrandToggle(b)}
-                    className="px-[10px] py-[3px] rounded-[9999px] text-[10px] font-semibold uppercase tracking-wider transition-all"
-                    style={{
-                      background: brand === b ? "rgba(255,255,255,0.92)" : "transparent",
-                      color: brand === b ? (b === "axa" ? "#3f48ff" : "#135cff") : "rgba(255,255,255,0.7)",
-                      fontFamily: "'Work Sans', sans-serif",
-                    }}
-                  >
-                    {b.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={onViewStates}
-                className="hidden sm:block text-[12px] font-semibold px-[10px] py-[5px] rounded-[9999px] border border-white/30 text-white/80 hover:text-white transition-colors"
-                style={{ fontFamily: "'Work Sans', sans-serif" }}
-              >
-                View states
-              </button>
               <div className="bg-[rgba(255,255,255,0)] content-stretch flex gap-[4px] items-center justify-center relative rounded-[9999px] shrink-0 cursor-pointer" onClick={onExit}>
                 <div
                   className="flex flex-col font-semibold justify-center leading-[0] not-italic relative shrink-0 text-[#edf6ff] text-[14px] whitespace-nowrap"
@@ -331,13 +313,6 @@ function Header({ onViewStates, brand, onBrandToggle, onExit }: {
                 </div>
               </div>
             </div>
-            <button
-              onClick={onViewStates}
-              className="sm:hidden text-[12px] font-semibold text-white/70"
-              style={{ fontFamily: "'Work Sans', sans-serif" }}
-            >
-              View states
-            </button>
           </div>
         </div>
       </div>
@@ -383,6 +358,21 @@ const CAROUSEL_SLIDES = [
     sub: "If anything needs attention, we'll contact you directly.",
     img: imgLhs5,
   },
+];
+
+// ─── Landing steps ───────────────────────────────────────────────────────────
+
+// 5747:27062. The four things that happen after Get started, in the file's
+// order and words. Icons are the ones the frame names, not chosen here.
+const LANDING_STEPS = [
+  // 5066:125346
+  { Icon: CircleUser, text: "Create your account and tell us a bit about you." },
+  // 5066:125350
+  { Icon: UserCheck, text: "Fill in a short lifestyle questionnaire to help us assess your current health." },
+  // 5446:12374
+  { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
+  // 5446:12622
+  { Icon: MapPin, text: "If advised to book an Advanced Corporate Health Assessment, you can easily schedule your appointment at a nearby location." },
 ];
 
 // Slide duration must match lhsBarFill animation duration in fonts.css
@@ -1519,890 +1509,6 @@ function StatusBanner({
   );
 }
 
-// ─── Failure states data ──────────────────────────────────────────────────────
-
-// ─── Unified state/dialog configuration ──────────────────────────────────────
-
-type IconType = "alert-circle" | "alert-triangle" | "info" | "user" | "wrench" | "check-circle";
-type IconScheme = "red" | "amber" | "blue" | "green";
-
-type StateDialogConfig = {
-  category: "activation" | "dependant" | "account" | "system";
-  pickerLabel: string;
-  pickerSubtitle: string;
-  pickerIconType: IconType;
-  pickerIconScheme: IconScheme;
-  inline?: boolean;
-  iconType: IconType;
-  iconScheme: IconScheme;
-  title: string;
-  body: string;
-  refLine?: string;
-  primaryCta: string;
-  helperText?: string;
-  secondaryCta?: string;
-  footerLink?: boolean;
-  altPath?: { link: string; subline: string };
-  emailInput?: boolean;
-};
-
-const STATE_DIALOG_CONFIGS: Record<string, StateDialogConfig> = {
-  // ── CAPTCHA MODE (switches the real Turnstile test sitekey) ────────────────
-  "captcha-mode-pass": {
-    category: "activation",
-    pickerLabel: "Pass",
-    pickerSubtitle: "Test sitekey 1x…AA, always passes",
-    pickerIconType: "check-circle",
-    pickerIconScheme: "green",
-    inline: true,
-    iconType: "check-circle", iconScheme: "green",
-    title: "", body: "", primaryCta: "",
-  },
-  "captcha-mode-block": {
-    category: "activation",
-    pickerLabel: "Block",
-    pickerSubtitle: "Test sitekey 2x…AB, always blocks",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "red",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "captcha-mode-challenge": {
-    category: "activation",
-    pickerLabel: "Challenge",
-    pickerSubtitle: "Test sitekey 3x…FF, interactive checkbox",
-    pickerIconType: "info",
-    pickerIconScheme: "blue",
-    inline: true,
-    iconType: "info", iconScheme: "blue",
-    title: "", body: "", primaryCta: "",
-  },
-  /*
-   * ONE ROW PER ARM. The screen is the same component, but HP and LC differ in
-   * two ways a reviewer has to be able to see: the box copy (AXA revised HP's
-   * on 27 Aug, LC's is still the frame's) and the support row (LC only). They
-   * also differ behind the glass, since nameMatches compares the first three
-   * characters on HP and the whole name on LC.
-   */
-  "axa-unvalidatedCode": {
-    category: "activation", pickerLabel: "AXA HP: details did not match",
-    pickerSubtitle: "Account saved, AXA\u2019s revised wording and their number",
-    pickerIconType: "alert-circle", pickerIconScheme: "amber",
-    inline: true, iconType: "alert-circle", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "axa-lc-unvalidatedCode": {
-    category: "activation", pickerLabel: "AXA LC: details did not match",
-    pickerSubtitle: "Account saved, the frame\u2019s wording and a support link",
-    pickerIconType: "alert-circle", pickerIconScheme: "amber",
-    inline: true, iconType: "alert-circle", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  // ── EMERGENCY CONTACT ──────────────────────────────────────────────────────
-  // All five were listed in the picker and none was configured, so the whole
-  // group drew a heading with nothing under it. Same failure the landing ids
-  // had; that fix should have swept this at the same time and did not.
-  "ec-noChoice": {
-    category: "account", pickerLabel: "Neither option chosen",
-    pickerSubtitle: "Continue pressed without provide or decline",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ec-detailsMissing": {
-    category: "account", pickerLabel: "Provide chosen, nothing filled in",
-    pickerSubtitle: "Name, mobile and relationship all flagged",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ec-lettersInMobile": {
-    category: "account", pickerLabel: "Letters in their mobile number",
-    pickerSubtitle: "07aaa, so the number is not valid",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ec-relationshipNotPicked": {
-    category: "account", pickerLabel: "Relationship not selected",
-    pickerSubtitle: "Name and mobile fine, the dropdown untouched",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ec-declined": {
-    category: "account", pickerLabel: "Declined to give one",
-    pickerSubtitle: "The valid path with no contact provided",
-    pickerIconType: "info", pickerIconScheme: "blue",
-    inline: true, iconType: "info", iconScheme: "blue",
-    title: "", body: "", primaryCta: "",
-  },
-  // ── SET UP YOUR ACCOUNT LANDING ────────────────────────────────────────────
-  // These five ids were listed in the picker but never configured, so both
-  // landing groups rendered as empty headings and the states were unreachable.
-  // Inline like the rest: selecting one jumps to the landing, it does not open
-  // a dialog.
-  "landing-beforeProfile": {
-    category: "account", pickerLabel: "Nothing done yet",
-    pickerSubtitle: "Profile is Next up, ID is Later",
-    pickerIconType: "user", pickerIconScheme: "blue",
-    inline: true, iconType: "user", iconScheme: "blue",
-    title: "", body: "", primaryCta: "",
-  },
-  "landing-afterProfile": {
-    category: "account", pickerLabel: "Profile completed",
-    pickerSubtitle: "ID verification becomes Next up",
-    pickerIconType: "check-circle", pickerIconScheme: "green",
-    inline: true, iconType: "check-circle", iconScheme: "green",
-    title: "", body: "", primaryCta: "",
-  },
-  "landing-policyValidating": {
-    category: "account", pickerLabel: "AXA policy not yet live",
-    pickerSubtitle: "Registration blocked until the start date",
-    pickerIconType: "alert-triangle", pickerIconScheme: "amber",
-    inline: true, iconType: "alert-triangle", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "axa-duplicate": {
-    category: "activation", pickerLabel: "Details already exist in CRM",
-    pickerSubtitle: "Uniqueness gate: sign in instead",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  // The two halves of the correction loop, as separate rows (Janelle, 27 Aug).
-  // The screen is the same either way; what differs is whether the re-check
-  // passed, and a reviewer cannot reach the failing half by typing, because
-  // matchesPolicy would have to reject whatever they type.
-  "axa-stillNotMatched": {
-    category: "activation", pickerLabel: "AXA HP: updated, still does not match",
-    pickerSubtitle: "Re-check running, button on Validating",
-    pickerIconType: "alert-circle", pickerIconScheme: "amber",
-    inline: true, iconType: "alert-circle", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "axa-detailsUpdated": {
-    category: "activation", pickerLabel: "Updated and matched",
-    pickerSubtitle: "Details updated toast on the landing",
-    pickerIconType: "check-circle", pickerIconScheme: "green",
-    inline: true, iconType: "check-circle", iconScheme: "green",
-    title: "", body: "", primaryCta: "",
-  },
-  "axa-creationFailed": {
-    category: "activation", pickerLabel: "Account creation failed",
-    pickerSubtitle: "Backend could not create the account",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ca-emailRegistered": {
-    category: "activation", pickerLabel: "Email already has an account",
-    pickerSubtitle: "Field error on Email, sign in instead",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ca-missing": {
-    category: "activation", pickerLabel: "Nothing filled in",
-    pickerSubtitle: "Every required field flagged at once",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ca-invalidDob": {
-    category: "activation", pickerLabel: "Date that does not exist",
-    pickerSubtitle: "31/02/1990 typed into date of birth",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ca-invalidEmail": {
-    category: "activation", pickerLabel: "Email missing its ending",
-    pickerSubtitle: "jane@gmail with no .com",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ca-weakPassword": {
-    category: "activation", pickerLabel: "Password too simple",
-    pickerSubtitle: "'password' fails the stated rule",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ca-termsNotAccepted": {
-    category: "activation", pickerLabel: "Terms not accepted",
-    pickerSubtitle: "Everything else complete",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ci-missingMobile": {
-    category: "activation", pickerLabel: "Mobile number left blank",
-    pickerSubtitle: "Required field not filled",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ci-landlineTyped": {
-    category: "activation", pickerLabel: "Landline instead of mobile",
-    pickerSubtitle: "0207 946 0958 typed in",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ci-mobileTooShort": {
-    category: "activation", pickerLabel: "Mobile number cut short",
-    pickerSubtitle: "07123 456, three digits short",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ci-lettersInMobile": {
-    category: "activation", pickerLabel: "Letters typed into the mobile",
-    pickerSubtitle: "07aaa, not digits",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ci-mobileTooLong": {
-    category: "activation", pickerLabel: "Mobile number one digit over",
-    pickerSubtitle: "+44 7123 456 7890",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "ci-nonUkNumber": {
-    category: "activation", pickerLabel: "Non-UK mobile number",
-    pickerSubtitle: "+1 555 0100, cannot be texted",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "dob-not-in-crm": {
-    category: "activation", pickerLabel: "Code recognised, no DoB on file",
-    pickerSubtitle: "Nothing to check, so nothing is asked",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "lead-no-dob": {
-    category: "activation", pickerLabel: "Lead, no date of birth to confirm",
-    pickerSubtitle: "Dialog asks nothing, the form collects it",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "lead-no-names": {
-    category: "activation", pickerLabel: "Lead form, no name fields",
-    pickerSubtitle: "Date of birth, email and password only",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "plan-dob-known": {
-    category: "activation", pickerLabel: "Date of birth in the band",
-    pickerSubtitle: "Confirmed already, so the field is gone",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "plan-dob-unknown": {
-    category: "activation", pickerLabel: "Date of birth not in the band",
-    pickerSubtitle: "Not on file, so the field asks",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "pay-allBlank": {
-    category: "activation", pickerLabel: "Payment fields left blank",
-    pickerSubtitle: "Every required card field flagged",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pay-cardMistyped": {
-    category: "activation", pickerLabel: "Card number mistyped",
-    pickerSubtitle: "One digit out, caught by the checksum",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pay-expiryPast": {
-    category: "activation", pickerLabel: "Card has expired",
-    pickerSubtitle: "04/2020 typed in",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pay-amexCvvThree": {
-    category: "activation", pickerLabel: "Amex with a 3-digit code",
-    pickerSubtitle: "Amex wants four, on the front",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pay-declined": {
-    category: "activation", pickerLabel: "Payment declined",
-    pickerSubtitle: "Valid card, refused at the gateway",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "otp-code": {
-    category: "activation", pickerLabel: "Verification code screen",
-    pickerSubtitle: `Text sent, any six digits verify (${DEMO_WRONG_OTP} fails)`,
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "otp-code-error": {
-    category: "activation", pickerLabel: "Verification code left blank",
-    pickerSubtitle: "Verify pressed with empty boxes",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "otp-code-failed": {
-    category: "activation", pickerLabel: "Verification failed",
-    pickerSubtitle: `Wrong code, or type ${DEMO_WRONG_OTP}`,
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pd-missingData": {
-    category: "activation", pickerLabel: "Sex and postcode left blank",
-    pickerSubtitle: "Both required fields flagged",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pd-invalidPostcode": {
-    category: "activation", pickerLabel: "Postcode mistyped",
-    pickerSubtitle: "123 typed into the postcode field",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pd-missingSelection": {
-    category: "activation", pickerLabel: "Address never picked",
-    pickerSubtitle: "Lookup run, no result chosen",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pd-manualMissingData": {
-    category: "activation", pickerLabel: "Manual address left blank",
-    pickerSubtitle: "Typed out instead of looked up",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "pd-addressSelected": {
-    category: "activation", pickerLabel: "Address picked from the lookup",
-    pickerSubtitle: "Summary card, not an error",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-noChoice": {
-    category: "activation", pickerLabel: "Neither GP option chosen",
-    pickerSubtitle: "Next pressed with no selection",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-gpPostcodeMissing": {
-    category: "activation", pickerLabel: "GP practice postcode blank",
-    pickerSubtitle: "Provide chosen, nothing typed",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-gpPostcodeInvalid": {
-    category: "activation", pickerLabel: "GP postcode mistyped",
-    pickerSubtitle: "WC1E, half a postcode",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-gpNotPicked": {
-    category: "activation", pickerLabel: "GP never picked",
-    pickerSubtitle: "Lookup run, no practice chosen",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-gpSelected": {
-    category: "activation", pickerLabel: "GP picked from the lookup",
-    pickerSubtitle: "Summary card, not an error",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-nhsNumberTooShort": {
-    category: "activation", pickerLabel: "NHS number cut short",
-    pickerSubtitle: "485 777 345, nine digits typed",
-    pickerIconType: "alert-circle", pickerIconScheme: "red",
-    inline: true, iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "gp-declined": {
-    category: "activation", pickerLabel: "GP details declined",
-    pickerSubtitle: "Shows the recommendation note",
-    pickerIconType: "info", pickerIconScheme: "amber",
-    inline: true, iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  "captcha-real-widget": {
-    category: "activation",
-    pickerLabel: "Use the real Cloudflare widget",
-    pickerSubtitle: "Live Turnstile, shows Cloudflare's test banner",
-    pickerIconType: "info",
-    pickerIconScheme: "amber",
-    inline: true,
-    iconType: "info", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  // ── CAPTCHA STATES ─────────────────────────────────────────────────────────
-  "captcha-failed": {
-    category: "activation",
-    pickerLabel: "Captcha: verification failed",
-    pickerSubtitle: "Human check could not complete",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "red",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "captcha-load-error": {
-    category: "activation",
-    pickerLabel: "Captcha: failed to load",
-    pickerSubtitle: "Widget could not load, retry shown",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "amber",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "amber",
-    title: "", body: "", primaryCta: "",
-  },
-  // ── VALIDATION ─────────────────────────────────────────────────────────────
-  "dob-confirm": {
-    category: "activation",
-    pickerLabel: "DoB in CRM: confirm identity",
-    pickerSubtitle: "With DoB in CRM, need to confirm",
-    pickerIconType: "check-circle",
-    pickerIconScheme: "green",
-    inline: true,            // renders as CodeVerifiedDialog, not ErrorDialog
-    iconType: "check-circle",
-    iconScheme: "green",
-    title: "Activation code recognised",
-    body: "Welcome to your membership. Please confirm your account by entering your date of birth:",
-    primaryCta: "Complete activation",
-  },
-  // ── ACTIVATION CODE ERRORS ─────────────────────────────────────────────────
-  "invalid-code": {
-    category: "activation",
-    pickerLabel: "Invalid code",
-    pickerSubtitle: "Code ABC-123456 cannot be validated",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "red",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "code-lapsed": {
-    category: "activation",
-    pickerLabel: "Code lapsed or cancelled",
-    pickerSubtitle: "Code 9876543L has been withdrawn",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "red",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  // NOT LC ONLY, corrected 26 Aug against docs/signup-flows.pdf. This said "LC
-  // only" on the assumption that waiting meant the AXA file had not been
-  // ingested into LCDB. Page 9 puts the same wait on the HP branch: the
-  // MembershipNumber is in AXA HP format, no Customer exists for it, the AXA
-  // API is called, and a response that is not OK, NotFound or
-  // UnprocessableEntity returns status Awaiting, and the enum on that page
-  // carries it as 0 - Awaiting. Two mechanisms, one situation: AXA has not told
-  // us about this person yet.
-  //
-  // This used to add "Page 11 maps 428 PreconditionRequired to Awaiting". That
-  // claim is withdrawn: page 11's text layer extracts as two unlabelled
-  // columns, seven statuses on the left against four results on the right, so
-  // the pairing is not recoverable from the export at all. The 26 Aug audit
-  // read the same page as mapping 428 to Lapsed. Neither of us can show it
-  // from that PDF. The conclusion above does not depend on it, because page 9
-  // states the Awaiting arm directly.
-  //
-  // PARKED AND STAYING PARKED. Janelle, 26 Aug: the reason is internal and does
-  // not belong in front of a patient. The patient-facing half of this already
-  // exists as the Awaiting screen, plan-notices policyValidating drawn at
-  // 2378:133264, which says only that the policy is being validated.
-  "code-not-arrived": {
-    category: "activation",
-    pickerLabel: "Code not arrived yet",
-    pickerSubtitle: "AXA has not sent the details yet, HP or LC",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "amber",
-    iconType: "alert-circle",
-    iconScheme: "amber",
-    title: "Code not arrived yet",
-    body: "Your activation code hasn't reached us yet. This can take a few days after your plan is confirmed. We'll email you as soon as it's ready.",
-    primaryCta: "Notify me",
-    secondaryCta: "Try again",
-    emailInput: true,
-  },
-  "lapsed-policy": {
-    category: "activation",
-    pickerLabel: "Lapsed policy",
-    pickerSubtitle: "Record in History, needs AXA reactivation",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "amber",
-    iconType: "alert-circle",
-    iconScheme: "amber",
-    title: "Invite lapsed or cancelled",
-    body: "We weren't able to activate your invite. This code has either lapsed or been cancelled. You can still book as a pay-as-you-go patient if you need an appointment sooner.",
-    primaryCta: "Continue as pay-as-you-go",
-    footerLink: true,
-  },
-  "code-used": {
-    category: "activation",
-    pickerLabel: "Code already used",
-    pickerSubtitle: "Code HOL/234567 is single-use",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "red",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "code-not-recognised": {
-    category: "activation",
-    pickerLabel: "Code not recognised",
-    pickerSubtitle: "Code Abc-12345 has the wrong case",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "red",
-    inline: true,
-    iconType: "alert-circle", iconScheme: "red",
-    title: "", body: "", primaryCta: "",
-  },
-  "details-mismatch": {
-    category: "activation",
-    pickerLabel: "Details don't match",
-    pickerSubtitle: "Policy record doesn't match entered details",
-    pickerIconType: "alert-circle",
-    pickerIconScheme: "amber",
-    iconType: "alert-circle",
-    iconScheme: "amber",
-    title: "Details don't match",
-    body: "The details you've entered don't match what we have on record for this code. Please check your name and date of birth. Your account is saved, nothing is lost.",
-    primaryCta: "Check my details",
-    footerLink: true,
-  },
-  // ── DEPENDANT STATES ───────────────────────────────────────────────────────
-  // ── ACCOUNT & RECOVERY ─────────────────────────────────────────────────────
-  // TWO OTP FAILURES, BOTH CORRECT. Confirmed by Janelle, 26 Aug: "apply two
-  // otps, those are correct, failed and error". They are not duplicates and
-  // their copy is meant to differ.
-  //   otp-code-failed  the screen state, on the mobile verification step, using
-  //                    OTP_MESSAGES.failedBody lifted from 1836:310658
-  //   otp-error        this one, a standalone preview of the inline field error
-  // Do not collapse them onto one string.
-  // ── SYSTEM ─────────────────────────────────────────────────────────────────
-};
-
-const PICKER_GROUPS: { label: string; ids: string[] }[] = [
-  { label: "Captcha mode",           ids: ["captcha-mode-pass", "captcha-mode-block", "captcha-mode-challenge", "captcha-real-widget"] },
-  { label: "CAPTCHA",                ids: ["captcha-failed", "captcha-load-error"] },
-  { label: "Validation",             ids: ["dob-confirm", "dob-not-in-crm"] },
-  { label: "Date of birth on file",  ids: ["plan-dob-known", "plan-dob-unknown"] },
-  { label: "Lead journey",           ids: ["lead-no-names", "lead-no-dob"] },
-  { label: "Activation code errors", ids: ["code-used", "code-not-recognised", "invalid-code", "code-lapsed"] },
-  // These two belong to the post-account-creation flow, not code entry.
-  // "code-not-arrived" is parked: its config is still below, but it has no
-  // inline design and overlaps with "Code not recognised" from the patient's side.
-  { label: "Create account errors", ids: ["ca-missing", "ca-invalidDob", "ca-invalidEmail", "ca-weakPassword", "ca-termsNotAccepted", "ca-emailRegistered"] },
-  // The AXA validation banners. Separate states rather than a runtime branch:
-  // the API reports one cause for both (systems audit flow 09), which is the
-  // reason they cannot ship as drawn.
-  { label: "AXA plan validation", ids: ["axa-unvalidatedCode", "axa-lc-unvalidatedCode", "axa-stillNotMatched", "axa-detailsUpdated", "axa-creationFailed", "axa-duplicate"] },
-  // Payment is NOT on the happy path (Janelle, 25 Aug): it belongs to PAYG,
-  // which is not built here, so no journey reaches it. These entries exist so
-  // the screens and their two status messages can still be reviewed:
-  //   1946:149641  payment success, floats
-  //   2171:120980  payment failed, inline
-  // Selecting one jumps straight to the screen. Nothing routes into it, and
-  // nothing routes out of it into the rest of the flow.
-  { label: "Payment (not on the journey)", ids: ["pay-allBlank", "pay-cardMistyped", "pay-expiryPast", "pay-amexCvvThree", "pay-declined"] },
-  { label: "Mobile verification", ids: ["otp-code", "otp-code-error", "otp-code-failed"] },
-  { label: "Contact info errors", ids: ["ci-missingMobile", "ci-lettersInMobile", "ci-landlineTyped", "ci-mobileTooShort", "ci-mobileTooLong", "ci-nonUkNumber"] },
-  { label: "Personal details errors", ids: ["pd-missingData", "pd-invalidPostcode", "pd-missingSelection", "pd-manualMissingData", "pd-addressSelected"] },
-  { label: "GP details", ids: ["gp-noChoice", "gp-gpPostcodeMissing", "gp-gpPostcodeInvalid", "gp-gpNotPicked", "gp-gpSelected", "gp-nhsNumberTooShort", "gp-declined"] },
-  { label: "Set up your account landing", ids: ["landing-beforeProfile", "landing-afterProfile", "landing-policyValidating"] },
-  { label: "Emergency contact errors", ids: ["ec-noChoice", "ec-detailsMissing", "ec-lettersInMobile", "ec-relationshipNotPicked", "ec-declined"] },
-  { label: "After account creation", ids: ["lapsed-policy", "details-mismatch"] },
-];
-
-// Icon badge helper
-const ICON_SCHEMES: Record<IconScheme, { bg: string; color: string }> = {
-  red:   { bg: "#991b1b", color: "#fef2f2" },
-  amber: { bg: "#92400e", color: "#fffbeb" },
-  blue:  { bg: "#135cff", color: "#dbeafe" },
-  green: { bg: "#166534", color: "#f0fdf4" },
-};
-
-function StateIconBadge({ type, scheme, size = 24, badgeSize = 40, bare = false }: { type: IconType; scheme: IconScheme; size?: number; badgeSize?: number; bare?: boolean }) {
-  const { bg, color } = ICON_SCHEMES[scheme];
-  const IconComp = type === "alert-triangle" ? AlertTriangle : type === "info" ? Info : type === "user" ? User : type === "wrench" ? Wrench : type === "check-circle" ? CheckCircle : AlertCircle;
-  if (bare) return <IconComp size={size} color={color} strokeWidth={1.67} />;
-  return (
-    <div className="flex items-center justify-center rounded-full shrink-0"
-      style={{ background: bg, width: badgeSize, height: badgeSize }}>
-      <IconComp size={size} color={color} strokeWidth={1.67} />
-    </div>
-  );
-}
-
-// ─── Error dialog + OTP inline preview ───────────────────────────────────────
-
-function ErrorDialog({ stateId, onClose }: { stateId: string; onClose: () => void }) {
-  const cfg = STATE_DIALOG_CONFIGS[stateId];
-  if (!cfg || cfg.inline) return null;
-  const ws = "'Work Sans', sans-serif";
-  const [notifyEmail, setNotifyEmail] = useState("");
-
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center px-[24px] py-[48px] overflow-y-auto"
-      style={{ background: "rgba(10,10,10,0.3)" }} onClick={onClose}>
-      <div className="bg-white relative rounded-[16px] w-full max-w-[512px] my-auto"
-        style={{ border: "1px solid #d7e9ff", boxShadow: "0 10px 7.5px rgba(15,55,190,0.05), 0 4px 3px rgba(15,55,190,0.05)" }}
-        onClick={(e) => e.stopPropagation()}>
-        <div className="flex flex-col gap-[16px] p-[24px]" style={{ fontFamily: ws }}>
-
-          {/* Header */}
-          <div className="flex flex-col gap-[8px]">
-            <StateIconBadge type={cfg.iconType} scheme={cfg.iconScheme} size={24} badgeSize={40} />
-            <p className="text-[18px] font-semibold leading-[28px]" style={{ color: "#030712" }}>{cfg.title}</p>
-            <p className="text-[16px] leading-[24px]" style={{ color: "#4b5563" }}>{cfg.body}</p>
-
-            {/* Monospaced ref line */}
-            {cfg.refLine && (
-              <p className="text-[13px] leading-[20px] font-mono" style={{ color: "#4b5563" }}>{cfg.refLine}</p>
-            )}
-
-            {/* Email input — code-not-arrived only */}
-            {cfg.emailInput && (
-              <div className="relative w-full mt-[4px]">
-                <div className="absolute flex items-center gap-[4px] px-[4px] z-10"
-                  style={{ top: -10, left: 12, background: "white" }}>
-                  <span className="text-[14px] font-semibold leading-[20px]" style={{ color: "#0f37be" }}>Email address</span>
-                  <span className="text-[14px] font-semibold leading-[20px]" style={{ color: "#991b1b" }}>*</span>
-                </div>
-                <div className="bg-white rounded-[8px] flex items-center px-[16px]"
-                  style={{ height: 44, border: "1px solid #b9daff", boxShadow: "0 1px 2px rgba(15,55,190,0.05)" }}>
-                  <input type="email" value={notifyEmail} onChange={(e) => setNotifyEmail(e.target.value)}
-                    placeholder="e.g. jane.smith@email.com"
-                    className="flex-1 min-w-0 bg-transparent outline-none text-[14px] leading-[20px]"
-                    style={{ fontFamily: ws, color: "#030712" }} />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Buttons + optional footer link */}
-          <div className="flex flex-col gap-[8px]">
-            {/* Primary CTA */}
-            <button onClick={onClose}
-              className="w-full flex items-center justify-center rounded-[9999px] py-[12px] px-[16px] text-[14px] font-semibold"
-              style={{ background: "#135cff", color: "#edf6ff", boxShadow: "0 4px 3px rgba(15,55,190,0.05)" }}>
-              {cfg.primaryCta}
-            </button>
-
-            {/* Helper text under primary */}
-            {cfg.helperText && (
-              <p className="text-[12px] leading-[16px] text-center" style={{ color: "#4b5563" }}>{cfg.helperText}</p>
-            )}
-
-            {/* Secondary CTA */}
-            {cfg.secondaryCta && (
-              <button onClick={onClose}
-                className="w-full flex items-center justify-center rounded-[9999px] py-[12px] px-[16px] text-[14px] font-semibold"
-                style={{ border: "1px solid #d7e9ff", color: "#030712", background: "white" }}>
-                {cfg.secondaryCta}
-              </button>
-            )}
-
-            {/* Footer support link */}
-            {cfg.footerLink && (
-              <button className="text-[13px] font-semibold flex items-center justify-center gap-[4px] mt-[4px]"
-                style={{ color: "#135cff" }}>
-                Contact the Patient Experience team
-                <ExternalLink size={12} strokeWidth={2} />
-              </button>
-            )}
-          </div>
-
-          {/* Alternative path — divider + bold link + sub-line */}
-          {cfg.altPath && (
-            <>
-              <div className="h-px" style={{ background: "#f2f2f2" }} />
-              <div className="flex flex-col gap-[4px]">
-                <button className="text-[14px] font-semibold text-left" style={{ color: "#135cff" }}>
-                  {cfg.altPath.link}
-                </button>
-                <p className="text-[12px] leading-[17px]" style={{ color: "#4b5563" }}>
-                  {cfg.altPath.subline}
-                </p>
-              </div>
-            </>
-          )}
-
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── View states panel ────────────────────────────────────────────────────────
-
-function ViewStatesPanel({
-  onClose,
-  onTriggerError,
-}: {
-  onClose: () => void;
-  onTriggerError: (stateId: string) => void;
-}) {
-  const ws = "'Work Sans', sans-serif";
-
-  return (
-    <div
-      className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center"
-      style={{ background: "rgba(3,7,18,0.5)" }}
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-t-[24px] sm:rounded-[24px] w-full sm:max-w-[560px] max-h-[85vh] overflow-y-auto"
-        style={{ border: "1px solid #d7e9ff" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[16px]">
-          <div>
-            <h2 className="text-[18px] font-semibold" style={{ fontFamily: ws, color: "#030712" }}>
-              Error &amp; recovery states
-            </h2>
-            <p className="text-[12px] leading-[16px] mt-[2px]" style={{ color: "#4b5563", fontFamily: ws }}>
-              Select a state to preview the dialog.
-            </p>
-          </div>
-          <button onClick={onClose} className="p-[4px] rounded-full hover:bg-gray-100 transition-colors">
-            <X size={18} color="#4b5563" />
-          </button>
-        </div>
-
-        <div className="px-[24px] pb-[32px] flex flex-col gap-[24px]">
-          {PICKER_GROUPS.map((group) => (
-            <div key={group.label} className="flex flex-col gap-[8px]">
-              <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "#135cff", fontFamily: ws }}>
-                {group.label}
-              </p>
-              {group.ids.map((id) => {
-                const cfg = STATE_DIALOG_CONFIGS[id];
-                if (!cfg) return null;
-                const scheme = ICON_SCHEMES[cfg.pickerIconScheme];
-                return (
-                  <button
-                    key={id}
-                    onClick={() => { onClose(); onTriggerError(id); }}
-                    className="w-full flex items-center justify-between gap-[12px] px-[14px] py-[12px] rounded-[10px] text-left transition-colors hover:bg-[rgba(19,92,255,0.04)]"
-                    style={{ border: "1px solid #d7e9ff", fontFamily: ws }}
-                  >
-                    <div className="flex items-center gap-[10px] min-w-0">
-                      <div
-                        className="shrink-0 w-[28px] h-[28px] rounded-full flex items-center justify-center"
-                        style={{ background: scheme.bg }}
-                      >
-                        <StateIconBadge type={cfg.pickerIconType} scheme={cfg.pickerIconScheme} size={14} badgeSize={0} bare />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-[13px] font-semibold leading-[18px]" style={{ color: "#030712" }}>{cfg.pickerLabel}</p>
-                        <p className="text-[12px] leading-[16px] truncate" style={{ color: "#9ca3af" }}>{cfg.pickerSubtitle}</p>
-                      </div>
-                    </div>
-                    <ChevronRight size={14} color="#9ca3af" className="shrink-0" />
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Stepper strip (RHS top) ──────────────────────────────────────────────────
-
-// Desktop-16 three-segment stepper — shown above the card for steps 0–3
-const TOP_STEPPER_LABELS = [
-  "Activate your invite",
-  "Create your account",
-  "Set up your account",
-];
-
-// Three section states, per Figma 2193:137724 and 2193:139199:
-//   done      bar base/primary,   CircleCheckBig indicator, label base/primary
-//   current   bar base/secondary, Circle indicator,         label base/foreground
-//   upcoming  bar muted at 50%,   Circle indicator,         label muted
-function TopStepper({ step, theme }: { step: number; theme?: BrandTheme }) {
-  const ws = "'Work Sans', sans-serif";
-  const currentSegment = step <= 0 ? 0 : step === 1 ? 1 : 2;
-  const doneTone = theme?.primaryColor ?? "#135cff";
-  const currentTone = theme?.stepperActiveColor ?? "#a2c4ff";
-
-  return (
-    <div className="max-w-[448px] w-full">
-      <div className="flex gap-[4px] items-start w-full">
-        {TOP_STEPPER_LABELS.map((label, i) => {
-          const done = i < currentSegment;
-          const current = i === currentSegment;
-          const tone = done ? doneTone : current ? currentTone : "#4b5563";
-          const labelColor = done ? doneTone : current ? "#030712" : "#4b5563";
-          const upcoming = !done && !current;
-          return (
-            <div
-              key={label}
-              className="flex-1 min-w-px relative flex flex-col items-center gap-[4px]"
-              style={{ opacity: upcoming ? 0.5 : 1 }}
-            >
-              {/* Pill bar with the indicator centred on it */}
-              <div
-                className="h-[6px] rounded-[9999px] w-full relative flex items-center justify-center"
-                style={{ background: tone, opacity: upcoming ? 0.5 : 1 }}
-              >
-                <div className="absolute bg-white rounded-full flex items-center p-[1px]">
-                  {done
-                    ? <CircleCheckBig size={16} color={tone} strokeWidth={1.67} />
-                    : <Circle size={16} color={tone} strokeWidth={1.67} />}
-                </div>
-              </div>
-              {/* Label */}
-              <p
-                className="text-[11px] font-semibold leading-[14px] text-center w-full min-h-[16px]"
-                style={{ color: labelColor, fontFamily: ws }}
-              >
-                {label}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 // ─── STEP 0 – Activate invite (exact Figma Desktop layout) ────────────────────
 
 // ─── Code Verified dialog (Desktop-10) ───────────────────────────────────────
@@ -2670,39 +1776,51 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
           style={{ fontFamily: "'Work Sans', sans-serif" }}
         >
           <p className="[word-break:break-word] font-semibold leading-[32px] text-[24px]" style={{ color: theme?.lhsHeadingColor ?? "#133595" }}>
-            Activate your invite
+            New here? Begin your journey
           </p>
           <p className="[word-break:break-word] font-normal leading-[24px] text-[16px] w-full" style={{ color: "#030712" }}>
-            If you've been given access to Doctor Care Anywhere by a partner or via an invite, you can activate it here.
+            Starting your health assessment journey is simple:
           </p>
         </div>
 
-        {/* Code wrapper */}
+        {/* Sign up steps, 5747:27062. Four rows, a 16px icon at x=0 against
+            20px text, 8px between rows. The icon for each row is named on the
+            frame, so these are the file's icons and not a guess:
+            CircleUser, UserCheck, CheckCheck, MapPin. */}
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-          <ActivationCodeInput
-            value={code}
-            onChange={(v) => { setCode(v); setError(""); setCodeError(null); }}
-            error={error}
-            onValidate={handleValidate}
-            loading={loading}
-            theme={theme}
-          />
-          {!codeError && (
-            <div className="flex flex-col gap-[8px] w-full">
-              {useReal ? (
-                <RealTurnstile mode={captchaMode} runKey={runKey} onEvent={handleTurnstileEvent} />
-              ) : (
-                <CaptchaWidget status={captcha} onTick={handleChallengeTick} onRetry={handleCaptchaRetry} theme={theme} />
-              )}
-              {captchaMessage && <CaptchaMessage message={captchaMessage} />}
+          {LANDING_STEPS.map(({ Icon, text }) => (
+            <div key={text} className="flex gap-[8px] items-start w-full">
+              {/* 16px icon centred in a 16x20 box, so it sits on the first
+                  line of a wrapping label. Green, not the heading blue: every
+                  Vector in the exported CSS is 1.33px #166534. */}
+              <div className="flex items-center shrink-0 h-[20px] w-[16px]">
+                <Icon size={16} color="#166534" strokeWidth={1.33} />
+              </div>
+              <p className="[word-break:break-word] font-normal leading-[20px] text-[14px] flex-1" style={{ color: "#030712" }}>
+                {text}
+              </p>
             </div>
-          )}
-          {codeError && (
-            <CodeErrorBanner errorId={codeError} theme={theme} />
-          )}
-          <InlineLinkRow prefix="Can't find your code?" linkLabel="Request a reminder" linkColor={theme?.primaryColor} onClick={() => setShowReminder(true)} />
-          <InlineLinkRow prefix="Any questions?" linkLabel="Get support" linkColor={theme?.primaryColor} onClick={() => setShowSupport(true)} />
+          ))}
         </div>
+
+        {/* 5066:125355. Filled pill, unlike the outlined Sign in below it: the
+            frame gives create account the weight and sign in the quiet slot. */}
+        <button
+          onClick={() => onValidate()}
+          className="content-stretch flex gap-[8px] items-center justify-center px-[16px] py-[12px] rounded-[9999px] shrink-0 cursor-pointer"
+          style={{
+            background: theme?.primaryColor ?? "#135CFF",
+            border: "none",
+            boxShadow: "0px 4px 6px -1px rgba(15,55,190,0.05), 0px 2px 4px -2px rgba(15,55,190,0.05)",
+          }}
+        >
+          {/* #EDF6FF, not white. The frame uses the same near-white on the
+              label and the chevron. */}
+          <span className="font-semibold leading-[20px] text-[14px] whitespace-nowrap" style={{ color: "#EDF6FF", fontFamily: "'Work Sans', sans-serif" }}>
+            Get started &ndash; create account
+          </span>
+          <ChevronRight size={16} color="#EDF6FF" strokeWidth={1.33} className="shrink-0" />
+        </button>
       </div>
 
       <Separator />
@@ -2715,26 +1833,26 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
           style={{ fontFamily: "'Work Sans', sans-serif" }}
         >
           <p className="[word-break:break-word] font-semibold leading-[28px] text-[18px]" style={{ color: theme?.lhsHeadingColor ?? "#133595" }}>
-            Don't have an invite?
+            Already have an account?
           </p>
           <p className="[word-break:break-word] font-normal leading-[24px] text-[16px] w-full" style={{ color: "#030712" }}>
-            Join today to book appointments in as little as one hour, and pay through flexible one-off payments or subscription options.
+            Sign in to quickly book your health assessment.
           </p>
         </div>
 
         {/* Join now button (exact Figma style) */}
         <div
-          className="bg-white content-stretch flex gap-[8px] items-center justify-center px-[12px] py-[8px] relative rounded-[9999px] shrink-0 cursor-pointer"
+          className="bg-white content-stretch flex gap-[4px] items-center justify-center px-[12px] py-[8px] relative rounded-[9999px] shrink-0 cursor-pointer"
           style={{
-            boxShadow: "0px 4px 3px rgba(15,55,190,0.05), 0px 2px 2px rgba(15,55,190,0.05)",
-            border: `1px solid ${theme?.joinNowBorderColor ?? "#ffb306"}`,
+            boxShadow: "0px 4px 6px -1px rgba(15,55,190,0.05), 0px 2px 4px -2px rgba(15,55,190,0.05)",
+            border: `1px solid ${theme?.joinNowBorderColor ?? "#FFB306"}`,
           }}
         >
           <span
             className="font-semibold leading-[16px] text-[12px] whitespace-nowrap"
             style={{ color: "#030712", fontFamily: "'Work Sans', sans-serif" }}
           >
-            Join now
+            Sign in
           </span>
           <div className="overflow-clip relative shrink-0 size-[16px]">
             <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4">
@@ -5404,7 +4522,6 @@ export default function App() {
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
-  const [showStates, setShowStates] = useState(false);
   const [showExit, setShowExit] = useState(false);
   const [activeErrorState, setActiveErrorState] = useState<string | null>(null);
   // Which code-recognised path is showing, and the date it produced. The date
@@ -5577,7 +4694,7 @@ export default function App() {
 
       {/* Sticky header */}
       <div className="relative z-40 w-full">
-        <Header onViewStates={() => setShowStates(true)} brand={brand} onBrandToggle={setBrand} onExit={() => setShowExit(true)} />
+        <Header brand={brand} onExit={() => setShowExit(true)} />
       </div>
 
       {/* Page content */}
@@ -5586,14 +4703,13 @@ export default function App() {
           {/* Max width wrapper */}
           <div className="content-stretch flex flex-col isolate items-center gap-[24px] max-w-[1024px] relative shrink-0 w-full">
 
-            {/* Desktop-16 top stepper — above card, code path only, steps 0–3.
-                It stays up through Set up your profile: 1836:310456 shows the
-                third segment current while the profile steps run. */}
-            {path === "code" && ((phase === "activate" && step <= 3) || phase === "landing" || isProfile) && (
-              <div className="hidden md:flex w-full justify-center">
-                <TopStepper step={phase === "activate" ? step : 3} theme={brandTheme} />
-              </div>
-            )}
+            {/* NO STEPPER ABOVE THE CARD. activationUI drew a three-segment
+                "Activate your invite / Create your account / Set up your
+                account" strip here. Health assessments has no invite step and
+                no such strip: of the 48 frames in 5066:125326, the only
+                progress element is Progress bar/Linear ("Step 1 of 4") and it
+                appears on the four onboarding columns only, never on the
+                landing or create account. Janelle, 2 Sep: remove it. */}
 
             {phase === "landing" ? (
               <OnboardingLanding
@@ -5639,11 +4755,6 @@ export default function App() {
                     ref={rhsRef}
                     className="flex-1 overflow-y-auto"
                   >
-                    {path === "code" && phase === "activate" && step <= 3 && (
-                      <div className="md:hidden px-[24px] pt-[24px]">
-                        <TopStepper step={step} theme={brandTheme} />
-                      </div>
-                    )}
                     {renderForm()}
                   </div>
                 </div>
@@ -5693,162 +4804,6 @@ export default function App() {
         />
       )}
 
-      {showStates && (
-        <ViewStatesPanel
-          onClose={() => setShowStates(false)}
-          onTriggerError={(id) => {
-            const cfg = STATE_DIALOG_CONFIGS[id];
-
-            /*
-             * EVERY picker-controlled field is reset here, not three of them.
-             *
-             * This used to clear path, askNames, enteredCode, activeErrorState,
-             * activeCodeVerified and activeBanner, and leave the other fifteen
-             * to whichever branch remembered. Several did not, so what a row
-             * drew depended on which row you opened before it. The 26 Aug audit
-             * found seven of these; they are one bug, not seven.
-             *
-             * The worst was a latch: setBrand is called in exactly two places
-             * and both pass "axa", and nothing reset it, so one AXA row put the
-             * whole picker in AXA chrome until you reloaded. That is also why
-             * the ALL USERS account-creation-failure frame could not be reached
-             * at all.
-             *
-             * The rule now: a branch may only SET what its own state needs. If
-             * a branch has to clear something, this list is missing it.
-             */
-            setPath("code");
-            setPhase("activate");
-            setStep(0);
-            setProfileStep(0);
-            setSsoStep(0);
-            setBrand("dca");
-            setJourney("dca");
-            setAskNames(id !== "lead-no-names" && id !== "lead-no-dob");
-            setProfileDone(false);
-            setPlanNotice(undefined);
-            setConfirmedDob(undefined);
-            setEnteredCode(undefined);
-            setActiveErrorState(null);
-            setActiveCodeVerified(false);
-            setActiveBanner(undefined);
-            setActiveUnvalidated(false);
-            setActiveValidating(false);
-            setDetailsUpdated(false);
-            setActiveCreateError(undefined);
-            setActiveCodeError(undefined);
-            setActiveCaptchaStatus(undefined);
-            setActiveCaptchaMode("pass");
-            setUseRealWidget(false);
-            setActivePaymentState(undefined);
-            setActivePersonalState(undefined);
-            setActiveContactState(undefined);
-            setActiveGpState(undefined);
-            setActiveEmergencyState(undefined);
-            setActiveOtpStage(undefined);
-            if (id.startsWith("pay-")) {
-              setPhase("activate"); setStep(2);
-              setActivePaymentState(id.slice(4) as keyof typeof DEMO_PAYMENT);
-            // Named, not prefixed. This was a prefix test until "otp-error", an
-            // Account & Recovery dialog, got swallowed by it. That state has
-            // since been removed as undesigned, but the naming stays: the three
-            // ids here are stages and the prefix is not a safe proxy for that.
-            } else if (id === "otp-code" || id === "otp-code-error" || id === "otp-code-failed") {
-              setPhase("profile"); setProfileStep(0);
-              setActiveOtpStage(id.slice(4) as "code" | "code-error" | "code-failed");
-            } else if (id.startsWith("landing-")) {
-              setPhase("landing");
-              setProfileDone(id === "landing-afterProfile");
-              const key = id.slice("landing-".length);
-              setPlanNotice(key in PLAN_NOTICES ? (key as keyof typeof PLAN_NOTICES) : undefined);
-              // A not-yet-live AXA policy is an AXA-plan state, so the band and
-              // the chrome have to be AXA. No code was typed to say so here.
-              if (key === "policyValidating") setBrand("axa");
-            } else if (id.startsWith("ec-")) {
-              setPhase("profile"); setProfileStep(3);
-              setActiveEmergencyState(id.slice(3) as keyof typeof DEMO_EMERGENCY_CONTACT);
-            } else if (id.startsWith("gp-")) {
-              setPhase("profile"); setProfileStep(2);
-              setActiveGpState(id.slice(3) as keyof typeof DEMO_GP_DETAILS);
-            } else if (id.startsWith("ci-")) {
-              setPhase("profile"); setProfileStep(0);
-              setActiveContactState(id.slice(3) as keyof typeof DEMO_CONTACT_INFO);
-            } else if (id.startsWith("pd-")) {
-              setPhase("profile"); setProfileStep(1);
-              setActivePersonalState(id.slice(3) as keyof typeof DEMO_PERSONAL_DETAILS);
-            } else if (id.startsWith("axa-")) {
-              setPhase("activate"); setStep(1);
-              setBrand("axa");
-              // The arm decides which copy the box draws and how names are
-              // compared, so it has to follow the row rather than being
-              // hardcoded to HP.
-              setJourney(id === "axa-lc-unvalidatedCode" ? "axa-lc" : "axa-hp");
-              // The correction screen, and the two halves of its loop.
-              if (id === "axa-unvalidatedCode" || id === "axa-lc-unvalidatedCode") setActiveUnvalidated(true);
-              else if (id === "axa-stillNotMatched") { setActiveUnvalidated(true); setActiveValidating(true); }
-              else if (id === "axa-detailsUpdated") { setPhase("landing"); setDetailsUpdated(true); }
-              else setActiveBanner(id === "axa-duplicate" ? "duplicate" : "creation-failed");
-            } else if (id.startsWith("ca-")) {
-              setPhase("activate"); setStep(1);
-              setActiveCreateError(id.slice(3));
-            } else if (id === "captcha-real-widget") {
-              setPhase("activate"); setStep(0);
-              setUseRealWidget(true);
-            } else if (id.startsWith("captcha-mode-")) {
-              setPhase("activate"); setStep(0);
-              setActiveCaptchaMode(id.slice("captcha-mode-".length) as CaptchaMode);
-            } else if (id === "captcha-failed") {
-              setPhase("activate"); setStep(0);
-              setActiveCaptchaStatus("failed"); setActiveCodeError(undefined);
-            } else if (id === "captcha-load-error") {
-              setPhase("activate"); setStep(0);
-              setActiveCaptchaStatus("load-error"); setActiveCodeError(undefined);
-            } else if (id === "invalid-code" || id === "code-lapsed" || id === "code-not-recognised" || id === "code-used") {
-              setPhase("activate"); setStep(0);
-              setActiveCodeError(id as CodeErrorId);
-            } else if (id === "dob-confirm") {
-              setPhase("activate"); setStep(0);
-              setConfirmedDob(undefined);
-              setActiveCodeVerified("crm");
-            } else if (id === "dob-not-in-crm") {
-              setPhase("activate"); setStep(0);
-              setConfirmedDob(undefined);
-              setActiveCodeVerified("no-crm");
-            } else if (id === "lead-no-dob") {
-              setPhase("activate"); setStep(0);
-              setConfirmedDob(undefined);
-              setActiveCodeVerified("no-crm");
-            } else if (id === "lead-no-names") {
-              setPhase("activate"); setStep(1);
-              setConfirmedDob(undefined);
-            } else if (id === "plan-dob-known") {
-              setPhase("activate"); setStep(1);
-              setConfirmedDob("03/03/1998"); // the date every badge frame draws, e.g. 2414:319401
-            } else if (id === "plan-dob-unknown") {
-              setPhase("activate"); setStep(1);
-              setConfirmedDob(undefined);
-            // Both rows in the After account creation group, and both dialogs
-            // over the Ready to Book screen. lapsed-policy used to fall through
-            // to the tail and open on the code-entry screen instead, because
-            // its category is "activation" and only the category branch reaches
-            // step 4. Its group says where it belongs; its category does not.
-            } else if (id === "details-mismatch" || id === "lapsed-policy") {
-              setPhase("activate");
-              setStep(4);
-              setActiveErrorState(id);
-            } else if (cfg && cfg.category !== "activation") {
-              setPhase("activate");
-              setStep(4);
-              setActiveErrorState(id);
-            } else {
-              setPhase("activate");
-              setStep(0);
-              setActiveErrorState(id);
-            }
-          }}
-        />
-      )}
-
       {/* DoB confirmation dialog (triggered from picker) */}
       {activeCodeVerified && (
         <CodeVerifiedDialog
@@ -5863,13 +4818,6 @@ export default function App() {
         />
       )}
 
-      {/* Error dialogs */}
-      {activeErrorState && (
-        <ErrorDialog
-          stateId={activeErrorState}
-          onClose={() => setActiveErrorState(null)}
-        />
-      )}
     </div>
   );
 }
