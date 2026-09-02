@@ -24,13 +24,13 @@
     "forceConsistentCasingInFileNames": true,
     // node_modules types are not ours to fix and slow the run down a lot.
     "skipLibCheck": true,
-    // The tests, copy-provenance and middleware.ts all run on Node.
+    // The tests and copy-provenance run on Node.
     "types": ["vite/client", "node"],
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["src", "middleware.ts"],
+  "include": ["src"],
   // src/imports/** are raw Figma Make export dumps. App.tsx pulls IMAGES out of
   // them and nothing else: their index.tsx files have no callers. They are
   // generated, nobody maintains them, and checking them buries the findings
