@@ -1,0 +1,40 @@
+{
+  // Type checking only. Vite/esbuild does the building and strips types WITHOUT
+  // checking them, which is how two white screens shipped past a green
+  // `npm run build`: <FileText> and <ChevronUp> were rendered without being
+  // imported, and nothing objected until the browser did.
+  //
+  // Deliberately NOT strict. The point of this file is to catch the class of
+  // bug that actually bit: an identifier that does not exist. Turning on
+  // strictNullChecks across a codebase written without it would bury that
+  // signal under hundreds of pre-existing findings, and a check nobody can read
+  // is a check nobody runs. Raise these once the current output is clean.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowJs": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    // node_modules types are not ours to fix and slow the run down a lot.
+    "skipLibCheck": true,
+    // The tests, copy-provenance and middleware.ts all run on Node.
+    "types": ["vite/client", "node"],
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src", "middleware.ts"],
+  // src/imports/** are raw Figma Make export dumps. App.tsx pulls IMAGES out of
+  // them and nothing else: their index.tsx files have no callers. They are
+  // generated, nobody maintains them, and checking them buries the findings
+  // that matter under noise from code we would never edit. The images still
+  // resolve, via vite/client in src/vite-env.d.ts.
+  "exclude": ["node_modules", "dist", "src/imports/**/*.tsx"]
+}
