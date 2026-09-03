@@ -22,9 +22,18 @@
 // they are not the template.
 
 // 354:102 Header. The logo, the title and the greeting.
+//
+// THE FRAME SAYS "Hi {{first_name}},". Janelle, 3 Sep: use a generic name
+// instead. Jane, because the prototype already demos as Jane everywhere else,
+// the first name placeholder is "e.g., Jane" and the email placeholder is
+// jane.doe@mail.com, and a merge tag left raw on the first screen reads as a
+// bug to anyone being shown this rather than as a personalisation token.
+//
+// The tag is the design's, not a mistake: Braze fills it on send. If this
+// screen is ever exported as a template, the tag goes back.
 export const EMAIL_HEADER = {
   title: "You’re invited",
-  greeting: "Hi {{first_name}},",
+  greeting: "Hi Jane,",
 };
 
 // 354:102, the opening paragraph directly under the header.
