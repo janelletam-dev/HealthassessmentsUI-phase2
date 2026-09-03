@@ -4460,11 +4460,15 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
 // 5066:125767. Three things were off: the title is heading-sm, 20px in #133595
 // rather than 18px in #030712; the shadow is the shadow/lg token; and the phone
 // number is 14px like the sentence around it, not 12px.
-// The Health Assessments PX team. Janelle, 3 Sep, correcting 02046 469 390,
-// which came across with the scaffold. This is the same number the invitation
-// email's footer carries, and the same one the Visio's activate-new-policy page
-// uses for DCA's own team. It is NOT an AXA number.
-const HA_PX_PHONE = "0330 088 4980";
+// The Patient Experience team. Janelle, 3 Sep: "px team is alywas: Or by phone:
+// +44 (0)330 088 4980", correcting first 02046 469 390, which came across with
+// the scaffold, and then the bare 0330 088 4980 I replaced it with. The dialling
+// prefix is part of how it is written, not optional.
+//
+// Same team the Visio's activate-new-policy page uses, and not an AXA number.
+// The invitation email's footer draws it bare, without the prefix; that is the
+// frame's and is left alone, but the two now disagree on format. Flagged.
+const HA_PX_PHONE = "+44 (0)330 088 4980";
 
 function ProfileNeedHelpCard() {
   const ws = "'Work Sans', sans-serif";
