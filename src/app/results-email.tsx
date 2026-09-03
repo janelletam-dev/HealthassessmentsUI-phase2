@@ -13,7 +13,7 @@ import { ArrowRight } from "lucide-react";
 import trustpilotRow from "../assets/email/trustpilot-row.png";
 import { EmailShell, INK_ALT } from "./email-chrome.tsx";
 import { EmailClient } from "./email-client.tsx";
-import { RESULTS_EMAIL, MAILBOX } from "./email-copy.ts";
+import { RESULTS_EMAIL, MAILBOX, EMAIL_FOOTER } from "./email-copy.ts";
 
 const TITLE_INK = "#1e3a5f";
 const BADGE = "#11225a";
@@ -29,6 +29,7 @@ export function ResultsEmail({ onView }: { onView: () => void }) {
         titleColor={TITLE_INK}
         greeting={RESULTS_EMAIL.greeting}
         greetingColor={INK_ALT}
+        smallPrint={EMAIL_FOOTER.smallPrint}
       >
         <div className="flex flex-col gap-[16px] w-full">
           {RESULTS_EMAIL.intro.map((para) => (

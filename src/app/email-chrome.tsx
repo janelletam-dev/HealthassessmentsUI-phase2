@@ -17,25 +17,30 @@ export const INK = "#183153";
 export const INK_ALT = "#11225a";
 export const MUTED = "#5c6975";
 
-export function EmailShell({ title, titleSize, titleWeight, titleColor, greeting, greetingColor, children }: {
+export function EmailShell({ title, titleSize, titleWeight, titleColor, greeting, greetingColor, smallPrint, padBottom = 15, children }: {
   title: string;
   titleSize: number;
   titleWeight: number;
   titleColor: string;
-  greeting: string;
-  greetingColor: string;
+  /** Marketing's invitation folds the greeting into the intro, so this is optional. */
+  greeting?: string;
+  greetingColor?: string;
+  /** The two emails lead their small print differently. */
+  smallPrint: string[];
+  padBottom?: number;
   children: ReactNode;
 }) {
   return (
     <div className="w-full max-w-[600px] mx-auto" style={{ background: "#ffffff", fontFamily: WS }}>
       <div
-        className="flex flex-col items-center px-[40px] pb-[15px]"
+        className="flex flex-col items-center px-[40px]"
         style={{
           background: "#dae9f5",
           backgroundImage: `url(${bgTexture})`,
           backgroundSize: "100% auto",
           backgroundPosition: "top center",
           backgroundRepeat: "no-repeat",
+          paddingBottom: padBottom,
         }}
       >
         <div className="flex flex-col items-center gap-[24px] w-full py-[40px]">
@@ -43,9 +48,11 @@ export function EmailShell({ title, titleSize, titleWeight, titleColor, greeting
           <p className="text-center" style={{ fontSize: titleSize, lineHeight: 1.26, fontWeight: titleWeight, color: titleColor }}>
             {title}
           </p>
-          <p className="text-center font-semibold" style={{ fontSize: 16, color: greetingColor }}>
-            {greeting}
-          </p>
+          {greeting && (
+            <p className="text-center font-semibold" style={{ fontSize: 16, color: greetingColor }}>
+              {greeting}
+            </p>
+          )}
         </div>
         <div className="flex flex-col items-center w-full">{children}</div>
       </div>
@@ -63,7 +70,7 @@ export function EmailShell({ title, titleSize, titleWeight, titleColor, greeting
           </p>
           <img src={social} alt="" aria-hidden className="w-[140px] h-[40px] object-contain" />
           <div className="flex flex-col gap-[10px] text-center" style={{ fontSize: 8, lineHeight: 1.5, color: "#ffffff" }}>
-            {EMAIL_FOOTER.smallPrint.map((line) => <p key={line}>{line}</p>)}
+            {smallPrint.map((line) => <p key={line}>{line}</p>)}
           </div>
         </div>
       </div>

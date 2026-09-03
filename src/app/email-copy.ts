@@ -32,35 +32,55 @@
 // The tag is the design's, not a mistake: Braze fills it on send. If this
 // screen is ever exported as a template, the tag goes back.
 export const EMAIL_HEADER = {
+  // 449:528
   title: "You’re invited",
-  greeting: "Hi Jane,",
 };
 
-// 354:102, the opening paragraph directly under the header.
+// 449:528. Marketing merged the greeting and the opening paragraph into one
+// centred block, so they are one string here rather than two. The double space
+// after "assessment." is the frame's.
 export const EMAIL_INTRO =
-  "As part of your employer's Health Assessment Programme, you're invited to take a short, employer-funded look at your health — starting with a quick lifestyle questionnaire that takes less than 5 minutes.";
+  "Hi Jane,\n\nAs part of your employer's Health Assessment Programme, you're invited to take a short health insights assessment.  It takes just a few minutes and is completely free.";
 
-// 354:102, the first section heading.
+// 449:528, the first card.
 export const EMAIL_NEXT_HEADING = "Here’s what happens next";
 
-/** Three numbered steps. The first carries no body in this frame. */
-// 354:102, the three numbered rows under that heading.
+/*
+ * FOUR STEPS NOW, NOT THREE, and the numbering is part of the string.
+ *
+ * Marketing writes "1. Complete your..." as one run rather than drawing a
+ * numbered badge beside it, so the numbers live in the copy. Step 3 carries no
+ * body in the frame.
+ */
 export const EMAIL_STEPS: { title: string; body?: string }[] = [
-  { title: "Complete a quick lifestyle questionnaire" },
   {
-    title: "A clinician reviews your answers",
+    // 449:528
+    title: "1. Complete your Health Insights Assessment",
+    // 449:528
+    body: "You'll need your height, weight and, if possible, your waist measurement. Guidance on measuring your waist can be found here: NHS – How to measure your waist.",
+  },
+  {
+    // 449:528
+    title: "2. A clinician reviews your answers",
+    // 449:528
     body: "They will share personalised tips and next steps with you.",
   },
   {
-    title: "Further support if needed*",
-    body: "You may be offered a free, more in-depth Health Assessment — this can include blood tests and health measurements, all at no cost to you.",
+    // 449:528
+    title: "3. Receive your Health Insights Report",
+  },
+  {
+    // 449:528
+    title: "4. Further support if needed*",
+    // 449:528
+    body: "You may be offered a free, more in-depth Health Assessment - this can include blood tests and health measurements, all at no cost to you.",
   },
 ];
 
-// 354:102, the second section heading.
+// 449:528, the second card.
 export const EMAIL_WHY_HEADING = "Why it matters";
 
-// 354:102, the four mint-disc rows under it.
+// 449:528, the four table rows. Unchanged from the earlier draft.
 export const EMAIL_WHY = [
   "Identify potential health risks early",
   "Get personalised advice",
@@ -68,25 +88,33 @@ export const EMAIL_WHY = [
   "Take proactive steps for a healthier future",
 ];
 
-// 354:102, the button and the line beneath it.
 export const EMAIL_CTA = {
-  button: "Start your questionnaire",
-  under: "New to Doctor Care Anywhere? You'll create an account first — it only takes a moment. Already have an account? Just log in.",
+  // 449:528
+  lead: "New to Doctor Care Anywhere? You'll create an account first, it only takes a moment.",
+  // 449:528. The arrow is inside the label in the frame, not a separate icon.
+  button: "Create account →",
 };
 
-// 354:102, the closing block above the Trustpilot row.
-export const EMAIL_SIGNOFF = {
-  results: "Your results are clinician-reviewed — not just raw data — so you'll know where you stand and what to do next.",
-  thanksLead: "With thanks,",
-  thanksTeam: "The Doctor Care Anywhere Team",
-  footnote: "*If recommended by the Clinician.",
+// 449:528, the tinted card at the foot of the body.
+export const EMAIL_PRIVACY = {
+  // 449:528
+  title: "Your privacy is important.",
+  // 449:528. The spacing around the dash is the frame's.
+  body: "Your information is confidential and secure. Your results are clinician-reviewed, not just raw data -  so you'll know where you stand and what to do next.",
 };
 
-// 354:164, the Footer frame, a sibling of Main container.
 export const EMAIL_FOOTER = {
   heading: "Need help?",
   email: "contactus@doctorcareanywhere.com",
   phone: "0330 088 4980",
+  // 449:528 opens the small print with the footnote instead of the membership
+  // line. The results email, which is from the other file, still uses the
+  // membership line, so both lists exist rather than one being imposed on both.
+  smallPrintMarketing: [
+    "*If recommended by the Clinician.",
+    "For information about how we process data and monitor communications, please see our Privacy Policy. For information on our service, subscription usage and cancellation policy, please see our Terms & Conditions.",
+    "If you no longer wish to receive these emails please unsubscribe here.",
+  ],
   smallPrint: [
     "You are receiving this email as part of your Doctor Care Anywhere membership.",
     "For information about how we process data and monitor communications, please see our Privacy Policy. For information on our service, subscription usage and cancellation policy, please see our Terms & Conditions.",
@@ -176,8 +204,9 @@ export const MAILBOX = {
   unsubscribe: "Unsubscribe",
   inboxChip: "Inbox",
   invitation: {
-    // 5190:1956
-    subject: "Jane, your employer's health assessment is ready for you",
+    // 449:620, marketing's annotation. Replaces the earlier
+    // "your employer's health assessment is ready for you".
+    subject: "Jane, your Health Insights Assessment is ready for you",
     date: "09:14",
   },
   results: {
