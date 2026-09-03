@@ -19,6 +19,7 @@ import { Toast, TOAST_DWELL_MS } from "./components/toast";
 import { CountrySelect, FieldLabel } from "./components/country-select";
 import { journeyForCode, JOURNEYS, type JourneyId } from "./journeys";
 import { CORRECTION_COPY } from "./axa-correction-copy";
+import { InvitationEmail } from "./invitation-email";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
 import { DEMO_PAYMENT } from "./payment";
@@ -2830,8 +2831,8 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
   const [marketing, setMarketing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<CreateAccountErrors>(demo?.errors ?? {});
-  const [created, setCreated] = useState(false);
   // The AXA correction loop: the account is saved, the details did not match.
+  const [created, setCreated] = useState(false);
   const [unvalidated, setUnvalidated] = useState(initialUnvalidated ?? false);
   const [detailsUpdated, setDetailsUpdated] = useState(false);
 
@@ -2924,23 +2925,17 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
       )}
       {created && (
         /*
-         * ONE BODY, and the tail keyed to whether payment follows.
+         * ONE BODY, and the tail keyed to whether payment follows. Both frames
+         * that draw it, 1946:149508 and 1946:150212, carry the same sentence
+         * and differ only in the tail, and the tail is about payment, not
+         * about brand.
          *
-         * This branched on BRAND, on the reading that 1946:149508 was a DCA
-         * frame carrying a short line without "You've created your account".
-         * That reading was wrong. Read back 27 Aug, 1946:149508 says:
-         *   "Welcome to Doctor Care Anywhere! You've created your account.
-         *    Taking you to payment..."
-         * and 1946:150212 says the same with "Taking you to the next step...".
+         * requiresPayment is false today, so the payment tail is unreachable
+         * until PAYG is wired. Written the way the frames divide it rather
+         * than hard-coded, so wiring PAYG is the only change needed.
          *
-         * So both frames carry the same body and differ only in the tail, and
-         * the tail is about payment, not about brand. The short line the code
-         * used for every non-AXA journey is drawn by no frame at all.
-         *
-         * requiresPayment is false on both themes today, so the payment tail is
-         * unreachable until PAYG is wired. It is written the way the frames
-         * divide it rather than hard-coded, so wiring PAYG is the only change
-         * needed.
+         * Removed on 3 Sep and put straight back the same day, on Janelle's
+         * word: "sorry ignore me, the toastie should be there".
          */
         <Toast
           title="Account created"
@@ -4463,6 +4458,12 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
 // 5066:125767. Three things were off: the title is heading-sm, 20px in #133595
 // rather than 18px in #030712; the shadow is the shadow/lg token; and the phone
 // number is 14px like the sentence around it, not 12px.
+// The Health Assessments PX team. Janelle, 3 Sep, correcting 02046 469 390,
+// which came across with the scaffold. This is the same number the invitation
+// email's footer carries, and the same one the Visio's activate-new-policy page
+// uses for DCA's own team. It is NOT an AXA number.
+const HA_PX_PHONE = "0330 088 4980";
+
 function ProfileNeedHelpCard() {
   const ws = "'Work Sans', sans-serif";
   return (
@@ -4478,7 +4479,7 @@ function ProfileNeedHelpCard() {
         <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>Need help?</p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
           {"If you need any support, our team is here to help. Please contact our dedicated Health Assessments PX team on "}
-          <span className="font-semibold underline" style={{ color: "#135CFF" }}>02046 469 390</span>
+          <span className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</span>
           {". Lines are open 09:00 – 17:30, Monday to Friday."}
         </p>
       </div>
@@ -4591,7 +4592,9 @@ export default function App() {
   const [path, setPath] = useState<"choose" | "code" | "sso">("code");
   const [ssoStep, setSsoStep] = useState(0);
   const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState<"activate" | "profile" | "landing">("activate");
+  // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
+  // "the email should be the first screen inside the prototype".
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing">("email");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4752,6 +4755,14 @@ export default function App() {
   // The first screen, and the only one without the Need help card below it.
   const isLanding = phase === "activate" && step === 0;
   const isSsoOrChoose = path === "sso" || path === "choose";
+
+  // THE EMAIL IS ITS OWN SCREEN, outside the app chrome. It is an email: a
+  // header, a footer and a carousel panel around it would be wrong. Start your
+  // questionnaire drops the patient on the landing, which is where the real
+  // link goes.
+  if (phase === "email") {
+    return <InvitationEmail onStart={() => { setPhase("activate"); setStep(0); }} />;
+  }
 
   return (
     <div
