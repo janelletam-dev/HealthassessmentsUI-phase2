@@ -9,13 +9,12 @@
 // than sampled off a render.
 
 import { Check, ArrowRight } from "lucide-react";
-import bgTexture from "../assets/email/header-bg.jpg";
-import logo from "../assets/email/logo.png";
 import trustpilotRow from "../assets/email/trustpilot-row.png";
-import social from "../assets/email/social.png";
+import { EmailShell } from "./email-chrome.tsx";
+import { EmailClient } from "./email-client.tsx";
 import {
   EMAIL_HEADER, EMAIL_INTRO, EMAIL_NEXT_HEADING, EMAIL_STEPS,
-  EMAIL_WHY_HEADING, EMAIL_WHY, EMAIL_CTA, EMAIL_SIGNOFF, EMAIL_FOOTER,
+  EMAIL_WHY_HEADING, EMAIL_WHY, EMAIL_CTA, EMAIL_SIGNOFF, MAILBOX,
 } from "./email-copy.ts";
 
 const WS = "'Work Sans', sans-serif";
@@ -26,34 +25,16 @@ const MINT = "#a0f2e8";      // the Why it matters check discs
 
 export function InvitationEmail({ onStart }: { onStart: () => void }) {
   return (
-    // A mail-client backdrop, so the 600px email reads as an email rather than
-    // as a narrow web page. Not part of the frame.
-    <div className="min-h-screen w-full flex justify-center py-[40px] px-[16px]" style={{ background: "#e5e7eb" }}>
-      <div className="w-full max-w-[600px] shadow-[0_10px_15px_-3px_rgba(0,0,0,0.08)]" style={{ background: "#ffffff", fontFamily: WS }}>
-        {/* Main container: #dae9f5 under a texture, padding 0 40 15 40 */}
-        <div
-          className="flex flex-col items-center px-[40px] pb-[15px]"
-          style={{
-            background: "#dae9f5",
-            backgroundImage: `url(${bgTexture})`,
-            backgroundSize: "100% auto",
-            backgroundPosition: "top center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          {/* Header, padding 40 top and bottom, gap 24, centred */}
-          <div className="flex flex-col items-center gap-[24px] w-full py-[40px]">
-            <img src={logo} alt="Doctor Care Anywhere" className="w-[180px] h-[57px] object-contain" />
-            <p className="text-center font-medium" style={{ fontSize: 30, lineHeight: "37.8px", color: INK_TITLE }}>
-              {EMAIL_HEADER.title}
-            </p>
-            <p className="text-center font-bold" style={{ fontSize: 16, color: INK }}>
-              {EMAIL_HEADER.greeting}
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center w-full">
-            <p className="w-full" style={{ fontSize: 16, lineHeight: 1.5, color: INK }}>
+    <EmailClient subject={MAILBOX.invitation.subject} date={MAILBOX.invitation.date}>
+      <EmailShell
+        title={EMAIL_HEADER.title}
+        titleSize={30}
+        titleWeight={500}
+        titleColor={INK_TITLE}
+        greeting={EMAIL_HEADER.greeting}
+        greetingColor={INK}
+      >
+<p className="w-full" style={{ fontSize: 16, lineHeight: 1.5, color: INK }}>
               {EMAIL_INTRO}
             </p>
 
@@ -123,30 +104,7 @@ export function InvitationEmail({ onStart }: { onStart: () => void }) {
             <div className="flex justify-center w-full pt-[50px] pb-[20px]">
               <img src={trustpilotRow} alt="" aria-hidden className="h-[22px] object-contain" />
             </div>
-          </div>
-        </div>
-
-        {/* Footer: the frame's linear gradient, padding 40/32, gap 16 */}
-        <div
-          className="flex flex-col items-center gap-[16px] px-[32px] py-[40px] w-full"
-          style={{ background: "linear-gradient(180deg, #183153 0%, #70b7ff 100%)" }}
-        >
-          <div className="flex flex-col items-center gap-[8px] w-full">
-            <p className="font-medium text-center" style={{ fontSize: 24, color: "#ffffff" }}>
-              {EMAIL_FOOTER.heading}
-            </p>
-            <p className="text-center" style={{ fontSize: 14, lineHeight: 1.38, color: "#ffffff" }}>
-              <span className="underline">{EMAIL_FOOTER.email}</span>
-              <br />
-              {EMAIL_FOOTER.phone}
-            </p>
-            <img src={social} alt="" aria-hidden className="w-[140px] h-[40px] object-contain" />
-            <div className="flex flex-col gap-[10px] text-center" style={{ fontSize: 8, lineHeight: 1.5, color: "#ffffff" }}>
-              {EMAIL_FOOTER.smallPrint.map((line) => <p key={line}>{line}</p>)}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </EmailShell>
+    </EmailClient>
   );
 }

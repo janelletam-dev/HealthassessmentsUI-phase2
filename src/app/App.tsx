@@ -21,6 +21,7 @@ import { journeyForCode, JOURNEYS, type JourneyId } from "./journeys";
 import { CORRECTION_COPY } from "./axa-correction-copy";
 import { InvitationEmail } from "./invitation-email";
 import { QuestionnaireScreen } from "./questionnaire-screen";
+import { ResultsEmail } from "./results-email";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
 import { DEMO_PAYMENT } from "./payment";
@@ -4595,7 +4596,7 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail">("email");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4773,8 +4774,16 @@ export default function App() {
       <QuestionnaireScreen
         submitted={phase === "submitted"}
         onSubmitted={() => setPhase("submitted")}
+        onDashboard={() => setPhase("resultsEmail")}
       />
     );
+  }
+
+  // e10, which arrives after the clinical team has reviewed the answers.
+  if (phase === "resultsEmail") {
+    // View your results and book has nowhere to go: the report and the booking
+    // flow are not built. Inert rather than pointed somewhere wrong.
+    return <ResultsEmail onView={() => {}} />;
   }
 
   return (

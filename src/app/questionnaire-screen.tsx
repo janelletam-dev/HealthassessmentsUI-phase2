@@ -146,7 +146,7 @@ function FhmShell({ children, footer, title }: { children: React.ReactNode; foot
 // the image only suggests.
 const NEXT_ICONS = [Stethoscope, Heart, Activity];
 
-function Submitted() {
+function Submitted({ onDashboard }: { onDashboard: () => void }) {
   return (
     <FhmShell title={SUBMITTED.banner}>
       <div
@@ -203,9 +203,13 @@ function Submitted() {
           <p className="text-[13px] leading-[18px] flex-1" style={{ color: MUTED }}>{SUBMITTED.privacy}</p>
         </div>
 
-        {/* INERT. There is no dashboard in this prototype, and the flow ends
-            here. Better a visible end than a button that lands somewhere wrong. */}
+        {/* There is no dashboard in this prototype. This carries the story on
+            instead, to the email that arrives once the clinical team has
+            reviewed the answers, which is the next thing that happens to the
+            patient. Flagged to Janelle: if a dashboard is ever built, this goes
+            back to pointing at it. */}
         <button
+          onClick={onDashboard}
           className="w-full rounded-[4px] px-[24px] py-[12px] text-[16px] font-medium leading-[24px] cursor-pointer"
           style={{ background: BLUE, color: "#ffffff", border: "none" }}
         >
@@ -216,10 +220,11 @@ function Submitted() {
   );
 }
 
-export function QuestionnaireScreen({ onSubmitted, submitted }: {
+export function QuestionnaireScreen({ onSubmitted, submitted, onDashboard }: {
   onSubmitted: () => void;
   /** Renders the confirmation instead of the form. */
   submitted: boolean;
+  onDashboard: () => void;
 }) {
   const [answers, setAnswers] = useState<Answers>({});
   // Nothing is flagged until Submit is pressed. Marking 24 questions red before
@@ -240,7 +245,7 @@ export function QuestionnaireScreen({ onSubmitted, submitted }: {
   }
 
   if (submitted) {
-    return <Submitted />;
+    return <Submitted onDashboard={onDashboard} />;
   }
 
   return (

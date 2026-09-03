@@ -93,3 +93,96 @@ export const EMAIL_FOOTER = {
     "If you no longer wish to receive these emails please unsubscribe here.",
   ],
 };
+
+// ─── e10, results ready, Advanced HA recommended ─────────────────────────────
+//
+// A DIFFERENT FILE FROM THE INVITATION. This one is Health assessments
+// rDltwIr2dJvUUNaXEqEYFO, page "B2B2C (Email comms)", frame 5193:8107
+// "e010-results-ready-prescreen-yesadv", 600x1309. Janelle pointed at that node
+// directly on 3 Sep: "the medical team will review and if further tseting
+// needed they receive this email".
+//
+// Its house style is not identical to the transactional file's invitation: the
+// title is 40 SemiBold here against 30 Medium there, and the numbered badges
+// are 12 SemiBold #edf6ff with a white ring against 14 Bold white. Both are
+// reproduced as their own frame draws them rather than averaged.
+//
+// THE SUPPORT NUMBER IN THE BODY CONTRADICTS THE FOOTER, and both are in this
+// one frame: the body says 02046 469 390, the footer says 0330 088 4980.
+// Janelle, 3 Sep, gave 0330 088 4980 as the correct Health Assessments number
+// and 02046 469 390 is the one she corrected out of the app's Need help card.
+// Reproduced verbatim anyway, because this is the design and quietly "fixing"
+// it would hide the conflict. Raised with her.
+
+export const RESULTS_EMAIL = {
+  // 5193:8107 Header
+  title: "Your results are ready",
+  greeting: "Hi Jane,",
+  intro: [
+    // 5193:8107 Body, first section
+    "A clinician has reviewed your lifestyle questionnaire — and based on your answers, you've been recommended a free, more in-depth Advanced Corporate Health Assessment, funded by your employer.",
+    // 5193:8107
+    "It includes blood tests and health measurements, and gives you a fuller picture of your health with a clinician-reviewed report — so you'll know where you stand and what to do next.",
+  ],
+  // 5193:8107, the What to do next heading
+  nextHeading: "What to do next",
+  steps: [
+    {
+      // 5193:8107, step 1
+      title: "View your results",
+      body: "See why you were recommended an advanced assessment.",
+    },
+    {
+      // 5193:8107, step 2
+      title: "Book your free Advanced Corporate Health Assessment",
+      body: "It only takes a few moments to choose a pharmacy, date and time that suit you.",
+    },
+  ],
+  // 5193:8107, the button
+  cta: "View your results and book",
+  closing: [
+    // 5193:8107
+    "Your assessment is delivered in collaboration with our partners, Full Health Medical and Tuli, so you can book at a convenient local location.",
+    // 5193:8107. The number here is the frame's and disagrees with the footer.
+    "If you need any support, our team is here to help. Please contact our dedicated Health Assessments Customer Support team on 02046 469 390. Lines are open 09:00–17:30, Monday to Friday.",
+  ],
+  // 5193:8107
+  thanksLead: "With thanks,",
+  thanksTeam: "The Doctor Care Anywhere Team",
+};
+
+// ─── The mail client around the emails ───────────────────────────────────────
+//
+// NO FRAME. Janelle, 3 Sep: "can we have the emails really look like an email
+// screen", with a Gmail screenshot, then "like that at the top but just show
+// the email content already". So this is the chrome an email is read in, not
+// part of any design.
+//
+// Deliberately a generic mail client rather than a copy of Gmail: reproducing
+// Google's wordmark and product furniture in a DCA prototype that gets shown to
+// clients is not something to do casually, and the point of the request is that
+// it reads as an email, which a neutral client does just as well.
+//
+// The subjects and previews ARE the design's, from the annotations above the
+// frames on the Email comms page, 5190:1956 and 5193:8160. The sender address
+// is prototype dressing: no frame states one.
+export const MAILBOX = {
+  sender: "Doctor Care Anywhere",
+  // Janelle sent a real inbox screenshot on 3 Sep. This is the address it shows,
+  // not a guess: noreply@info.doctorcareanywhere.com, with an Unsubscribe link
+  // beside it and "to me" underneath.
+  senderAddress: "noreply@info.doctorcareanywhere.com",
+  to: "to me",
+  unsubscribe: "Unsubscribe",
+  inboxChip: "Inbox",
+  invitation: {
+    // 5190:1956
+    subject: "Jane, your employer's health assessment is ready for you",
+    date: "09:14",
+  },
+  results: {
+    // 5193:8160
+    subject: "Jane, you've been recommended a free in-depth Health Assessment",
+    date: "16:02",
+  },
+};
