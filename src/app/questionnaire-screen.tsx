@@ -14,9 +14,9 @@
 // banner, a #f9fafb page, a 744 column of white cards, and a white sticky bar.
 
 import { useState } from "react";
-import { Menu, CircleCheckBig } from "lucide-react";
+import { Menu, CircleCheck, Stethoscope, Heart, Activity, History, Lock } from "lucide-react";
 import logo from "../assets/email/logo.png";
-import { SECTIONS, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
+import { SECTIONS, SUBMITTED, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
 
 const WS = "'Work Sans', sans-serif";
 const PAGE = "#f9fafb";
@@ -107,7 +107,7 @@ function QuestionBlock({ question, value, invalid, onChange }: {
   );
 }
 
-function FhmShell({ children, footer }: { children: React.ReactNode; footer?: React.ReactNode }) {
+function FhmShell({ children, footer, title }: { children: React.ReactNode; footer?: React.ReactNode; title: string }) {
   return (
     <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: WS }}>
       {/* 1512x89 white, bottom rule. The hamburger is FHM's, not a DCA control. */}
@@ -122,7 +122,7 @@ function FhmShell({ children, footer }: { children: React.ReactNode; footer?: Re
       {/* 1512x148, #135cff, title 40 Medium white */}
       <div className="flex items-center justify-center px-[24px]" style={{ height: 148, background: BLUE }}>
         <p className="text-center font-medium" style={{ fontSize: 40, lineHeight: "52px", color: "#ffffff" }}>
-          {TITLE}
+          {title}
         </p>
       </div>
 
@@ -132,6 +132,87 @@ function FhmShell({ children, footer }: { children: React.ReactNode; footer?: Re
 
       {footer}
     </div>
+  );
+}
+
+
+// After submitting. Janelle, 3 Sep: "create something similar to the FHM chrome
+// but something similar to this", with an image. So: FHM's nav, banner and page,
+// and inside them the card her image draws.
+//
+// The icons are lucide's nearest match to the glyphs in that image, each in the
+// pale blue tile it sits in there. The confetti around the tick is NOT
+// reproduced: it is decorative, and drawing my own would be inventing detail
+// the image only suggests.
+const NEXT_ICONS = [Stethoscope, Heart, Activity];
+
+function Submitted() {
+  return (
+    <FhmShell title={SUBMITTED.banner}>
+      <div
+        className="w-full rounded-[8px] px-[24px] py-[32px] flex flex-col items-center gap-[24px]"
+        style={{ background: "#ffffff", border: `1px solid ${RULE}` }}
+        role="status"
+      >
+        <CircleCheck size={72} color="#16a34a" strokeWidth={1.5} />
+
+        <div className="flex flex-col items-center gap-[8px] text-center">
+          <p className="text-[28px] font-bold leading-[36px]" style={{ color: "#111827" }}>{SUBMITTED.title}</p>
+          <p className="text-[16px] leading-[24px]" style={{ color: INK }}>{SUBMITTED.lead}</p>
+        </div>
+
+        <div className="w-full" style={{ borderTop: `1px solid ${RULE}` }} />
+
+        <div className="flex flex-col gap-[20px] w-full">
+          <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>{SUBMITTED.nextHeading}</p>
+
+          {SUBMITTED.next.map((item, i) => {
+            const Icon = NEXT_ICONS[i];
+            return (
+              <div key={item.title} className="flex gap-[16px] items-start w-full">
+                <div
+                  className="flex items-center justify-center shrink-0 w-[40px] h-[40px] rounded-[8px]"
+                  style={{ background: SELECTED_BG }}
+                >
+                  <Icon size={20} color={BLUE} strokeWidth={2} />
+                </div>
+                <div className="flex flex-col gap-[2px] flex-1">
+                  <p className="text-[15px] font-bold leading-[22px]" style={{ color: "#111827" }}>{item.title}</p>
+                  <p className="text-[14px] leading-[20px]" style={{ color: MUTED }}>{item.body}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* The one row on a tint in her image, because it is the only one that
+            asks the patient to do something rather than telling them what we
+            will do. */}
+        <div className="flex gap-[16px] items-start w-full rounded-[8px] p-[16px]" style={{ background: SELECTED_BG }}>
+          <div className="flex items-center justify-center shrink-0 w-[40px] h-[40px] rounded-[8px]" style={{ background: "#ffffff" }}>
+            <History size={20} color={BLUE} strokeWidth={2} />
+          </div>
+          <div className="flex flex-col gap-[2px] flex-1">
+            <p className="text-[15px] font-bold leading-[22px]" style={{ color: "#111827" }}>{SUBMITTED.resume.title}</p>
+            <p className="text-[14px] leading-[20px]" style={{ color: MUTED }}>{SUBMITTED.resume.body}</p>
+          </div>
+        </div>
+
+        <div className="flex gap-[8px] items-start w-full">
+          <Lock size={16} color={MUTED} strokeWidth={2} className="shrink-0 mt-[2px]" />
+          <p className="text-[13px] leading-[18px] flex-1" style={{ color: MUTED }}>{SUBMITTED.privacy}</p>
+        </div>
+
+        {/* INERT. There is no dashboard in this prototype, and the flow ends
+            here. Better a visible end than a button that lands somewhere wrong. */}
+        <button
+          className="w-full rounded-[4px] px-[24px] py-[12px] text-[16px] font-medium leading-[24px] cursor-pointer"
+          style={{ background: BLUE, color: "#ffffff", border: "none" }}
+        >
+          {SUBMITTED.cta}
+        </button>
+      </div>
+    </FhmShell>
   );
 }
 
@@ -159,30 +240,12 @@ export function QuestionnaireScreen({ onSubmitted, submitted }: {
   }
 
   if (submitted) {
-    return (
-      <FhmShell>
-        {/*
-         * NO FRAME FOR THIS ONE. The only artefact is the pilot deck's step 13,
-         * a green "Your health questionnaire has been successfully submitted."
-         * banner on FHM, so that is the sentence and nothing more is invented.
-         * Replace this when a frame exists rather than extending it.
-         */}
-        <div
-          className="flex items-start gap-[12px] w-full rounded-[4px] px-[16px] py-[12px]"
-          style={{ background: "#ecfdf5", border: "1px solid #166534" }}
-          role="status"
-        >
-          <CircleCheckBig size={20} color="#166534" strokeWidth={2} className="shrink-0" />
-          <p className="text-[16px] leading-[24px]" style={{ color: "#166534" }}>
-            Your health questionnaire has been successfully submitted.
-          </p>
-        </div>
-      </FhmShell>
-    );
+    return <Submitted />;
   }
 
   return (
     <FhmShell
+      title={TITLE}
       footer={
         // 1512x73 white with a top rule, per the capture. Submit alone:
         // "i dont think an <- appointments is needed to be placed as the user

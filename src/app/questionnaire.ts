@@ -156,3 +156,56 @@ export function missingAnswers(answers: Answers): string[] {
     return false;
   }).map((q) => q.id);
 }
+
+// ─── After submitting ────────────────────────────────────────────────────────
+
+/*
+ * NO FRAME. This screen is not in the Health assessments file: searched the
+ * B2B2C page for "Thank you!", "has been submitted", "What happens next?" and
+ * "Back to Dashboard" and found nothing. Janelle sent it as an image on 3 Sep
+ * with "when user is done with the questionnaire, have this: create something
+ * similar to the FHM chrome but something similar to this", so the copy below
+ * is transcribed from that image and the layout follows it.
+ *
+ * Cite a node once one exists. Until then this is the only record of the
+ * wording, which is why it lives here rather than inline in the component.
+ */
+export const SUBMITTED = {
+  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  banner: "Your Health Questionnaire has been submitted",
+  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  title: "Thank you!",
+  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  lead: "Your Health Questionnaire has been submitted successfully.",
+  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  nextHeading: "What happens next?",
+  next: [
+    {
+      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      title: "Clinician review",
+      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      body: "A qualified Clinician will review your responses and identify any opportunities to improve your health and wellbeing.",
+    },
+    {
+      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      title: "Personalised recommendations",
+      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      body: "You'll receive practical health and lifestyle recommendations tailored to you.",
+    },
+    {
+      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      title: "Advanced Health Assessment (if recommended)",
+      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      body: "If clinically appropriate, you may be invited to book a free Advanced Corporate Health Assessment, fully funded by your employer.",
+    },
+  ],
+  resume: {
+    // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+    title: "Need to come back and finish later?",
+    // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+    body: "Simply log back in to your account at any time. You'll continue from where you left off.",
+  },
+  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  privacy: "Your information is confidential and will only be used by our healthcare team to support your health.",
+  cta: "Back to Dashboard",
+};
