@@ -48,11 +48,12 @@ export function Toast({ title, body }: { title: string; body: string }) {
     <div
       role="status"
       aria-live="polite"
-      // top-[64px], not 12. 1946:150231 sits at x=493 y=64 inside its 1440 frame,
-      // which clears the 92px header rather than landing on top of it. The old
-      // comment here claimed the frame drew it over the header; the frame does
-      // not. Icon is 20px in the frame too.
-      className="fixed left-1/2 -translate-x-1/2 top-[64px] z-[200] w-full max-w-[448px] px-[16px] sm:px-0 pointer-events-none"
+      // top-[104px]. 64 was inherited from the AXA prototype and lands the
+      // toast ON the secondary strip here: measured in the browser, this app's
+      // sticky header stack is 92px, 64 for the primary bar plus 28 for the
+      // "Already have an account? Log in" strip. 104 clears it with a 12px gap,
+      // which is the same gap the frame leaves. Icon is 20px in the frame.
+      className="fixed left-1/2 -translate-x-1/2 top-[104px] z-[200] w-full max-w-[448px] px-[16px] sm:px-0 pointer-events-none"
     >
       <div
         className="flex gap-[10px] items-start rounded-[8px] p-[10px]"

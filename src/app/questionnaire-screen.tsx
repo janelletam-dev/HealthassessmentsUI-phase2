@@ -1,26 +1,36 @@
-// The pre-screen questionnaire, from the capture at 27003:15040.
+// The pre-screen questionnaire, on FHM's platform.
 //
-// The capture is FHM's live page, so its chrome is FHM's: a blue banner
-// heading, and a bottom bar carrying "Appointments" next to Submit. Neither is
-// reproduced. Janelle, 3 Sep: "the button floating should be at the bottom" and
-// "i dont think an <- appointments is needed to be placed as the user wont be
-// able to". So the bar is a sticky footer with Submit alone, and the page wears
-// the same DCA chrome as every other screen here.
+// Figma rDltwIr2dJvUUNaXEqEYFO node 27003:15040, a web capture of
+// dca-test-domain.fullhealthmedical.com.
 //
-// The selected row is the capture's: a blue border, a pale blue fill and a
-// filled radio, per Janelle's "when the user selects this is how it should
-// look".
+// THIS SCREEN IS NOT DCA-CHROMED, ON PURPOSE. Janelle, 3 Sep: "can you follow
+// the node of questionnaire as this is now by FHM.. not dca. that is why they
+// see it on the profile". The Profile complete card explains Full Health
+// Medical precisely because the patient is handed over at this point, so
+// wearing DCA's header, footer, Need help card and Trustpilot badge here would
+// hide the handover the previous screen just described.
+//
+// So the chrome is the capture's: a white nav with a bottom rule, a blue
+// banner, a #f9fafb page, a 744 column of white cards, and a white sticky bar.
 
 import { useState } from "react";
+import { Menu, CircleCheckBig } from "lucide-react";
+import logo from "../assets/email/logo.png";
 import { SECTIONS, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
 
 const WS = "'Work Sans', sans-serif";
-const HEADING = "#133595";
-const INK = "#030712";
-const BORDER = "#d7e9ff";
-const PRIMARY = "#135cff";
-const SELECTED_BG = "#edf6ff";
+const PAGE = "#f9fafb";
+const RULE = "#e5e7eb";
+const NAV_RULE = "#d1d5db";
+const BLUE = "#135cff";
+const INK = "#1f2937";
+const MUTED = "#6b7280";
+const SELECTED_BG = "#eff6ff";
 const ERROR = "#991b1b";
+
+// The capture reads "Questionnaire - Janelle tamayo". Generic here, for the
+// same reason the email greets Jane rather than showing a merge tag.
+const TITLE = "Questionnaire - Jane Smith";
 
 function ChoiceRow({ label, selected, invalid, onSelect }: {
   label: string; selected: boolean; invalid: boolean; onSelect: () => void;
@@ -30,20 +40,22 @@ function ChoiceRow({ label, selected, invalid, onSelect }: {
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className="flex items-center gap-[12px] w-full text-left rounded-[8px] px-[16px] py-[12px] cursor-pointer"
+      // 694x54 in the capture, fill #f9fafb, stroke #e5e7eb, radius 4.
+      className="flex items-center gap-[12px] w-full text-left rounded-[4px] px-[16px] cursor-pointer"
       style={{
-        border: `1px solid ${selected ? PRIMARY : invalid ? ERROR : BORDER}`,
-        background: selected ? SELECTED_BG : "#ffffff",
+        minHeight: 54,
+        border: `1px solid ${selected ? BLUE : invalid ? ERROR : RULE}`,
+        background: selected ? SELECTED_BG : PAGE,
         fontFamily: WS,
       }}
     >
       <span
         className="flex items-center justify-center shrink-0 w-[16px] h-[16px] rounded-[9999px]"
-        style={{ border: `1px solid ${selected ? PRIMARY : "#9ca3af"}` }}
+        style={{ border: `1px solid ${selected ? BLUE : "#9ca3af"}`, background: "#ffffff" }}
       >
-        {selected && <span className="w-[8px] h-[8px] rounded-[9999px]" style={{ background: PRIMARY }} />}
+        {selected && <span className="w-[8px] h-[8px] rounded-[9999px]" style={{ background: BLUE }} />}
       </span>
-      <span className="text-[14px] leading-[20px] flex-1" style={{ color: INK }}>{label}</span>
+      <span className="text-[16px] leading-[24px] flex-1 py-[12px]" style={{ color: INK }}>{label}</span>
     </button>
   );
 }
@@ -53,15 +65,13 @@ function QuestionBlock({ question, value, invalid, onChange }: {
 }) {
   return (
     <div className="flex flex-col gap-[8px] w-full" id={`q-${question.id}`}>
-      <div className="flex flex-col gap-[2px]">
-        <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>
-          {question.required && <span style={{ color: ERROR }}>* </span>}
-          {question.label}
-        </p>
-        {question.helper && (
-          <p className="text-[12px] leading-[16px]" style={{ color: "#4b5563" }}>{question.helper}</p>
-        )}
-      </div>
+      {/* 16 Medium #1f2937, with the asterisk inline as the capture draws it */}
+      <p className="text-[16px] font-medium leading-[24px]" style={{ color: INK }}>
+        {question.required && "* "}{question.label}
+      </p>
+      {question.helper && (
+        <p className="text-[14px] leading-[20px]" style={{ color: MUTED }}>{question.helper}</p>
+      )}
 
       {question.kind === "choice" ? (
         <div className="flex flex-col gap-[8px] w-full">
@@ -76,22 +86,20 @@ function QuestionBlock({ question, value, invalid, onChange }: {
           ))}
         </div>
       ) : (
-        <div className="flex items-center gap-[8px]">
-          <input
-            type="number"
-            inputMode="numeric"
-            min={1}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="rounded-[8px] px-[16px] py-[12px] text-[14px] leading-[20px] w-[160px]"
-            style={{ border: `1px solid ${invalid ? ERROR : BORDER}`, color: INK, fontFamily: WS }}
-          />
-          <span className="text-[14px] leading-[20px]" style={{ color: "#4b5563" }}>{question.suffix}</span>
-        </div>
+        // Full width. Janelle, 3 Sep: "the weight and height is full width".
+        <input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full rounded-[4px] px-[12px] py-[8px] text-[16px] leading-[24px]"
+          style={{ border: `1px solid ${invalid ? ERROR : NAV_RULE}`, color: INK, fontFamily: WS, background: "#ffffff" }}
+        />
       )}
 
       {invalid && (
-        <p className="text-[12px] leading-[16px]" style={{ color: ERROR }}>
+        <p className="text-[14px] leading-[20px]" style={{ color: ERROR }}>
           {question.kind === "number" ? "Please enter a number." : "Please choose an option."}
         </p>
       )}
@@ -99,7 +107,39 @@ function QuestionBlock({ question, value, invalid, onChange }: {
   );
 }
 
-export function QuestionnaireScreen({ onSubmitted }: { onSubmitted: () => void }) {
+function FhmShell({ children, footer }: { children: React.ReactNode; footer?: React.ReactNode }) {
+  return (
+    <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: WS }}>
+      {/* 1512x89 white, bottom rule. The hamburger is FHM's, not a DCA control. */}
+      <div
+        className="flex items-center justify-between px-[24px] w-full"
+        style={{ height: 89, background: "#ffffff", borderBottom: `1px solid ${NAV_RULE}` }}
+      >
+        <img src={logo} alt="Doctor Care Anywhere" className="h-[57px] object-contain" />
+        <Menu size={24} color={INK} strokeWidth={2} aria-hidden />
+      </div>
+
+      {/* 1512x148, #135cff, title 40 Medium white */}
+      <div className="flex items-center justify-center px-[24px]" style={{ height: 148, background: BLUE }}>
+        <p className="text-center font-medium" style={{ fontSize: 40, lineHeight: "52px", color: "#ffffff" }}>
+          {TITLE}
+        </p>
+      </div>
+
+      <div className="flex justify-center px-[24px] pt-[24px] pb-[140px]">
+        <div className="w-full max-w-[744px] flex flex-col gap-[24px]">{children}</div>
+      </div>
+
+      {footer}
+    </div>
+  );
+}
+
+export function QuestionnaireScreen({ onSubmitted, submitted }: {
+  onSubmitted: () => void;
+  /** Renders the confirmation instead of the form. */
+  submitted: boolean;
+}) {
   const [answers, setAnswers] = useState<Answers>({});
   // Nothing is flagged until Submit is pressed. Marking 24 questions red before
   // anyone has answered one is noise, not help.
@@ -118,53 +158,81 @@ export function QuestionnaireScreen({ onSubmitted }: { onSubmitted: () => void }
     document.getElementById(`q-${gaps[0]}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  return (
-    <div className="flex flex-col gap-[24px] w-full max-w-[672px] pb-[96px]" style={{ fontFamily: WS }}>
-      <p className="text-[24px] font-semibold leading-[32px]" style={{ color: HEADING }}>Questionnaire</p>
-
-      {SECTIONS.map((section) => (
+  if (submitted) {
+    return (
+      <FhmShell>
+        {/*
+         * NO FRAME FOR THIS ONE. The only artefact is the pilot deck's step 13,
+         * a green "Your health questionnaire has been successfully submitted."
+         * banner on FHM, so that is the sentence and nothing more is invented.
+         * Replace this when a frame exists rather than extending it.
+         */}
         <div
-          key={section.title}
-          className="flex flex-col gap-[24px] w-full rounded-[16px] bg-white px-[24px] py-[24px]"
-          style={{ border: `1px solid ${BORDER}` }}
+          className="flex items-start gap-[12px] w-full rounded-[4px] px-[16px] py-[12px]"
+          style={{ background: "#ecfdf5", border: "1px solid #166534" }}
+          role="status"
         >
-          <p className="text-[16px] font-semibold leading-[24px]" style={{ color: HEADING }}>{section.title}</p>
-          {section.questions.map((q) => (
-            <QuestionBlock
-              key={q.id}
-              question={q}
-              value={answers[q.id] ?? ""}
-              invalid={!!missing?.includes(q.id)}
-              onChange={(v) => set(q.id, v)}
-            />
-          ))}
+          <CircleCheckBig size={20} color="#166534" strokeWidth={2} className="shrink-0" />
+          <p className="text-[16px] leading-[24px]" style={{ color: "#166534" }}>
+            Your health questionnaire has been successfully submitted.
+          </p>
+        </div>
+      </FhmShell>
+    );
+  }
+
+  return (
+    <FhmShell
+      footer={
+        // 1512x73 white with a top rule, per the capture. Submit alone:
+        // "i dont think an <- appointments is needed to be placed as the user
+        // wont be able to".
+        <div
+          className="fixed left-0 right-0 bottom-0 z-[100] flex justify-center px-[24px]"
+          style={{ height: 73, background: "#ffffff", borderTop: `1px solid ${NAV_RULE}` }}
+        >
+          <div className="w-full max-w-[744px] flex items-center justify-end">
+            <button
+              onClick={submit}
+              className="rounded-[4px] px-[24px] py-[8px] text-[16px] font-medium leading-[24px] cursor-pointer"
+              style={{ background: BLUE, color: "#ffffff", border: "none" }}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      }
+    >
+      {SECTIONS.map((section) => (
+        <div key={section.title} className="w-full rounded-[4px]" style={{ background: "#ffffff", border: `1px solid ${RULE}` }}>
+          {/* Card header, 73 tall in the capture, with its own bottom rule.
+              The label is uppercased by FHM's CSS, not by the string. */}
+          <div className="px-[24px] py-[24px]" style={{ borderBottom: `1px solid ${RULE}` }}>
+            <p className="text-[16px] font-bold leading-[24px] uppercase" style={{ color: BLUE }}>
+              {section.title}
+            </p>
+          </div>
+          <div className="flex flex-col gap-[24px] px-[24px] py-[24px]">
+            {section.questions.map((q) => (
+              <QuestionBlock
+                key={q.id}
+                question={q}
+                value={answers[q.id] ?? ""}
+                invalid={!!missing?.includes(q.id)}
+                onChange={(v) => set(q.id, v)}
+              />
+            ))}
+          </div>
         </div>
       ))}
 
       {missing !== null && missing.length > 0 && (
-        <p className="text-[14px] leading-[20px]" style={{ color: ERROR }}>
+        <p className="text-[16px] leading-[24px]" style={{ color: ERROR }}>
           {missing.length === 1
             ? "One question still needs an answer."
             : `${missing.length} questions still need an answer.`}
         </p>
       )}
-
-      {/* Sticky, per the capture. Submit alone: there is no Appointments to go
-          back to in this prototype. */}
-      <div
-        className="fixed left-0 right-0 bottom-0 z-[100] flex justify-center px-[24px] py-[16px]"
-        style={{ background: "#ffffff", borderTop: `1px solid ${BORDER}` }}
-      >
-        <div className="w-full max-w-[672px] flex justify-end">
-          <button
-            onClick={submit}
-            className="rounded-[9999px] px-[24px] py-[12px] text-[14px] font-semibold leading-[20px] cursor-pointer"
-            style={{ background: PRIMARY, color: "#edf6ff", border: "none" }}
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-    </div>
+    </FhmShell>
   );
 }
