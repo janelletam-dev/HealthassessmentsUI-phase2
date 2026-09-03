@@ -1898,7 +1898,8 @@ function DsField({
   onChange: (v: string) => void;
   placeholder?: string;
   required?: boolean;
-  helper?: string;
+  /** A node, not a string: the email field's helper carries a link. */
+  helper?: ReactNode;
   /** A node, not a string: 1946:149604 draws "signing in" as a link. */
   error?: ReactNode;
   type?: string;
@@ -2956,11 +2957,14 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
           Create your account
         </p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-          Enter your details to activate your plan:
+          Let&rsquo;s get you set up and ready to book your first health assessment.
         </p>
       </div>
 
-      <AccountPlan brand={theme?.accountPlanBrand ?? "dca"} code={code} dob={confirmedDob} />
+      {/* NO ACCOUNT PLAN BAND. activationUI drew the plan and the activation
+          code here. The health assessment create account frame has neither, and
+          there is no code to show: the invite carries one by email and it is
+          used later, for the questionnaire (Janelle, 2 Sep). */}
 
       {askNames && (
         <>
@@ -2978,8 +2982,22 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
       <DsField
         label="Email" required type="email"
         value={form.email} onChange={(v) => set("email", v)}
-        placeholder="name@domain.com"
-        helper="We recommend using a personal email so you can easily continue accessing our services, even if your employment changes."
+        placeholder="jane.doe@mail.com"
+        helper={
+          <>
+            If you need to change the email you&rsquo;re registering with, please{" "}
+            <a
+              href="https://doctorcareanywhere.com/contact"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold underline"
+              style={{ color: "#135CFF" }}
+            >
+              contact the Patient Experience team
+            </a>
+            .
+          </>
+        }
         error={
           // 1946:149604. The way out of this state is a sign-in, so it is a
           // link in the sentence rather than a second button competing with
