@@ -44,6 +44,7 @@ import imgLhs5 from "../assets/slide-5-skipping.jpg";
 import imgDoctorAvatar from "../assets/doctor-avatar.png";
 import imgUKFlag from "../assets/uk-flag.png";
 import imgCareLogo1 from "../assets/cqc-logo.png";
+import imgTrustpilot from "../assets/trustpilot.png";
 // Both of these are AXA-only and go with the AXA screens. See the README beside
 // them: they exist so the first commit compiles unchanged, nothing more.
 import d17SvgPaths from "../assets/axa-pending-removal/svg-paths";
@@ -58,6 +59,7 @@ import {
   CircleUser,
   UserCheck,
   CheckCheck,
+  ListTodo,
   MapPin,
   Captions,
   TriangleAlert,
@@ -1805,6 +1807,11 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
 
         {/* 5066:125355. Filled pill, unlike the outlined Sign in below it: the
             frame gives create account the weight and sign in the quiet slot. */}
+        {/* Straight to create account. There is no code to validate: the
+            health assessment invite carries the code by email and it is used
+            later, for the questionnaire. journeyForCode would throw on the
+            undefined, hence the guard at the call site. The journey machinery
+            it belongs to is prune material. */}
         <button
           onClick={() => onValidate()}
           className="content-stretch flex gap-[8px] items-center justify-center px-[16px] py-[12px] rounded-[9999px] shrink-0 cursor-pointer"
@@ -3765,98 +3772,131 @@ function LandingTaskCard({ badge, borderColor, icon, title, description, cta, on
   );
 }
 
-function OnboardingLanding({ profileDone, theme, code, notice, detailsUpdated, onStartProfile, onStartVerification }: {
-  profileDone: boolean;
+// 5066:125767, "Profile setup complete", and the exported CSS Janelle sent.
+//
+// THIS IS THE LAST SCREEN. Janelle, 3 Sep: "this should be the last one they
+// see after the emergency contact step" and "there wont be any verification set
+// up for them". So the two task cards that used to live here are gone. What
+// replaced them is a single card: what happens next, who Full Health Medical
+// are, and one button into the questionnaire.
+//
+// 0041CC for the three step icons, which is a deeper blue than the 166534 green
+// on the landing's four. Both are from their own frame's CSS; they are not
+// meant to match.
+const COMPLETE_STEPS = [
+  // I5066:125767 next steps, Frame 1
+  { Icon: ListTodo, text: "Fill in a short lifestyle questionnaire to help us assess your current health." },
+  // Frame 5
+  { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
+  // Frame 4
+  { Icon: MapPin, text: "If advised to book an Advanced Corporate Health Assessment, you can easily schedule your appointment at a nearby location." },
+];
+
+function ProfileComplete({ theme, onContinue }: {
   theme: BrandTheme;
-  code: string;
-  notice?: PlanNotice;
-  /** "Details updated", shown here because both frames that carry it are landings. */
-  detailsUpdated?: boolean;
-  onStartProfile: () => void;
-  onStartVerification: () => void;
+  /**
+   * Into the questionnaire, which is not built. Inert for now rather than
+   * wired to something wrong: the questionnaire is a separate scope and its
+   * content has not been supplied.
+   */
+  onContinue: () => void;
 }) {
   const ws = "'Work Sans', sans-serif";
-  // Both tasks go Later and lose their buttons while a notice blocks them: the
-  // AXA validation frame draws it that way, and offering "Set up your profile"
-  // against a policy that may never activate is a button that leads nowhere.
-  const blocked = notice?.blocksTasks ?? false;
+  const [aboutOpen, setAboutOpen] = useState(true);
   return (
-    <div className="flex flex-col gap-[24px] w-full max-w-[672px] px-[20px] pt-[24px] pb-[32px] sm:px-0 sm:pt-0 sm:pb-0" style={{ fontFamily: ws }}>
-      <div className="flex flex-col gap-[4px] items-center text-center">
-        <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>
-          Set up your account
+    <div className="flex flex-col gap-[24px] items-center w-full max-w-[672px] px-[20px] pt-[24px] pb-[32px] sm:px-0 sm:pt-0 sm:pb-0" style={{ fontFamily: ws }}>
+      {/* 48x48 ring, 24px check, both #133595 */}
+      <div className="flex items-center justify-center shrink-0 w-[48px] h-[48px] rounded-[9999px]" style={{ border: "1px solid #133595" }}>
+        <Check size={24} color="#133595" strokeWidth={2} />
+      </div>
+
+      <div className="flex flex-col gap-[4px] items-center w-full text-center">
+        <p className="text-[24px] font-semibold leading-[32px]" style={{ color: "#133595" }}>
+          Profile complete
         </p>
-        <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-          You need to set up your profile and verify your ID before attending your first appointment.
+        <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
+          You&rsquo;re all set to book your first health assessment.
         </p>
       </div>
 
-      {detailsUpdated && (
-        // 2097:99790 and 2466:65066. It floats over the landing, which is where
-        // a patient actually arrives after a successful correction. It used to
-        // render on the correction screen itself and be unmounted by the
-        // navigation before it could be read.
-        <Toast
-          title="Details updated"
-          body="Your details now match your policy record. Please continue setting up your profile."
-        />
-      )}
-
-      {notice && (
-        // A FRAME-LEVEL FLOAT, not a row in the column. 2378:133282 places the
-        // Status messaging instance at x=491 y=35 inside its 1440 frame, above
-        // the heading and clear of the column, which is the same slot the
-        // success toast uses. It was rendered inline below the heading and
-        // stretched to the full 672 column, which is where the dependant
-        // notices sit but not this one.
-        //
-        // Same fixed geometry as Toast: 448 wide, centred, clear of the header.
-        <div
-          className="fixed left-1/2 -translate-x-1/2 z-[200] w-full max-w-[448px] px-[16px] sm:px-0"
-          style={{ top: 64 }}
+      {/* The card is the only one on this screen with the primary border and
+          the Next up badge, which is what marks it as the thing to do. */}
+      <div
+        className="relative w-full rounded-[16px] bg-white"
+        style={{ border: "1px solid #135CFF", boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)" }}
+      >
+        <span
+          className="absolute left-[24px] top-[-9px] flex items-center justify-center px-[8px] py-[2px] rounded-[9999px] text-[12px] font-semibold leading-[16px]"
+          style={{ background: "#135CFF", color: "#EDF6FF" }}
         >
-          <DsStatusBanner notice={notice} />
+          Next up
+        </span>
+
+        <div className="flex flex-col gap-[16px] py-[24px]">
+          <div className="flex flex-col gap-[16px] px-[24px]">
+            <div className="flex flex-col gap-[8px] p-[16px] rounded-[16px]" style={{ background: "#EDF6FF" }}>
+              <p className="text-[16px] font-semibold leading-[24px]" style={{ color: "#030712" }}>
+                Next steps:
+              </p>
+              <div className="flex flex-col gap-[8px] w-full">
+                {COMPLETE_STEPS.map(({ Icon, text }) => (
+                  <div key={text} className="flex gap-[8px] items-start w-full">
+                    <div className="flex items-center shrink-0 h-[20px] w-[16px]">
+                      <Icon size={16} color="#0041CC" strokeWidth={1.33} />
+                    </div>
+                    <p className="[word-break:break-word] text-[14px] leading-[20px] flex-1" style={{ color: "#030712" }}>
+                      {text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
+              Through our collaboration with Full Health Medical, you can complete necessary questionnaires, access your test results, and receive personalised reports. If recommended, you can also schedule your Advanced Corporate Health Assessment conveniently.
+            </p>
+
+            {/* A disclosure, not a link. The frame draws it expanded with a
+                ChevronUp, so that is the default here. */}
+            <button
+              onClick={() => setAboutOpen((v) => !v)}
+              className="flex items-center gap-[8px] text-[14px] font-semibold leading-[20px] self-start"
+              style={{ color: "#135CFF", background: "none", border: "none", padding: 0, cursor: "pointer" }}
+              aria-expanded={aboutOpen}
+            >
+              About Full Health Medical
+              {aboutOpen
+                ? <ChevronUp size={16} color="#135CFF" strokeWidth={1.33} />
+                : <ChevronDown size={16} color="#135CFF" strokeWidth={1.33} />}
+            </button>
+
+            {aboutOpen && (
+              <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
+                Full Health Medical are a trusted provider specialising in medical assessments. They securely manage your clinical evaluation through their dedicated booking platform.
+              </p>
+            )}
+          </div>
+
+          <div className="px-[24px]">
+            <button
+              onClick={onContinue}
+              className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] px-[16px] py-[12px] text-[14px] font-semibold leading-[20px] cursor-pointer"
+              style={{ background: "#135CFF", color: "#EDF6FF", border: "none", boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)" }}
+            >
+              Continue to questionnaire
+            </button>
+          </div>
         </div>
-      )}
+      </div>
 
-      <LandingTaskCard
-        badge={blocked ? "later" : profileDone ? "done" : "next"}
-        borderColor="#135cff"
-        icon={<CircleUser size={24} color="#133595" strokeWidth={1.67} />}
-        title="Set up your profile"
-        description="You'll provide key contact and personal information, such as your mobile number, home address and an emergency contact."
-        cta={blocked || profileDone ? undefined : "Set up your profile"}
-        onCta={onStartProfile}
-      />
-
-      <LandingTaskCard
-        badge={blocked || !profileDone ? "later" : "next"}
-        borderColor="#d7e9ff"
-        icon={<Captions size={24} color="#133595" strokeWidth={1.67} />}
-        title="Verify your identity"
-        description="You'll also verify your identity using a valid photo ID and by taking a selfie."
-        cta={!blocked && profileDone ? "Verify your identity" : undefined}
-        onCta={onStartVerification}
-      />
-
-      <AccountPlan brand={theme.accountPlanBrand} code={code} />
-
-      {/* Janelle's Figma CSS for this LHS: 672 x 400, border-radius 32, and it
-          is a flex column. Two things were wrong here.
-
-          FLEX, not block. LhsPanel sizes itself with flex-[1_0_0] and
-          self-stretch, which do nothing inside a block parent, so on desktop
-          (md:min-h-0) it collapsed to its content height, 274 of the 400. The
-          photo stopped flat 126px short and the rounded bottom corners were
-          simply never reached, which is what read as "square at the bottom".
-
-          32, not 16. The radius was half what the frame asks for. */}
+      {/* 672 x 400, radius 32, the same carousel panel as everywhere else. */}
       <div className="relative w-full rounded-[32px] overflow-hidden flex" style={{ height: 400 }}>
         <LhsPanel theme={theme} />
       </div>
     </div>
   );
 }
+
 
 // ─── Set up your profile · Emergency contact (Figma 1836:310154) ─────────────
 
@@ -4401,25 +4441,40 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
   );
 }
 
+// The Need help card, corrected against the exported CSS Janelle sent for
+// 5066:125767. Three things were off: the title is heading-sm, 20px in #133595
+// rather than 18px in #030712; the shadow is the shadow/lg token; and the phone
+// number is 14px like the sentence around it, not 12px.
 function ProfileNeedHelpCard() {
   const ws = "'Work Sans', sans-serif";
   return (
     <div
       className="bg-white relative rounded-[16px] w-full"
       style={{
-        boxShadow: "0 10px 7.5px rgba(15,55,190,0.05), 0 4px 3px rgba(15,55,190,0.05)",
-        border: "1px solid #d7e9ff",
+        boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)",
+        border: "1px solid #D7E9FF",
         fontFamily: ws,
       }}
     >
-      <div className="flex flex-col gap-[4px] px-[24px] py-[20px]">
-        <p className="text-[18px] font-semibold leading-[28px]" style={{ color: "#030712" }}>Need help?</p>
-        <p className="text-[14px] leading-[20px]" style={{ color: "#4b5563" }}>
+      <div className="flex flex-col gap-[4px] px-[24px] py-[24px]">
+        <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>Need help?</p>
+        <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
           {"If you need any support, our team is here to help. Please contact our dedicated Health Assessments PX team on "}
-          <span className="font-semibold underline text-[12px]" style={{ color: "#135cff" }}>02046 469 390</span>
+          <span className="font-semibold underline" style={{ color: "#135CFF" }}>02046 469 390</span>
           {". Lines are open 09:00 – 17:30, Monday to Friday."}
         </p>
       </div>
+    </div>
+  );
+}
+
+// 5066:125788, "image 4" on the frame, 118x60. Exported at 3x so it stays crisp.
+// Decorative: the rating it shows is Trustpilot's own chrome, and the sentence
+// it would read out adds nothing a patient needs mid sign-up.
+function TrustpilotBadge() {
+  return (
+    <div className="flex justify-center w-full">
+      <img src={imgTrustpilot} alt="" aria-hidden className="w-[118px] h-[60px] object-contain" />
     </div>
   );
 }
@@ -4661,8 +4716,8 @@ export default function App() {
     switch (step) {
       // Keyed on the demo selection so picking a state resets Step0 rather than
       // leaving a previous banner on screen
-      case 0: return <Step0 key={`${activeCaptchaMode}|${activeCaptchaStatus ?? "none"}|${activeCodeError ?? "none"}|${useRealWidget}`} onCodeRecognised={(code) => { const j = journeyForCode(code); if (j.id !== "dca") setJourney(j.id); }} onValidate={(dob, code) => { setConfirmedDob(dob); setEnteredCode(code); const j = journeyForCode(code); setJourney(j.id); setStep(1); setActiveCaptchaStatus(undefined); setActiveCodeError(undefined); }} theme={brandTheme} initialCaptchaStatus={activeCaptchaStatus} initialCodeError={activeCodeError} captchaMode={activeCaptchaMode} useRealWidget={useRealWidget} />;
-      case 1: return <Step1 key={`${activeCreateError ?? "none"}|${confirmedDob ?? "ask"}|${askNames}|${enteredCode ?? "d"}|${journey}|${activeBanner ?? "none"}|${activeUnvalidated}|${activeValidating}`} onNext={() => { setActiveCreateError(undefined); if (brandTheme.requiresPayment) return setStep(2); setProfileDone(false); setPlanNotice(undefined); setPhase("landing"); }} theme={brandTheme} initialError={activeCreateError} confirmedDob={confirmedDob} askNames={askNames} code={enteredCode ?? "ABC-12345"} policyPlan={JOURNEYS[journey].validatesAgainstPolicy ? (journey === "axa-hp" ? "hp" : "lc") : undefined} initialBanner={activeBanner} initialUnvalidated={activeUnvalidated} initialValidating={activeValidating} />;
+      case 0: return <Step0 key={`${activeCaptchaMode}|${activeCaptchaStatus ?? "none"}|${activeCodeError ?? "none"}|${useRealWidget}`} onCodeRecognised={(code) => { const j = journeyForCode(code); if (j.id !== "dca") setJourney(j.id); }} onValidate={(dob, code) => { setConfirmedDob(dob); setEnteredCode(code); if (code) setJourney(journeyForCode(code).id); setStep(1); setActiveCaptchaStatus(undefined); setActiveCodeError(undefined); }} theme={brandTheme} initialCaptchaStatus={activeCaptchaStatus} initialCodeError={activeCodeError} captchaMode={activeCaptchaMode} useRealWidget={useRealWidget} />;
+      case 1: return <Step1 key={`${activeCreateError ?? "none"}|${confirmedDob ?? "ask"}|${askNames}|${enteredCode ?? "d"}|${journey}|${activeBanner ?? "none"}|${activeUnvalidated}|${activeValidating}`} onNext={() => { setActiveCreateError(undefined); setProfileDone(false); startProfile(); }} theme={brandTheme} initialError={activeCreateError} confirmedDob={confirmedDob} askNames={askNames} code={enteredCode ?? "ABC-12345"} policyPlan={JOURNEYS[journey].validatesAgainstPolicy ? (journey === "axa-hp" ? "hp" : "lc") : undefined} initialBanner={activeBanner} initialUnvalidated={activeUnvalidated} initialValidating={activeValidating} />;
       case 2: return (
         <PaymentScreen
           key={activePaymentState ?? "none"}
@@ -4676,6 +4731,8 @@ export default function App() {
   }
 
   const isProfile = phase === "profile" && path === "code";
+  // The first screen, and the only one without the Need help card below it.
+  const isLanding = phase === "activate" && step === 0;
   const isSsoOrChoose = path === "sso" || path === "choose";
 
   return (
@@ -4712,22 +4769,13 @@ export default function App() {
                 landing or create account. Janelle, 2 Sep: remove it. */}
 
             {phase === "landing" ? (
-              <OnboardingLanding
-                profileDone={profileDone}
+              <ProfileComplete
                 theme={brandTheme}
-                code={enteredCode ?? "ABC-12345"}
-                notice={planNotice ? PLAN_NOTICES[planNotice] : undefined}
-                detailsUpdated={detailsUpdated}
-                onStartProfile={startProfile}
-                // NOTHING HAPPENS HERE, on purpose. Janelle, 27 Aug: clicking
-                // Verify your identity landed on step 4, the older Ready to
-                // Book screen with its own task list, which reads as a second
-                // copy of Set up your profile. There is nowhere correct to go:
-                // the verification screen was deleted because Onfido owns that
-                // flow, and part 2 is upcoming. The card stays as the frame
-                // draws it and the button is inert until there is a real
-                // handoff to make.
-                onStartVerification={() => {}}
+                // INERT ON PURPOSE. The questionnaire is a separate scope and
+                // its content has not been supplied, so there is nowhere
+                // correct for this to go yet. Better an end than a button that
+                // lands somewhere wrong.
+                onContinue={() => {}}
               />
             ) : (
             <>
@@ -4771,10 +4819,14 @@ export default function App() {
               />
             </div>
 
-            {/* Below-card elements — only visible in profile setup phase */}
-            {isProfile && (
+            {/* Everything from create account onwards carries these two.
+                Janelle, 3 Sep: "landing page is correct, no trustpilot, but
+                once they click create an account, then we see the need help
+                section and the trust pilot at the bottom". */}
+            {!isLanding && (
               <>
                 <ProfileNeedHelpCard />
+                <TrustpilotBadge />
               </>
             )}
             </>
