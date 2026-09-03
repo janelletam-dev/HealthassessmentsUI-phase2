@@ -20,6 +20,7 @@ import { CountrySelect, FieldLabel } from "./components/country-select";
 import { journeyForCode, JOURNEYS, type JourneyId } from "./journeys";
 import { CORRECTION_COPY } from "./axa-correction-copy";
 import { InvitationEmail } from "./invitation-email";
+import { QuestionnaireScreen } from "./questionnaire-screen";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
 import { DEMO_PAYMENT } from "./payment";
@@ -4594,7 +4595,7 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted">("email");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4797,14 +4798,33 @@ export default function App() {
                 appears on the four onboarding columns only, never on the
                 landing or create account. Janelle, 2 Sep: remove it. */}
 
-            {phase === "landing" ? (
+            {phase === "questionnaire" ? (
+              <QuestionnaireScreen onSubmitted={() => setPhase("submitted")} />
+            ) : phase === "submitted" ? (
+              /*
+               * NO DESIGN FOR THIS ONE YET. The pilot deck's step 13 is a green
+               * "Your health questionnaire has been successfully submitted."
+               * banner on FHM, which is the only artefact for it, so that is
+               * the sentence. Flagged rather than invented further: when a
+               * frame exists, this is replaced, not extended.
+               */
+              <div className="flex flex-col gap-[16px] w-full max-w-[672px]">
+                <div
+                  className="flex items-start gap-[8px] w-full rounded-[8px] px-[16px] py-[12px]"
+                  style={{ background: "#ecfdf5", border: "1px solid #166534" }}
+                  role="status"
+                >
+                  <CheckCheck size={20} color="#166534" strokeWidth={1.67} className="shrink-0" />
+                  <p className="text-[14px] leading-[20px]" style={{ color: "#166534" }}>
+                    Your health questionnaire has been successfully submitted.
+                  </p>
+                </div>
+                <ProfileComplete theme={brandTheme} onContinue={() => setPhase("questionnaire")} />
+              </div>
+            ) : phase === "landing" ? (
               <ProfileComplete
                 theme={brandTheme}
-                // INERT ON PURPOSE. The questionnaire is a separate scope and
-                // its content has not been supplied, so there is nowhere
-                // correct for this to go yet. Better an end than a button that
-                // lands somewhere wrong.
-                onContinue={() => {}}
+                onContinue={() => setPhase("questionnaire")}
               />
             ) : (
             <>
