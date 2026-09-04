@@ -14,17 +14,10 @@
 // banner, a #f9fafb page, a 744 column of white cards, and a white sticky bar.
 
 import { useState } from "react";
-import { Menu, CircleCheck, Stethoscope, Heart, Activity, History, Lock } from "lucide-react";
-import logo from "../assets/email/logo.png";
+import { CircleCheck, Stethoscope, Heart, Activity, History, Lock } from "lucide-react";
 import { SECTIONS, SUBMITTED, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
+import { FhmShell, WS, PAGE, RULE, NAV_RULE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
 
-const WS = "'Work Sans', sans-serif";
-const PAGE = "#f9fafb";
-const RULE = "#e5e7eb";
-const NAV_RULE = "#d1d5db";
-const BLUE = "#135cff";
-const INK = "#1f2937";
-const MUTED = "#6b7280";
 const SELECTED_BG = "#eff6ff";
 const ERROR = "#991b1b";
 
@@ -107,33 +100,6 @@ function QuestionBlock({ question, value, invalid, onChange }: {
   );
 }
 
-function FhmShell({ children, footer, title }: { children: React.ReactNode; footer?: React.ReactNode; title: string }) {
-  return (
-    <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: WS }}>
-      {/* 1512x89 white, bottom rule. The hamburger is FHM's, not a DCA control. */}
-      <div
-        className="flex items-center justify-between px-[24px] w-full"
-        style={{ height: 89, background: "#ffffff", borderBottom: `1px solid ${NAV_RULE}` }}
-      >
-        <img src={logo} alt="Doctor Care Anywhere" className="h-[57px] object-contain" />
-        <Menu size={24} color={INK} strokeWidth={2} aria-hidden />
-      </div>
-
-      {/* 1512x148, #135cff, title 40 Medium white */}
-      <div className="flex items-center justify-center px-[24px]" style={{ height: 148, background: BLUE }}>
-        <p className="text-center font-medium" style={{ fontSize: 40, lineHeight: "52px", color: "#ffffff" }}>
-          {title}
-        </p>
-      </div>
-
-      <div className="flex justify-center px-[24px] pt-[24px] pb-[140px]">
-        <div className="w-full max-w-[744px] flex flex-col gap-[24px]">{children}</div>
-      </div>
-
-      {footer}
-    </div>
-  );
-}
 
 
 // After submitting. Janelle, 3 Sep: "create something similar to the FHM chrome
