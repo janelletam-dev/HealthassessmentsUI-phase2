@@ -236,9 +236,9 @@ export function DemoDriver() {
               window.scrollTo(0, (total * i) / ticks);
               await sleep(24);
             }
+            // No return trip: scrolling back up read as eye ping-pong. The
+            // next step's scrollIntoView repositions in a single movement.
             await sleep(500);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            await sleep(600);
             break;
           }
           case "pdfPage": {

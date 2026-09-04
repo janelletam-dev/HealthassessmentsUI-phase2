@@ -137,7 +137,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 2800 },
   { kind: "pdfPage", page: 5 },
   { kind: "pause", ms: 2200 },
-  { kind: "click", label: "View report" },
+  { kind: "click", label: "Close report" },
   // Booking starts here, on the clinical site, per the PM: the advanced
   // process only exists on FHM. The DCA account is acknowledged, not toured.
   { kind: "zoom", text: "Results and the next step on one page: booking starts right here" },
@@ -198,6 +198,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 2800 },
   { kind: "pdfPage", page: 5 },
   { kind: "pause", ms: 2200 },
+  { kind: "click", label: "Close report" },
   { kind: "click", label: "Profile" },
 
   // ── 13. Booking the GP follow-up ──────────────────────────────────────────

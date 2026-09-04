@@ -717,6 +717,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
       </Card>
 
       <Card label="WHAT YOU'VE BOOKED"><ProductRow /></Card>
+      <GuideArrow onNext={() => setStep("questionnaire")} nextLabel="Complete the questionnaire" />
     </FhmShell>
   );
 }

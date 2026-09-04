@@ -32,6 +32,7 @@ import { MyHealthAssessments } from "./my-health-assessments.tsx";
 import { BookFollowUp } from "./book-followup.tsx";
 import { SleepProgramme } from "./sleep-programme.tsx";
 import { FhmResults } from "./fhm-results.tsx";
+import { GuideArrow } from "./guide-arrow.tsx";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
@@ -4728,7 +4729,12 @@ export default function App() {
   // questionnaire drops the patient on the landing, which is where the real
   // link goes.
   if (phase === "email") {
-    return <InvitationEmail onStart={() => { setPhase("activate"); setStep(0); }} />;
+    return (
+      <>
+        <InvitationEmail onStart={() => { setPhase("activate"); setStep(0); }} />
+        <GuideArrow onNext={() => { setPhase("activate"); setStep(0); }} nextLabel="Create your account" />
+      </>
+    );
   }
 
   // FHM'S PLATFORM, NOT OURS. The questionnaire and its confirmation are handed
@@ -4757,10 +4763,16 @@ export default function App() {
 
   if (phase === "advancedResultsEmail") {
     return (
-      <AdvancedResultsEmail
-        onView={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
-        onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
-      />
+      <>
+        <AdvancedResultsEmail
+          onView={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
+          onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
+        />
+        <GuideArrow
+          onNext={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
+          nextLabel="View the report"
+        />
+      </>
     );
   }
 
@@ -4781,10 +4793,18 @@ export default function App() {
   // is what runs the SSO into Full Health Medical.
   if (phase === "myAssessments") {
     return (
-      <MyHealthAssessments
-        onContinue={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
-        onBack={() => setPhase(portalReturn)}
-      />
+      <>
+        <MyHealthAssessments
+          onContinue={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
+          onBack={() => setPhase(portalReturn)}
+        />
+        <GuideArrow
+          onBack={() => setPhase(portalReturn)}
+          backLabel="Back to Home"
+          onNext={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
+          nextLabel="Continue to Full Health Medical"
+        />
+      </>
     );
   }
 
@@ -4822,18 +4842,31 @@ export default function App() {
     // Janelle, 4 Sep: "when the user clicks on the email for the results, it
     // should show the sso to FHM portal", and the SSO shows on every FHM
     // crossing: "always show to FHM also".
-    return <ResultsEmail onView={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} />;
+    return (
+      <>
+        <ResultsEmail onView={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} />
+        <GuideArrow onNext={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} nextLabel="View the report" />
+      </>
+    );
   }
 
   // The results on FHM's side; the Profile pill is the way back to the DCA
   // account, where the report also sits in Uploads.
   if (phase === "fhmResults") {
     return (
-      <FhmResults
-        stage={resultsStage}
-        onExit={() => setPhase(resultsStage === "advanced" ? "portalAdvanced" : "portal")}
-        onBook={() => { setBookingStart("location"); setPhase("booking"); }}
-      />
+      <>
+        <FhmResults
+          stage={resultsStage}
+          onExit={() => setPhase(resultsStage === "advanced" ? "portalAdvanced" : "portal")}
+          onBook={() => { setBookingStart("location"); setPhase("booking"); }}
+        />
+        <GuideArrow
+          onNext={resultsStage === "prescreen"
+            ? () => { setBookingStart("location"); setPhase("booking"); }
+            : () => setPhase("portalAdvanced")}
+          nextLabel={resultsStage === "prescreen" ? "Book the assessment" : "Back to your DCA account"}
+        />
+      </>
     );
   }
 
@@ -4882,10 +4915,16 @@ export default function App() {
                 landing or create account. Janelle, 2 Sep: remove it. */}
 
             {phase === "landing" ? (
-              <ProfileComplete
-                theme={brandTheme}
-                onContinue={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
-              />
+              <>
+                <ProfileComplete
+                  theme={brandTheme}
+                  onContinue={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
+                />
+                <GuideArrow
+                  onNext={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
+                  nextLabel="Continue to questionnaire"
+                />
+              </>
             ) : (
             <>
             {/* Main container card */}

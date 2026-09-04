@@ -22,7 +22,7 @@
 import { useState } from "react";
 import {
   House, CircleUserRound, ClipboardList, PenSquare, ChevronRight, Info, Download,
-  FlaskConical, ListChecks, Stethoscope, FileHeart, CircleCheck, Eye,
+  FlaskConical, ListChecks, Stethoscope, FileHeart, CircleCheck, Eye, X,
 } from "lucide-react";
 import { FhmNav, WS, PAGE, RULE, BLUE, INK } from "./fhm-chrome.tsx";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
@@ -234,10 +234,10 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
 }) {
   const data = STAGES[stage];
   const pdf = data.pdf === "advanced" ? advancedReportPdf : reportPdf;
-  // The inline viewer is invention: FHM serves the PDF in its own tab, and
-  // Download report still does. But an own-tab document cannot be walked to
-  // the clinician's letter by the demo, and reports no longer open on the DCA
-  // side, so the page offers a view-in-place too.
+  // The popup viewer is invention, and says so. FHM serves the PDF in its
+  // own tab, which Download report still does; Janelle, 4 Sep: "have the pdfs
+  // when view report as pdf popup just to show (although not how it is but we
+  // jsut want to show the contents)".
   const [viewerOpen, setViewerOpen] = useState(false);
   return (
     <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: WS }}>
@@ -327,11 +327,6 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
               </a>
             </div>
 
-            {viewerOpen && (
-              <div style={{ borderTop: `1px solid ${RULE}` }}>
-                <iframe src={pdf} title="Your report" className="w-full h-[820px] border-none block" />
-              </div>
-            )}
           </div>
 
           {stage === "prescreen" && <NextStepExplainer onBook={onBook} />}
@@ -350,6 +345,29 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
           </div>
         </div>
       </div>
+
+      {viewerOpen && (
+        <div
+          className="fixed inset-0 z-[600] flex items-center justify-center px-[24px] py-[24px]"
+          style={{ background: "rgba(3,7,18,0.55)" }}
+        >
+          <div className="bg-white rounded-[10px] w-full max-w-[980px] h-full flex flex-col overflow-hidden" style={{ boxShadow: "0 24px 60px rgba(3,7,18,0.35)" }}>
+            <div className="flex items-center justify-between px-[20px] py-[12px]" style={{ borderBottom: `1px solid ${RULE}` }}>
+              <p className="font-bold text-[15px]" style={{ color: "#111827" }}>Your report</p>
+              <button
+                type="button"
+                onClick={() => setViewerOpen(false)}
+                aria-label="Close report"
+                className="flex items-center justify-center size-[30px] rounded-full cursor-pointer border-none"
+                style={{ background: "#f3f4f6" }}
+              >
+                <X size={16} color="#374151" strokeWidth={2.5} />
+              </button>
+            </div>
+            <iframe src={pdf} title="Your report" className="w-full flex-1 border-none block" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
