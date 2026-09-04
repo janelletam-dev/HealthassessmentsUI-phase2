@@ -22,7 +22,8 @@ export type DemoStep =
   | { kind: "fillAll" }
   | { kind: "pick"; trigger: string; option?: string }
   | { kind: "jumpPhase"; phase: string }
-  | { kind: "pdfPage"; page: number };
+  | { kind: "pdfPage"; page: number }
+  | { kind: "scrollThrough"; ms?: number };
 
 export const DEMO_SCRIPT: DemoStep[] = [
   // ── 1. The invitation lands ────────────────────────────────────────────────
@@ -30,6 +31,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "your Health Insights Assessment is ready for you" },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "Jane, your Health Insights Assessment is ready for you" },
+  { kind: "scrollThrough", ms: 3000 },
   { kind: "click", label: "Create account" },
 
   // ── 2. The landing ─────────────────────────────────────────────────────────
@@ -113,7 +115,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "zoom", text: "Approve or reject: nothing reaches the patient without this" },
   { kind: "click", label: "Approve" },
   { kind: "pause", ms: 1200 },
-  { kind: "zoom", text: "Approved. The Patient Experience team dispatches the report" },
+  { kind: "zoom", text: "Approved. Dispatch sends the email and uploads the report to the DCA account" },
   { kind: "click", label: "Dispatch" },
 
   // ── 8. Results arrive and the report is read ──────────────────────────────
@@ -127,38 +129,24 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 900 },
   { kind: "zoom", text: "Reviewed, with a note from the clinician" },
-  { kind: "pause", ms: 1600 },
-  // Download report opens the PDF in its own tab, as FHM serves it.
-  { kind: "click", label: "Download report" },
-  { kind: "pause", ms: 2000 },
-  { kind: "click", label: "Profile" },
-  { kind: "scene", label: "Report in the portal" },
-  { kind: "waitFor", text: "Health Insights Pre-screen test results" },
-  { kind: "click", label: "Health Insights Pre-screen test results" },
-  { kind: "waitFor", text: "14 pages" },
-  { kind: "pause", ms: 2000 },
-  // Page 2 is the clinician's letter, Dear Jane.
+  { kind: "scrollThrough", ms: 3400 },
+  // The in-page viewer, opened to the clinician's letter and the summary.
+  { kind: "click", label: "View report" },
+  { kind: "pause", ms: 1400 },
   { kind: "pdfPage", page: 2 },
   { kind: "pause", ms: 2800 },
   { kind: "pdfPage", page: 5 },
   { kind: "pause", ms: 2200 },
-  { kind: "click", label: "Back to uploads" },
+  { kind: "click", label: "View report" },
+  // Booking starts here, on the clinical site, per the PM: the advanced
+  // process only exists on FHM. The DCA account is acknowledged, not toured.
+  { kind: "zoom", text: "Results and the next step on one page: booking starts right here" },
+  { kind: "click", label: "Book Appointment" },
 
   // ── 9. Booking the advanced assessment ────────────────────────────────────
-  { kind: "scene", label: "My health assessments" },
-  { kind: "click", label: "Home" },
-  { kind: "pause", ms: 600 },
-  { kind: "click", label: "Open my health assessments" },
-  { kind: "waitFor", text: "Advanced Corporate Health Assessment" },
-  { kind: "pause", ms: 700 },
-  { kind: "click", label: "Continue journey" },
-  { kind: "waitFor", text: "Signing you in to Full Health Medical" },
   { kind: "scene", label: "Booking with FHM" },
-  { kind: "waitFor", text: "About this product", timeoutMs: 8000 },
-  // NO FRAME: a caption, naming the beat Janelle asked the demo to carry.
+  { kind: "waitFor", text: "Choose a location", timeoutMs: 8000 },
   { kind: "zoom", text: "Booking the assessment: a pharmacy, a date and a time" },
-  { kind: "click", label: "Continue" },
-  { kind: "waitFor", text: "Choose a location" },
   { kind: "pause", ms: 600 },
   { kind: "click", label: "Choose" },
   { kind: "waitFor", text: "Select date and time" },
@@ -188,26 +176,29 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Your appointment is booked" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Your appointment is booked" },
+  { kind: "scrollThrough", ms: 3200 },
   { kind: "click", label: "Newer message" },
   { kind: "scene", label: "Advanced results email" },
   { kind: "waitFor", text: "Your health assessment results are ready" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Your health assessment results are ready" },
+  { kind: "scrollThrough", ms: 2200 },
   { kind: "click", label: "View my report" },
+  { kind: "waitFor", text: "Signing you in to Full Health Medical" },
 
-  // ── 12. The new report arrives ────────────────────────────────────────────
-  { kind: "scene", label: "New report uploaded" },
-  { kind: "waitFor", text: "Advanced Health Assessment Report", timeoutMs: 8000 },
-  { kind: "zoom", text: "A new report has arrived" },
-  { kind: "click", label: "Advanced Health Assessment Report" },
-  { kind: "waitFor", text: "32 pages" },
-  { kind: "pause", ms: 2000 },
-  // Page 2 again: the clinician's letter on the advanced report.
+  // ── 12. The advanced report, on FHM ───────────────────────────────────────
+  { kind: "scene", label: "Advanced results on FHM" },
+  { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
+  { kind: "pause", ms: 900 },
+  { kind: "zoom", text: "The advanced report, reviewed and ready" },
+  { kind: "scrollThrough", ms: 2600 },
+  { kind: "click", label: "View report" },
+  { kind: "pause", ms: 1400 },
   { kind: "pdfPage", page: 2 },
   { kind: "pause", ms: 2800 },
   { kind: "pdfPage", page: 5 },
   { kind: "pause", ms: 2200 },
-  { kind: "click", label: "Back to uploads" },
+  { kind: "click", label: "Profile" },
 
   // ── 13. Booking the GP follow-up ──────────────────────────────────────────
   { kind: "scene", label: "GP follow-up booking" },

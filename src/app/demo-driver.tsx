@@ -15,6 +15,7 @@
 // the progress badge, the typing caret effect and the zoom card.
 
 import { useEffect, useRef, useState } from "react";
+import { ChevronRight, Pause, Play, Square } from "lucide-react";
 import { DEMO_SCRIPT } from "./demo-script.ts";
 
 /** Janelle, 4 Sep: "/demo-fastforward so all info are prefilled". The path is
@@ -48,6 +49,14 @@ const timerWorker = new Worker(
 );
 let sleepSeq = 0;
 let fillAllNumberSeq = 0;
+
+/*
+ * The viewer's controls, at module scope so poll() can see them: a paused
+ * run must not keep counting toward its timeouts, which is exactly how the
+ * first pause died ("timed out waiting" at whatever step was mid-poll).
+ * step releases exactly one script step while paused, the > button.
+ */
+const control = { paused: false, stopped: false, step: false, stepping: false };
 const sleepers = new Map<number, () => void>();
 timerWorker.onmessage = (e: MessageEvent<{ id: number }>) => {
   sleepers.get(e.data.id)?.();
@@ -61,11 +70,15 @@ const sleep = (ms: number) =>
   });
 
 async function poll<T>(find: () => T | undefined, timeoutMs = 8000): Promise<T> {
-  const started = Date.now();
+  let elapsed = 0;
   for (;;) {
-    const found = find();
-    if (found !== undefined) return found;
-    if (Date.now() - started > timeoutMs) throw new Error("demo: timed out waiting");
+    if (control.stopped) throw new Error("STOPPED");
+    if (!control.paused || control.stepping) {
+      const found = find();
+      if (found !== undefined) return found;
+      elapsed += 120;
+      if (elapsed > timeoutMs) throw new Error("demo: timed out waiting");
+    }
     await sleep(120);
   }
 }
@@ -123,14 +136,39 @@ export function DemoDriver() {
   // The catch reads these refs, not the state, which a closure would freeze at
   // its first render's values.
   const where = useRef("start");
+  // Viewer controls. Janelle, 4 Sep: "could we add a stop/pause button here",
+  // then "on the demo add also a < > arrow": the > steps one action while
+  // paused. There is no <: the app cannot unclick what was clicked; restart
+  // by refreshing.
+  const [isPaused, setIsPaused] = useState(false);
+  const [isStopped, setIsStopped] = useState(false);
 
   useEffect(() => {
     if (running.current) return;
     running.current = true;
 
+    // The top-of-step gate: holds while paused, releases one step when the
+    // viewer presses >, throws when stopped. Inner loops use innerGate, which
+    // never consumes the step credit.
+    async function gate() {
+      control.stepping = false;
+      while (control.paused && !control.step && !control.stopped) await sleep(150);
+      if (control.stopped) throw new Error("STOPPED");
+      if (control.step) {
+        control.step = false;
+        control.stepping = true;
+      }
+    }
+
+    async function innerGate() {
+      while (control.paused && !control.stepping && !control.stopped) await sleep(150);
+      if (control.stopped) throw new Error("STOPPED");
+    }
+
     async function run() {
       let scenes = 0;
       for (const [index, step] of DEMO_SCRIPT.entries()) {
+        await gate();
         where.current = `step ${index} (${step.kind}${"label" in step ? ` ${step.label}` : "text" in step ? ` ${String(step.text).slice(0, 40)}` : "field" in step ? ` ${step.field}` : ""})`;
         switch (step.kind) {
           case "scene": {
@@ -167,6 +205,7 @@ export function DemoDriver() {
             el.focus();
             spotlight(el, true);
             for (let i = 1; i <= step.text.length; i++) {
+              await innerGate();
               setNativeValue(el, step.text.slice(0, i));
               await sleep(TYPE_MS);
             }
@@ -184,6 +223,22 @@ export function DemoDriver() {
             setNativeValue(el, [...el.options].find((o) => o.text === step.option)!.value);
             await sleep(250);
             spotlight(el, false);
+            break;
+          }
+          case "scrollThrough": {
+            // Glide down the page so its whole content is seen, then return.
+            // Janelle, 4 Sep: "for the email bits on the fast forward, can you
+            // please have the chance for others to scroll through".
+            const total = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+            const ticks = Math.max(1, Math.round((step.ms ?? 2600) / 24));
+            for (let i = 1; i <= ticks; i++) {
+              await innerGate();
+              window.scrollTo(0, (total * i) / ticks);
+              await sleep(24);
+            }
+            await sleep(500);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            await sleep(600);
             break;
           }
           case "pdfPage": {
@@ -309,6 +364,7 @@ export function DemoDriver() {
               (d) => d.querySelector(":scope > p") && d.querySelector(":scope > div > button") && visible(d),
             );
             for (const group of groups) {
+              await innerGate();
               const first = group.querySelector<HTMLElement>(":scope > div > button");
               if (!first) continue;
               first.scrollIntoView({ block: "center" });
@@ -330,6 +386,10 @@ export function DemoDriver() {
     }
 
     run().catch((error: Error) => {
+      if (error.message === "STOPPED") {
+        setIsStopped(true);
+        return;
+      }
       setFailed(`${where.current}: ${error.message}`);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -342,10 +402,50 @@ export function DemoDriver() {
         className="fixed bottom-[16px] left-[16px] z-[9999] flex items-center gap-[10px] rounded-[9999px] px-[16px] py-[8px]"
         style={{ background: "rgba(3,7,18,0.85)", backdropFilter: "blur(4px)", fontFamily: "'Work Sans', sans-serif" }}
       >
-        <span className="size-[8px] rounded-full animate-pulse" style={{ background: failed ? "#f87171" : "#4ade80" }} />
+        <span
+          className={isPaused || isStopped ? "size-[8px] rounded-full" : "size-[8px] rounded-full animate-pulse"}
+          style={{ background: failed ? "#f87171" : isStopped ? "#9ca3af" : isPaused ? "#facc15" : "#4ade80" }}
+        />
         <p className="text-[13px] leading-[18px] text-white">
-          {failed ? `Demo stopped at ${failed}` : `Fast-forward demo ${sceneIndex ? `· ${sceneIndex}/${DEMO_SCRIPT.filter((s) => s.kind === "scene").length} ` : ""}· ${scene}`}
+          {failed
+            ? `Demo stopped at ${failed}`
+            : isStopped
+              ? "Demo stopped. Refresh to restart"
+              : `Fast-forward demo ${sceneIndex ? `· ${sceneIndex}/${DEMO_SCRIPT.filter((s) => s.kind === "scene").length} ` : ""}· ${isPaused ? "Paused" : scene}`}
         </p>
+        {!failed && !isStopped && scene !== "Demo complete" && (
+          <>
+            <button
+              type="button"
+              aria-label={isPaused ? "Resume the demo" : "Pause the demo"}
+              onClick={() => { control.paused = !control.paused; setIsPaused(control.paused); }}
+              className="flex items-center justify-center size-[26px] rounded-full cursor-pointer border-none"
+              style={{ background: "rgba(255,255,255,0.16)" }}
+            >
+              {isPaused ? <Play size={13} color="#ffffff" strokeWidth={2.5} /> : <Pause size={13} color="#ffffff" strokeWidth={2.5} />}
+            </button>
+            {isPaused && (
+              <button
+                type="button"
+                aria-label="Advance one step"
+                onClick={() => { control.step = true; }}
+                className="flex items-center justify-center size-[26px] rounded-full cursor-pointer border-none"
+                style={{ background: "rgba(255,255,255,0.16)" }}
+              >
+                <ChevronRight size={14} color="#ffffff" strokeWidth={2.5} />
+              </button>
+            )}
+            <button
+              type="button"
+              aria-label="Stop the demo"
+              onClick={() => { control.stopped = true; control.paused = false; }}
+              className="flex items-center justify-center size-[26px] rounded-full cursor-pointer border-none"
+              style={{ background: "rgba(255,255,255,0.16)" }}
+            >
+              <Square size={11} color="#ffffff" strokeWidth={2.5} />
+            </button>
+          </>
+        )}
       </div>
 
       {/* The zoom card: the emphasized text, large, over a dimmed page. */}

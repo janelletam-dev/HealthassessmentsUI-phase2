@@ -32,6 +32,7 @@ import appTile from "../assets/portal/app-tile.png";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
 import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
 import { useScrollTop } from "./use-scroll-top.ts";
+import { GuideArrow } from "./guide-arrow.tsx";
 
 const SS = "'Source Sans 3', 'Source Sans Pro', sans-serif";
 const WS = "'Work Sans', sans-serif";
@@ -545,14 +546,21 @@ export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAss
   }
 
   return (
-    <PortalShell active={tab} onSelectTab={selectTab}>
-      {tab === "Home" ? (
-        <HomeBody showAdvanced={showAdvanced} onOpenAssessments={onOpenAssessments} onBookFollowUp={onBookFollowUp} onOpenSleep={onOpenSleep} />
-      ) : openFile ? (
-        <PdfViewer name={openFile.name} pages={openFile.pages} src={openFile.pdf} onClose={() => setOpenFile(undefined)} />
-      ) : (
-        <UploadsBody showAdvanced={showAdvanced} onOpenFile={setOpenFile} />
-      )}
-    </PortalShell>
+    <>
+      <PortalShell active={tab} onSelectTab={selectTab}>
+        {tab === "Home" ? (
+          <HomeBody showAdvanced={showAdvanced} onOpenAssessments={onOpenAssessments} onBookFollowUp={onBookFollowUp} onOpenSleep={onOpenSleep} />
+        ) : openFile ? (
+          <PdfViewer name={openFile.name} pages={openFile.pages} src={openFile.pdf} onClose={() => setOpenFile(undefined)} />
+        ) : (
+          <UploadsBody showAdvanced={showAdvanced} onOpenFile={setOpenFile} />
+        )}
+      </PortalShell>
+      {/* Where next is singular, the guide points there: the uploads list leads
+          to Home, and the pre-screen Home's one move is booking the assessment.
+          The advanced Home offers real choices, so no arrow decides for it. */}
+      {tab === "Uploads" && !openFile && <GuideArrow onNext={() => selectTab("Home")} nextLabel="Home" />}
+      {tab === "Home" && !showAdvanced && <GuideArrow onNext={onOpenAssessments} nextLabel="Book your assessment" />}
+    </>
   );
 }

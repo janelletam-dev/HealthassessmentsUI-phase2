@@ -10,6 +10,7 @@
 // Latchmere Pharmacy, Wed 16 Sep, 10:15 AM.
 
 import { CircleCheck } from "lucide-react";
+import { GuideArrow } from "./guide-arrow.tsx";
 import { EmailShell, INK } from "./email-chrome.tsx";
 import { EmailClient } from "./email-client.tsx";
 import { APPOINTMENT_EMAIL as E, MAILBOX, EMAIL_FOOTER } from "./email-copy.ts";
@@ -108,6 +109,7 @@ export function AppointmentEmail({ onQuestionnaire, onNext }: {
           </p>
         </div>
       </EmailShell>
+      {onNext && <GuideArrow onNext={onNext} nextLabel="Next email" />}
     </EmailClient>
   );
 }

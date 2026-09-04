@@ -17,6 +17,7 @@ import { useState } from "react";
 import { CircleCheck, Stethoscope, Heart, Activity, History, Lock } from "lucide-react";
 import { SECTIONS, SUBMITTED, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
 import { FhmShell, WS, PAGE, RULE, NAV_RULE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
+import { GuideArrow } from "./guide-arrow.tsx";
 
 const SELECTED_BG = "#eff6ff";
 const ERROR = "#991b1b";
@@ -182,6 +183,7 @@ function Submitted({ onDashboard }: { onDashboard: () => void }) {
           {SUBMITTED.cta}
         </button>
       </div>
+      <GuideArrow onNext={onDashboard} nextLabel="Continue" />
     </FhmShell>
   );
 }

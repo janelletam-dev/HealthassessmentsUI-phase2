@@ -35,6 +35,7 @@ import {
   Search, Plus, Bell, ChevronDown, ChevronRight, Phone, CircleCheck, Download,
 } from "lucide-react";
 import { useScrollTop } from "./use-scroll-top.ts";
+import { GuideArrow } from "./guide-arrow.tsx";
 
 const SYS = "system-ui, -apple-system, 'Segoe UI', sans-serif";
 const NAV_BG = "#1b2a38";
@@ -605,16 +606,36 @@ export function ClinicianPortal({ onDispatched }: {
   const [approved, setApproved] = useState(false);
   useScrollTop(screen);
 
-  if (screen === "reports") return <OrgReports onMedicals={() => setScreen("queue")} />;
-  if (screen === "detail") {
+  if (screen === "reports") {
     return (
-      <Detail
-        approved={approved}
-        onApprove={() => setApproved(true)}
-        onDispatch={onDispatched}
-        onReports={() => setScreen("reports")}
-      />
+      <>
+        <OrgReports onMedicals={() => setScreen("queue")} />
+        <GuideArrow onBack={() => setScreen("queue")} backLabel="Medicals" />
+      </>
     );
   }
-  return <Queue onOpenJane={() => setScreen("detail")} onReports={() => setScreen("reports")} />;
+  if (screen === "detail") {
+    return (
+      <>
+        <Detail
+          approved={approved}
+          onApprove={() => setApproved(true)}
+          onDispatch={onDispatched}
+          onReports={() => setScreen("reports")}
+        />
+        <GuideArrow
+          onBack={() => setScreen("queue")}
+          backLabel="Queue"
+          onNext={approved ? onDispatched : () => setApproved(true)}
+          nextLabel={approved ? "Dispatch" : "Approve"}
+        />
+      </>
+    );
+  }
+  return (
+    <>
+      <Queue onOpenJane={() => setScreen("detail")} onReports={() => setScreen("reports")} />
+      <GuideArrow onNext={() => setScreen("detail")} nextLabel="Open Jane Smith" />
+    </>
+  );
 }

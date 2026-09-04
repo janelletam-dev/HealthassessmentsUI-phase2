@@ -4532,6 +4532,11 @@ export default function App() {
   const [portalReturn, setPortalReturn] = useState<"portal" | "portalAdvanced">("portal");
   useScrollTop(phase);
 
+  // Where the FHM booking starts: the results-page explainer goes straight to
+  // Choose a location; the My health assessments route keeps About this
+  // product. The key remounts the flow so the start step actually applies.
+  const [bookingStart, setBookingStart] = useState<"about" | "location">("about");
+
   // DEMO ONLY. The fast-forward script drives real controls, but no real
   // control crosses personas from the patient's portal to the clinician's, so
   // in demo mode the driver may ask for a phase by event. Inert otherwise.
@@ -4552,6 +4557,11 @@ export default function App() {
   // pre-assessment the one we did already and then when approved, they go back
   // to book their appointment".
   const [ssoTarget, setSsoTarget] = useState<"questionnaire" | "booking" | "fhmResults">("questionnaire");
+
+  // Which report the FHM results page shows. PM ruling, 4 Sep: patients view
+  // reports on FHM, not DCA Uploads, because the advanced process only exists
+  // on the FHM platform.
+  const [resultsStage, setResultsStage] = useState<"prescreen" | "advanced">("prescreen");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4734,7 +4744,7 @@ export default function App() {
     // Booking made and questionnaire submitted, so the next beat is the
     // confirmation email landing. Janelle, 4 Sep: "we end up with another
     // email transaction supposing before they go to their appointment".
-    return <FhmBooking onExit={() => setPhase("apptEmail")} />;
+    return <FhmBooking key={bookingStart} initialStep={bookingStart} onExit={() => setPhase("apptEmail")} />;
   }
 
   if (phase === "apptEmail") {
@@ -4748,7 +4758,7 @@ export default function App() {
   if (phase === "advancedResultsEmail") {
     return (
       <AdvancedResultsEmail
-        onView={() => setPhase("portalAdvanced")}
+        onView={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
         onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
       />
     );
@@ -4772,7 +4782,7 @@ export default function App() {
   if (phase === "myAssessments") {
     return (
       <MyHealthAssessments
-        onContinue={() => { setSsoTarget("booking"); setPhase("sso"); }}
+        onContinue={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
         onBack={() => setPhase(portalReturn)}
       />
     );
@@ -4818,7 +4828,13 @@ export default function App() {
   // The results on FHM's side; the Profile pill is the way back to the DCA
   // account, where the report also sits in Uploads.
   if (phase === "fhmResults") {
-    return <FhmResults onExit={() => setPhase("portal")} />;
+    return (
+      <FhmResults
+        stage={resultsStage}
+        onExit={() => setPhase(resultsStage === "advanced" ? "portalAdvanced" : "portal")}
+        onBook={() => { setBookingStart("location"); setPhase("booking"); }}
+      />
+    );
   }
 
   if (phase === "portal") {

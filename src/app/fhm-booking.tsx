@@ -26,8 +26,10 @@
 import { useState } from "react";
 import { ArrowLeft, Calendar, MapPin, CircleCheck, ClipboardList, ChevronRight, Check, House, CircleUserRound } from "lucide-react";
 import { FhmShell, FhmNav, WS, PAGE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
+import { NextStepExplainer } from "./fhm-results.tsx";
 import { SECTIONS as PRE_APPOINTMENT, missingAnswers, type Answers } from "./pre-appointment-questionnaire.ts";
 import { useScrollTop } from "./use-scroll-top.ts";
+import { GuideArrow } from "./guide-arrow.tsx";
 
 const BORDER = "#d2d2d2";
 const CARD_LABEL = BLUE;
@@ -283,6 +285,7 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
           </Card>
         </div>
       </div>
+      <GuideArrow onNext={onExit} nextLabel="Continue" />
     </div>
   );
 }
@@ -418,8 +421,14 @@ function PreAppointmentQuestionnaire({ onBack, onExit, location, day, slot }: {
   );
 }
 
-export function FhmBooking({ onExit }: { onExit: () => void }) {
-  const [step, setStep] = useState<Step>("about");
+export function FhmBooking({ onExit, initialStep = "about" }: {
+  onExit: () => void;
+  /** Entering from the results page's explainer skips About this product,
+      which that explainer replaces; the My health assessments route still
+      starts there. */
+  initialStep?: Step;
+}) {
+  const [step, setStep] = useState<Step>(initialStep);
   const [location, setLocation] = useState<typeof LOCATIONS[number] | undefined>(undefined);
   const [day, setDay] = useState<number | undefined>(undefined);
   const [slot, setSlot] = useState<string | undefined>(undefined);
@@ -430,23 +439,14 @@ export function FhmBooking({ onExit }: { onExit: () => void }) {
   const dateLabel = day ? `${shortDay(day)} ${day} Sep 2026` : "";
 
   if (step === "about") {
+    // The sparse capture card is replaced by the full explainer. Janelle,
+    // 4 Sep: "slide 15 should have been updated to show this also". This is
+    // the screen the My health assessments route still lands on; the results
+    // page carries the same explainer, whose Book Appointment enters at
+    // Choose a location directly.
     return (
       <FhmShell title="About this product">
-        <Card label="CORPORATE ADVANCED">
-          <div className="px-[24px] py-[24px] flex flex-col gap-[16px]">
-            {PRODUCT.lines.map((line) => (
-              <p key={line} className="text-[16px] leading-[24px]" style={{ color: INK }}>{line}</p>
-            ))}
-            <button
-              type="button"
-              onClick={() => setStep("location")}
-              className="w-full rounded-[4px] py-[12px] text-[16px] leading-[24px] cursor-pointer mt-[8px]"
-              style={{ background: BLUE, color: "#ffffff", border: "none" }}
-            >
-              Continue
-            </button>
-          </div>
-        </Card>
+        <NextStepExplainer onBook={() => setStep("location")} />
       </FhmShell>
     );
   }
