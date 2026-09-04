@@ -127,17 +127,21 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Signing you in to Full Health Medical" },
   { kind: "scene", label: "Results on FHM" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
-  { kind: "pause", ms: 900 },
-  { kind: "zoom", text: "Reviewed, with a note from the clinician" },
-  { kind: "scrollThrough", ms: 3400 },
-  // The in-page viewer, opened to the clinician's letter and the summary.
+  { kind: "pause", ms: 500 },
+  // The report first: popup open, the clinician's letter and summary, close.
+  // Janelle, 4 Sep: "go through popup pdf close it and then scroll down to
+  // show the message then book", with the narration card after the PDF,
+  // not before it.
   { kind: "click", label: "View report" },
-  { kind: "pause", ms: 1400 },
+  { kind: "pause", ms: 700 },
   { kind: "pdfPage", page: 2 },
-  { kind: "pause", ms: 2800 },
+  { kind: "pause", ms: 3400 },
   { kind: "pdfPage", page: 5 },
   { kind: "pause", ms: 2200 },
   { kind: "click", label: "Close report" },
+  { kind: "zoom", text: "Reviewed, with a note from the clinician" },
+  // Then the glide down through the note and the next-step explainer.
+  { kind: "scrollThrough", ms: 3400 },
   // Booking starts here, on the clinical site, per the PM: the advanced
   // process only exists on FHM. The DCA account is acknowledged, not toured.
   { kind: "zoom", text: "Results and the next step on one page: booking starts right here" },
@@ -202,26 +206,26 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // ── 12. The advanced report, on FHM ───────────────────────────────────────
   { kind: "scene", label: "Advanced results on FHM" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
-  { kind: "pause", ms: 900 },
-  { kind: "zoom", text: "The advanced report, reviewed and ready" },
-  { kind: "scrollThrough", ms: 2600 },
+  { kind: "pause", ms: 500 },
   { kind: "click", label: "View report" },
-  { kind: "pause", ms: 1400 },
+  { kind: "pause", ms: 700 },
   { kind: "pdfPage", page: 2 },
-  { kind: "pause", ms: 2800 },
+  { kind: "pause", ms: 3400 },
   { kind: "pdfPage", page: 5 },
   { kind: "pause", ms: 2200 },
   { kind: "click", label: "Close report" },
+  { kind: "zoom", text: "The advanced report, reviewed and ready" },
+  { kind: "scrollThrough", ms: 2600 },
   { kind: "click", label: "Profile" },
 
   // ── 13. Back to the DCA account, through its own login ────────────────────
   { kind: "scene", label: "DCA log in" },
-  { kind: "waitFor", text: "Sign in to your Doctor Care Anywhere account" },
+  { kind: "waitFor", text: "Sign in with your email address" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Back on Doctor Care Anywhere to book the follow-up" },
-  { kind: "type", field: "Your email address", text: "jane.smith@mail.com" },
-  { kind: "type", field: "Your password", text: "Harbour-Sunrise-42" },
-  { kind: "click", label: "Log in" },
+  { kind: "type", field: "Email Address", text: "jane.smith@mail.com" },
+  { kind: "type", field: "Password", text: "Harbour-Sunrise-42" },
+  { kind: "click", label: "Sign in" },
 
   // ── 14. Booking the GP follow-up ──────────────────────────────────────────
   { kind: "scene", label: "GP follow-up booking" },
@@ -275,12 +279,14 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // not the sleep content". No real control crosses personas, so this is the
   // demo-only phase jump.
   { kind: "scene", label: "Organisational health report" },
-  { kind: "zoom", text: "And the employer sees the anonymised picture" },
   { kind: "jumpPhase", phase: "clinician" },
   { kind: "waitFor", text: "Ready for approval" },
   { kind: "click", label: "Reports" },
   { kind: "waitFor", text: "Company D 2025" },
   { kind: "click", label: "Health insights" },
   { kind: "waitFor", text: "Report flags" },
+  // Narrate over the report itself; before the jump the card played on the
+  // previous screen and vanished with the phase change.
+  { kind: "zoom", text: "And the employer sees the anonymised picture" },
   { kind: "pause", ms: 2600 },
 ];
