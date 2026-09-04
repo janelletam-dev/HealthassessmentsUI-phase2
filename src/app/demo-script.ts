@@ -214,9 +214,19 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "click", label: "Close report" },
   { kind: "click", label: "Profile" },
 
-  // ── 13. Booking the GP follow-up ──────────────────────────────────────────
+  // ── 13. Back to the DCA account, through its own login ────────────────────
+  { kind: "scene", label: "DCA log in" },
+  { kind: "waitFor", text: "Sign in to your Doctor Care Anywhere account" },
+  { kind: "pause", ms: 600 },
+  { kind: "zoom", text: "Back on Doctor Care Anywhere to book the follow-up" },
+  { kind: "type", field: "Your email address", text: "jane.smith@mail.com" },
+  { kind: "type", field: "Your password", text: "Harbour-Sunrise-42" },
+  { kind: "click", label: "Log in" },
+
+  // ── 14. Booking the GP follow-up ──────────────────────────────────────────
   { kind: "scene", label: "GP follow-up booking" },
-  { kind: "click", label: "Home" },
+  // 27052:15761, the Home greeting: a waitFor target, not new copy.
+  { kind: "waitFor", text: "What can we help you with?" },
   { kind: "pause", ms: 700 },
   { kind: "zoom", text: "Book a GP follow-up to talk the results through" },
   { kind: "click", label: "Book follow-up appointment" },

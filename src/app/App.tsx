@@ -33,6 +33,7 @@ import { BookFollowUp } from "./book-followup.tsx";
 import { SleepProgramme } from "./sleep-programme.tsx";
 import { FhmResults } from "./fhm-results.tsx";
 import { GuideArrow } from "./guide-arrow.tsx";
+import { DcaLogin } from "./dca-login.tsx";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
@@ -4532,11 +4533,15 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp" | "sleep" | "fhmResults">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp" | "sleep" | "fhmResults" | "dcaLogin">("email");
 
   // Which portal phase the DCA side-screens (My health assessments, the
   // follow-up booking) return to.
   const [portalReturn, setPortalReturn] = useState<"portal" | "portalAdvanced">("portal");
+
+  // Which tab the advanced portal opens on: Uploads by default, Home when
+  // arriving through the DCA login to book the follow-up.
+  const [portalAdvancedTab, setPortalAdvancedTab] = useState<"Uploads" | "Home">("Uploads");
   useScrollTop(phase);
 
   // Where the FHM booking starts: the results-page explainer goes straight to
@@ -4778,10 +4783,15 @@ export default function App() {
     );
   }
 
+  if (phase === "dcaLogin") {
+    return <DcaLogin onLogin={() => { setPortalAdvancedTab("Home"); setPhase("portalAdvanced"); }} />;
+  }
+
   if (phase === "portalAdvanced") {
     return (
       <Portal
-        initialTab="Uploads"
+        key={portalAdvancedTab}
+        initialTab={portalAdvancedTab}
         showAdvanced
         onOpenAssessments={() => { setPortalReturn("portalAdvanced"); setPhase("myAssessments"); }}
         onBookFollowUp={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
@@ -4853,7 +4863,10 @@ export default function App() {
     return (
       <FhmResults
         stage={resultsStage}
-        onExit={() => setPhase(resultsStage === "advanced" ? "portalAdvanced" : "portal")}
+        // The advanced exit crosses back to DCA through its own login.
+        // Janelle, 4 Sep: "after showing the report have the user log in to
+        // their dca account to book their Advanced HA ff up with clinician".
+        onExit={() => setPhase(resultsStage === "advanced" ? "dcaLogin" : "portal")}
         onBook={() => { setBookingStart("location"); setPhase("booking"); }}
       />
     );
