@@ -34,6 +34,7 @@ import { useState } from "react";
 import {
   Search, Plus, Bell, ChevronDown, ChevronRight, Phone, CircleCheck, Download,
 } from "lucide-react";
+import { useScrollTop } from "./use-scroll-top.ts";
 
 const SYS = "system-ui, -apple-system, 'Segoe UI', sans-serif";
 const NAV_BG = "#1b2a38";
@@ -595,6 +596,7 @@ export function ClinicianPortal({ onApproved }: {
 }) {
   const [screen, setScreen] = useState<"queue" | "detail" | "reports">("queue");
   const [approved, setApproved] = useState(false);
+  useScrollTop(screen);
 
   // A short dwell after Approve so cause and effect read: the chip flips, the
   // release strip appears, then the patient's email arrives.

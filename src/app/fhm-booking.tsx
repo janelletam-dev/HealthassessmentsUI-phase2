@@ -27,6 +27,7 @@ import { useState } from "react";
 import { ArrowLeft, Calendar, MapPin, CircleCheck, ClipboardList, ChevronRight, Check, House, CircleUserRound } from "lucide-react";
 import { FhmShell, FhmNav, WS, PAGE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
 import { SECTIONS as PRE_APPOINTMENT, missingAnswers, type Answers } from "./pre-appointment-questionnaire.ts";
+import { useScrollTop } from "./use-scroll-top.ts";
 
 const BORDER = "#d2d2d2";
 const CARD_LABEL = BLUE;
@@ -296,6 +297,7 @@ function PreAppointmentQuestionnaire({ onBack, onExit, location, day, slot }: {
   const [answers, setAnswers] = useState<Answers>({});
   const [missing, setMissing] = useState<string[]>([]);
   const [done, setDone] = useState(false);
+  useScrollTop(done);
 
   function submit() {
     const gaps = missingAnswers(answers);
@@ -421,6 +423,7 @@ export function FhmBooking({ onExit }: { onExit: () => void }) {
   const [location, setLocation] = useState<typeof LOCATIONS[number] | undefined>(undefined);
   const [day, setDay] = useState<number | undefined>(undefined);
   const [slot, setSlot] = useState<string | undefined>(undefined);
+  useScrollTop(step);
 
   const weekdayOf = (d: number) => DAY_NAMES[(FIRST_WEEKDAY + d - 1) % 7];
   const shortDay = (d: number) => weekdayOf(d).charAt(0) + weekdayOf(d).slice(1, 3).toLowerCase();

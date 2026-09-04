@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
 import appTile from "../assets/portal/app-tile.png";
+import { useScrollTop } from "./use-scroll-top.ts";
 
 const WS = "'Work Sans', sans-serif";
 const PURPLE = "#494de3";
@@ -151,6 +152,7 @@ function Chrome({ children, onBackStep }: { children: React.ReactNode; onBackSte
 export function BookFollowUp({ onBack }: { onBack: () => void }) {
   const [step, setStep] = useState<Step>("notice");
   const [slot, setSlot] = useState<string | undefined>(undefined);
+  useScrollTop(step);
 
   const backFrom: Record<Step, () => void> = {
     notice: onBack,

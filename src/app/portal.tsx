@@ -31,6 +31,7 @@ import { Logo } from "./dca-logo.tsx";
 import appTile from "../assets/portal/app-tile.png";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
 import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
+import { useScrollTop } from "./use-scroll-top.ts";
 
 const SS = "'Source Sans 3', 'Source Sans Pro', sans-serif";
 const WS = "'Work Sans', sans-serif";
@@ -534,6 +535,7 @@ export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAss
 }) {
   const [tab, setTab] = useState<TabName>(initialTab);
   const [openFile, setOpenFile] = useState<typeof FILES[number] | undefined>(undefined);
+  useScrollTop(tab, openFile);
 
   // Changing tab closes the document, so Uploads is never returned to with a
   // viewer still open over its list.

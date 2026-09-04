@@ -31,6 +31,7 @@ import { ClinicianPortal } from "./clinician-portal.tsx";
 import { MyHealthAssessments } from "./my-health-assessments.tsx";
 import { BookFollowUp } from "./book-followup.tsx";
 import { SleepProgramme } from "./sleep-programme.tsx";
+import { useScrollTop } from "./use-scroll-top.ts";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
 import { DEMO_PAYMENT } from "./payment";
@@ -4532,6 +4533,7 @@ export default function App() {
   // Which portal phase the DCA side-screens (My health assessments, the
   // follow-up booking) return to.
   const [portalReturn, setPortalReturn] = useState<"portal" | "portalAdvanced">("portal");
+  useScrollTop(phase);
 
   // DEMO ONLY. The fast-forward script drives real controls, but no real
   // control crosses personas from the patient's portal to the clinician's, so
