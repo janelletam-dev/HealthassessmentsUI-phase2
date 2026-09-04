@@ -22,6 +22,14 @@ import { CORRECTION_COPY } from "./axa-correction-copy";
 import { InvitationEmail } from "./invitation-email";
 import { QuestionnaireScreen } from "./questionnaire-screen";
 import { ResultsEmail } from "./results-email";
+import { Portal } from "./portal.tsx";
+import { SsoHandover } from "./sso-handover.tsx";
+import { FhmBooking } from "./fhm-booking.tsx";
+import { AppointmentEmail } from "./appointment-email.tsx";
+import { AdvancedResultsEmail } from "./advanced-results-email.tsx";
+import { ClinicianPortal } from "./clinician-portal.tsx";
+import { MyHealthAssessments } from "./my-health-assessments.tsx";
+import { BookFollowUp } from "./book-followup.tsx";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
 import { DEMO_PAYMENT } from "./payment";
@@ -83,89 +91,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 
-// ─── Exact logo components from Figma ────────────────────────────────────────
-
-function LogoLayer() {
-  return (
-    <div className="absolute inset-[0.65%_10.81%_0_0.04%]" data-name="Layer 1">
-      <svg
-        className="absolute block inset-0 size-full"
-        fill="none"
-        height="35.7653"
-        preserveAspectRatio="none"
-        viewBox="0 0 122.932 35.7653"
-        width="122.932"
-      >
-        <g id="Layer 1">
-          <path d={svgPaths.p2a6c3980} fill="#FFB306" />
-          <path d={svgPaths.p2eda5f80} fill="#FFB306" />
-          <path d={svgPaths.pdf57f0} fill="url(#logo_grad)" />
-        </g>
-        <defs>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id="logo_grad"
-            x1="5.2374"
-            x2="30.5205"
-            y1="30.5268"
-            y2="5.24374"
-          >
-            <stop stopColor="#0E73DD" />
-            <stop offset="0.18" stopColor="#1684DF" />
-            <stop offset="0.47" stopColor="#219AE0" />
-            <stop offset="0.74" stopColor="#27A7E2" />
-            <stop offset="1" stopColor="#29ABE2" />
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
-  );
-}
-
-function LogoGroup() {
-  return (
-    <div className="absolute inset-[9.87%_0.11%_7.62%_29.61%]" data-name="Group">
-      <svg
-        className="absolute block inset-0 size-full"
-        fill="none"
-        height="29.7022"
-        preserveAspectRatio="none"
-        viewBox="0 0 96.9004 29.7022"
-        width="96.9004"
-      >
-        <g>
-          <path d={svgPaths.pedc1e00} fill="white" />
-          <path d={svgPaths.p31f94e00} fill="white" />
-          <path d={svgPaths.p27ad900} fill="white" />
-          <path d={svgPaths.p3bfd2400} fill="white" />
-          <path d={svgPaths.p369fbf80} fill="white" />
-          <path d={svgPaths.p3de47100} fill="white" />
-          <path d={svgPaths.p2ebe5970} fill="white" />
-          <path d={svgPaths.p231ab580} fill="white" />
-          <path d={svgPaths.pd85ab00} fill="white" />
-          <path d={svgPaths.p34382df0} fill="white" />
-          <path d={svgPaths.p60abc00} fill="white" />
-          <path d={svgPaths.p328c8e00} fill="white" />
-          <path d={svgPaths.p3041f280} fill="white" />
-          <path d={svgPaths.p33936770} fill="white" />
-          <path d={svgPaths.pc2dae00} fill="white" />
-          <path d={svgPaths.p2453a200} fill="white" />
-          <path d={svgPaths.p12dc1180} fill="white" />
-          <path d={svgPaths.p293d8230} fill="white" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Logo() {
-  return (
-    <div className="h-[36px] overflow-clip relative shrink-0 w-[137.895px]">
-      <LogoLayer />
-      <LogoGroup />
-    </div>
-  );
-}
+import { Logo } from "./dca-logo.tsx";
 
 // ─── Brand system ─────────────────────────────────────────────────────────────
 
@@ -4600,7 +4526,32 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp">("email");
+
+  // Which portal phase the DCA side-screens (My health assessments, the
+  // follow-up booking) return to.
+  const [portalReturn, setPortalReturn] = useState<"portal" | "portalAdvanced">("portal");
+
+  // DEMO ONLY. The fast-forward script drives real controls, but no real
+  // control crosses personas from the patient's portal to the clinician's, so
+  // in demo mode the driver may ask for a phase by event. Inert otherwise.
+  useEffect(() => {
+    const isDemo =
+      window.location.pathname === "/demo-fastforward" ||
+      new URLSearchParams(window.location.search).get("demo") === "fastforward";
+    if (!isDemo) return;
+    const jump = (e: Event) => setPhase((e as CustomEvent<typeof phase>).detail);
+    window.addEventListener("demo:phase", jump);
+    return () => window.removeEventListener("demo:phase", jump);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // The handover runs twice and lands somewhere different each time: from
+  // Profile complete it opens the pre-screen questionnaire, and from My health
+  // assessments it opens the booking flow. Janelle, 4 Sep: "there is a
+  // pre-assessment the one we did already and then when approved, they go back
+  // to book their appointment".
+  const [ssoTarget, setSsoTarget] = useState<"questionnaire" | "booking">("questionnaire");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4773,21 +4724,97 @@ export default function App() {
   // FHM'S PLATFORM, NOT OURS. The questionnaire and its confirmation are handed
   // over to Full Health Medical, which is what the Profile complete card says
   // is about to happen, so they wear FHM's chrome and none of DCA's.
+  // Single sign-on into Full Health Medical, which the patient never sees a
+  // form for. It runs itself and moves on.
+  if (phase === "sso") {
+    return <SsoHandover onDone={() => setPhase(ssoTarget)} />;
+  }
+
+  if (phase === "booking") {
+    // Booking made and questionnaire submitted, so the next beat is the
+    // confirmation email landing. Janelle, 4 Sep: "we end up with another
+    // email transaction supposing before they go to their appointment".
+    return <FhmBooking onExit={() => setPhase("apptEmail")} />;
+  }
+
+  if (phase === "apptEmail") {
+    // The CTA is the frame's, for patients who have not done the questionnaire
+    // yet. This one has, in the booking flow, so it goes nowhere rather than
+    // reopening a submitted form. The toolbar's newer-message chevron is the
+    // way forward: the appointment happens, and the next email arrives.
+    return <AppointmentEmail onNext={() => setPhase("advancedResultsEmail")} />;
+  }
+
+  if (phase === "advancedResultsEmail") {
+    return (
+      <AdvancedResultsEmail
+        onView={() => setPhase("portalAdvanced")}
+        onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
+      />
+    );
+  }
+
+  if (phase === "portalAdvanced") {
+    return (
+      <Portal
+        initialTab="Uploads"
+        showAdvanced
+        onOpenAssessments={() => { setPortalReturn("portalAdvanced"); setPhase("myAssessments"); }}
+        onBookFollowUp={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
+      />
+    );
+  }
+
+  // The DCA screens between the portal and elsewhere. My health assessments is
+  // the step Janelle added on 4 Sep: its Continue journey, not the Home tile,
+  // is what runs the SSO into Full Health Medical.
+  if (phase === "myAssessments") {
+    return (
+      <MyHealthAssessments
+        onContinue={() => { setSsoTarget("booking"); setPhase("sso"); }}
+        onBack={() => setPhase(portalReturn)}
+      />
+    );
+  }
+
+  if (phase === "bookFollowUp") {
+    return <BookFollowUp onBack={() => setPhase(portalReturn)} />;
+  }
+
+
+
   if (phase === "questionnaire" || phase === "submitted") {
     return (
       <QuestionnaireScreen
         submitted={phase === "submitted"}
         onSubmitted={() => setPhase("submitted")}
-        onDashboard={() => setPhase("resultsEmail")}
+        onDashboard={() => setPhase("clinician")}
       />
     );
   }
 
-  // e10, which arrives after the clinical team has reviewed the answers.
+  // The CTM's side of the review. Janelle, 4 Sep: "that's clinician access to
+  // FHM portal to approve or reject) before DCA sends and uploads the
+  // lifestyle / and advanced assessment results". Approving is what lets the
+  // results email exist, so the beat runs between submission and that email.
+  if (phase === "clinician") {
+    return <ClinicianPortal onApproved={() => setPhase("resultsEmail")} />;
+  }
+
+  // The results email, which arrives after the clinical team has reviewed the
+  // answers, and the portal page View report opens.
   if (phase === "resultsEmail") {
-    // View your results and book has nowhere to go: the report and the booking
-    // flow are not built. Inert rather than pointed somewhere wrong.
-    return <ResultsEmail onView={() => {}} />;
+    return <ResultsEmail onView={() => setPhase("portal")} />;
+  }
+
+  if (phase === "portal") {
+    return (
+      <Portal
+        initialTab="Uploads"
+        onOpenAssessments={() => { setPortalReturn("portal"); setPhase("myAssessments"); }}
+        onBookFollowUp={() => { setPortalReturn("portal"); setPhase("bookFollowUp"); }}
+      />
+    );
   }
 
   return (
@@ -4826,7 +4853,7 @@ export default function App() {
             {phase === "landing" ? (
               <ProfileComplete
                 theme={brandTheme}
-                onContinue={() => setPhase("questionnaire")}
+                onContinue={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
               />
             ) : (
             <>

@@ -48,12 +48,13 @@ export function Toast({ title, body }: { title: string; body: string }) {
     <div
       role="status"
       aria-live="polite"
-      // top-[104px]. 64 was inherited from the AXA prototype and lands the
-      // toast ON the secondary strip here: measured in the browser, this app's
-      // sticky header stack is 92px, 64 for the primary bar plus 28 for the
-      // "Already have an account? Log in" strip. 104 clears it with a 12px gap,
-      // which is the same gap the frame leaves. Icon is 20px in the frame.
-      className="fixed left-1/2 -translate-x-1/2 top-[104px] z-[200] w-full max-w-[448px] px-[16px] sm:px-0 pointer-events-none"
+      // top-[35px], centred: where every frame that draws a success toast
+      // puts it, x=491 in a 1440 frame (dead centre for a 448 box) at y=35,
+      // floating OVER the header. An earlier fix moved it down to 104px to
+      // clear the sticky strip, which drifted it into the page; Janelle,
+      // 4 Sep: it "should be at the middle", per the design files. The z-200
+      // is what lets it sit on the header as the frames show.
+      className="fixed left-1/2 -translate-x-1/2 top-[35px] z-[200] w-full max-w-[448px] px-[16px] sm:px-0 pointer-events-none"
     >
       <div
         className="flex gap-[10px] items-start rounded-[8px] p-[10px]"

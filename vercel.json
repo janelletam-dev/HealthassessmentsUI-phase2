@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/demo-fastforward", "destination": "/index.html" }]
+}
