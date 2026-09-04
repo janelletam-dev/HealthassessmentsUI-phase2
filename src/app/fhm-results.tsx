@@ -213,6 +213,7 @@ export function NextStepExplainer({ onBook }: { onBook: () => void }) {
         <button
           type="button"
           onClick={onBook}
+          data-guide-primary
           className="rounded-full px-[26px] py-[11px] text-[15px] font-bold border-none cursor-pointer shrink-0"
           style={{ background: "#ffffff", color: BLUE, fontFamily: WS }}
         >
@@ -252,6 +253,7 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
           <button
             type="button"
             onClick={onExit}
+            data-guide-primary={stage === "advanced" || undefined}
             className="flex items-center gap-[8px] rounded-[9999px] px-[16px] py-[8px] bg-transparent border-none cursor-pointer text-[16px] leading-[24px] text-white"
             style={{ fontFamily: WS }}
           >

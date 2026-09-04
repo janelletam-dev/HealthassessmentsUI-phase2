@@ -179,6 +179,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
             <button
               type="button"
               onClick={() => setStep("category")}
+              data-guide-primary
               className="flex items-center gap-[10px] rounded-full px-[38px] py-[13px] cursor-pointer border-none"
               style={{ background: CORAL }}
             >
@@ -198,6 +199,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
                 key={name}
                 type="button"
                 onClick={name === "Health Check Follow-Up" ? () => setStep("concern") : undefined}
+                data-guide-primary={name === "Health Check Follow-Up" || undefined}
                 className="flex items-stretch text-left rounded-[4px] overflow-hidden bg-white p-0"
                 style={{ border: `1px solid ${BORDER}`, cursor: name === "Health Check Follow-Up" ? "pointer" : "default", fontFamily: WS }}
               >
@@ -223,6 +225,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
           <button
             type="button"
             onClick={() => setStep("attach")}
+            data-guide-primary
             className="flex items-center justify-between text-left rounded-[4px] w-full mt-[22px] px-[16px] py-[12px] cursor-pointer bg-white"
             style={{ border: `1px solid ${BORDER}`, fontFamily: WS }}
           >
@@ -261,6 +264,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
             <button
               type="button"
               onClick={() => setStep("datetime")}
+              data-guide-primary
               className="flex items-center gap-[10px] rounded-full px-[38px] py-[12px] cursor-pointer border-none"
               style={{ background: "#0d1c8a" }}
             >
@@ -313,6 +317,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
               <button
                 key={time}
                 type="button"
+                data-guide-primary={(!slot && time === "9:20am") || undefined}
                 onClick={() => setSlot(time)}
                 className="rounded-[8px] py-[12px] text-[14px] cursor-pointer bg-white"
                 style={{
@@ -333,6 +338,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
             <button
               type="button"
               disabled={!slot}
+              data-guide-primary
               onClick={() => setStep("booked")}
               className="rounded-full px-[60px] py-[13px] text-[15px] font-semibold text-white border-none"
               style={{ background: slot ? BLUE : "#93b8fd", cursor: slot ? "pointer" : "default", fontFamily: WS }}
@@ -356,6 +362,7 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
           <button
             type="button"
             onClick={onBack}
+            data-guide-primary
             className="rounded-full px-[32px] py-[12px] mt-[8px] text-[15px] font-semibold text-white border-none cursor-pointer"
             style={{ background: BLUE, fontFamily: WS }}
           >

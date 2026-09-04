@@ -61,6 +61,7 @@ export function MyHealthAssessments({ onContinue, onBack }: { onContinue: () => 
             <button
               type="button"
               onClick={onContinue}
+              data-guide-primary
               className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none"
               style={{ background: BLUE }}
             >

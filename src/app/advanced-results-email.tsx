@@ -14,10 +14,11 @@ import { ADVANCED_RESULTS_EMAIL as E, MAILBOX, EMAIL_FOOTER } from "./email-copy
 const CARD = "#fbfbfb";
 const SLAB = "'Quatro Slab', 'Zilla Slab', serif";
 
-function NavyButton({ label, onClick }: { label: string; onClick?: () => void }) {
+function NavyButton({ label, onClick, primary }: { label: string; onClick?: () => void; primary?: boolean }) {
   return (
     <button
       onClick={onClick}
+      data-guide-primary={primary || undefined}
       className={onClick ? "cursor-pointer" : undefined}
       style={{ background: INK, borderRadius: 6, border: "none", padding: "12px 45px" }}
     >
@@ -35,7 +36,7 @@ export function AdvancedResultsEmail({ onView, onBook }: { onView: () => void; o
             <p className="text-center whitespace-pre-line w-full" style={{ fontSize: 16, lineHeight: 1.5, color: INK }}>
               {E.body}
             </p>
-            <NavyButton label={E.cta} onClick={onView} />
+            <NavyButton label={E.cta} onClick={onView} primary />
           </div>
         </div>
 

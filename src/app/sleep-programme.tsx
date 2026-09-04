@@ -28,6 +28,7 @@ export function SleepProgramme({ onBack }: { onBack: () => void }) {
         <button
           type="button"
           onClick={onBack}
+          data-guide-primary
           className="flex items-center gap-[8px] bg-transparent border-none cursor-pointer p-0 text-[13px] font-semibold"
           style={{ color: INK, fontFamily: WS }}
         >

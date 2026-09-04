@@ -207,6 +207,7 @@ function Queue({ onOpenJane, onReports }: { onOpenJane: () => void; onReports: (
                       <button
                         type="button"
                         onClick={onOpenJane}
+                        data-guide-primary
                         className="bg-transparent border-none p-0 cursor-pointer font-semibold text-[13px] underline decoration-transparent hover:decoration-inherit"
                         style={{ color: TEAL, fontFamily: SYS }}
                       >
@@ -255,6 +256,7 @@ function Detail({ approved, onApprove, onDispatch, onReports }: { approved: bool
           <button
             type="button"
             onClick={approved ? onDispatch : onApprove}
+            data-guide-primary
             className="rounded-[4px] px-[14px] py-[8px] text-[13px] font-semibold text-white border-none cursor-pointer"
             style={{ background: TEAL, fontFamily: SYS }}
           >
@@ -623,19 +625,13 @@ export function ClinicianPortal({ onDispatched }: {
           onDispatch={onDispatched}
           onReports={() => setScreen("reports")}
         />
-        <GuideArrow
-          onBack={() => setScreen("queue")}
-          backLabel="Queue"
-          onNext={approved ? onDispatched : () => setApproved(true)}
-          nextLabel={approved ? "Dispatch" : "Approve"}
-        />
+        <GuideArrow onBack={() => setScreen("queue")} backLabel="Queue" />
       </>
     );
   }
   return (
     <>
       <Queue onOpenJane={() => setScreen("detail")} onReports={() => setScreen("reports")} />
-      <GuideArrow onNext={() => setScreen("detail")} nextLabel="Open Jane Smith" />
     </>
   );
 }

@@ -32,7 +32,6 @@ import appTile from "../assets/portal/app-tile.png";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
 import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
 import { useScrollTop } from "./use-scroll-top.ts";
-import { GuideArrow } from "./guide-arrow.tsx";
 
 const SS = "'Source Sans 3', 'Source Sans Pro', sans-serif";
 const WS = "'Work Sans', sans-serif";
@@ -320,6 +319,7 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep
                   <button
                     type="button"
                     onClick={onBookFollowUp}
+                    data-guide-primary
                     className="flex items-center gap-[8px] justify-center px-[16px] py-[12px] rounded-full cursor-pointer shrink-0 bg-transparent"
                     style={{ border: `1px solid ${BLUE}`, filter: "drop-shadow(0px 4px 3px rgba(15,55,190,0.05))" }}
                   >
@@ -347,6 +347,7 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep
                 <button
                   type="button"
                   aria-label="Open my health assessments"
+                  data-guide-primary={!showAdvanced || undefined}
                   onClick={onOpenAssessments}
                   className="flex items-center justify-center size-[44px] rounded-full cursor-pointer shrink-0"
                   style={{ background: "rgba(10,10,10,0.01)", border: "1px solid rgba(10,10,10,0.05)" }}
@@ -454,6 +455,7 @@ function UploadsBody({ showAdvanced, onOpenFile }: {
               <button
                 type="button"
                 onClick={() => onOpenFile(file)}
+                data-guide-primary={file === rows[0] || undefined}
                 className="font-bold text-[14px] leading-[20px] w-[158px] shrink-0 text-left bg-transparent border-none p-0 cursor-pointer underline decoration-transparent hover:decoration-inherit"
                 style={{ color: NAVY, fontFamily: "inherit" }}
               >
@@ -510,6 +512,7 @@ function PdfViewer({ name, pages, src, onClose }: { name: string; pages: number;
         <button
           type="button"
           onClick={onClose}
+          data-guide-primary
           className="flex items-center gap-[6px] bg-transparent border-none cursor-pointer p-0"
         >
           <ChevronLeft size={14} color={NAVY} strokeWidth={2.5} />
@@ -556,11 +559,6 @@ export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAss
           <UploadsBody showAdvanced={showAdvanced} onOpenFile={setOpenFile} />
         )}
       </PortalShell>
-      {/* Where next is singular, the guide points there: the uploads list leads
-          to Home, and the pre-screen Home's one move is booking the assessment.
-          The advanced Home offers real choices, so no arrow decides for it. */}
-      {tab === "Uploads" && !openFile && <GuideArrow onNext={() => selectTab("Home")} nextLabel="Home" />}
-      {tab === "Home" && !showAdvanced && <GuideArrow onNext={onOpenAssessments} nextLabel="Book your assessment" />}
     </>
   );
 }

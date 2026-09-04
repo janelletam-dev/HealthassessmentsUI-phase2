@@ -177,13 +177,13 @@ function Submitted({ onDashboard }: { onDashboard: () => void }) {
             back to pointing at it. */}
         <button
           onClick={onDashboard}
+          data-guide-primary
           className="w-full rounded-[4px] px-[24px] py-[12px] text-[16px] font-medium leading-[24px] cursor-pointer"
           style={{ background: BLUE, color: "#ffffff", border: "none" }}
         >
           {SUBMITTED.cta}
         </button>
       </div>
-      <GuideArrow onNext={onDashboard} nextLabel="Continue" />
     </FhmShell>
   );
 }
@@ -230,6 +230,7 @@ export function QuestionnaireScreen({ onSubmitted, submitted, onDashboard }: {
           <div className="w-full max-w-[744px] flex items-center justify-end">
             <button
               onClick={submit}
+              data-guide-primary
               className="rounded-[4px] px-[24px] py-[8px] text-[16px] font-medium leading-[24px] cursor-pointer"
               style={{ background: BLUE, color: "#ffffff", border: "none" }}
             >

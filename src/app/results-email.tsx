@@ -37,6 +37,7 @@ export function ResultsEmail({ onView }: { onView: () => void }) {
             {/* 205x49, radius 6, padding 12/45, label 17 Bold white. */}
             <button
               onClick={onView}
+              data-guide-primary
               className="cursor-pointer mt-[4px]"
               style={{ background: INK, borderRadius: 6, border: "none", padding: "12px 45px" }}
             >

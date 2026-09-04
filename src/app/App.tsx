@@ -1747,6 +1747,7 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
             it belongs to is prune material. */}
         <button
           onClick={() => onValidate()}
+          data-guide-primary
           className="content-stretch flex gap-[8px] items-center justify-center px-[16px] py-[12px] rounded-[9999px] shrink-0 cursor-pointer"
           style={{
             background: theme?.primaryColor ?? "#135CFF",
@@ -3016,6 +3017,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
       )}
       <button
         onClick={handleSubmit}
+        data-guide-primary
         className="w-full flex items-center justify-center rounded-[9999px] text-[12px] font-semibold leading-[16px] px-[16px] py-[12px] mt-[8px]"
         style={{ background: "#135cff", color: "#edf6ff", boxShadow: "0px 4px 3px rgba(15,55,190,0.05), 0px 2px 2px rgba(15,55,190,0.05)" }}
       >
@@ -3337,6 +3339,7 @@ function DsStepButtons({ nextLabel, prevLabel, onNext, onBack, busy, busyLabel, 
       <button
         onClick={onNext}
         disabled={busy}
+        data-guide-primary
         className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] text-[12px] font-semibold leading-[16px] px-[16px] py-[12px]"
         style={{ background: busy ? "#5b8dff" : "#135cff", color: "#edf6ff", boxShadow: "0px 4px 3px rgba(15,55,190,0.05), 0px 2px 2px rgba(15,55,190,0.05)" }}
       >
@@ -3825,6 +3828,7 @@ function ProfileComplete({ theme, onContinue }: {
           <div className="px-[24px]">
             <button
               onClick={onContinue}
+              data-guide-primary
               className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] px-[16px] py-[12px] text-[14px] font-semibold leading-[20px] cursor-pointer"
               style={{ background: "#135CFF", color: "#EDF6FF", border: "none", boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)" }}
             >
@@ -4301,6 +4305,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
           <button
             onClick={verifyCode}
             disabled={verifying || verified}
+            data-guide-primary
             className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] text-[12px] font-semibold leading-[16px] px-[16px] py-[12px]"
             style={{ background: verifying || verified ? "#5b8dff" : "#135cff", color: "#edf6ff", boxShadow: "0px 4px 3px rgba(15,55,190,0.05), 0px 2px 2px rgba(15,55,190,0.05)" }}
           >
@@ -4365,6 +4370,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
         <button
           onClick={sendCode}
           disabled={sending}
+          data-guide-primary
           className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] text-[12px] font-semibold leading-[16px] px-[16px] py-[12px]"
           style={{ background: sending ? "#5b8dff" : "#135cff", color: "#edf6ff", boxShadow: "0px 4px 3px rgba(15,55,190,0.05), 0px 2px 2px rgba(15,55,190,0.05)" }}
         >
@@ -4729,12 +4735,7 @@ export default function App() {
   // questionnaire drops the patient on the landing, which is where the real
   // link goes.
   if (phase === "email") {
-    return (
-      <>
-        <InvitationEmail onStart={() => { setPhase("activate"); setStep(0); }} />
-        <GuideArrow onNext={() => { setPhase("activate"); setStep(0); }} nextLabel="Create your account" />
-      </>
-    );
+    return <InvitationEmail onStart={() => { setPhase("activate"); setStep(0); }} />;
   }
 
   // FHM'S PLATFORM, NOT OURS. The questionnaire and its confirmation are handed
@@ -4763,16 +4764,10 @@ export default function App() {
 
   if (phase === "advancedResultsEmail") {
     return (
-      <>
-        <AdvancedResultsEmail
-          onView={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
-          onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
-        />
-        <GuideArrow
-          onNext={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
-          nextLabel="View the report"
-        />
-      </>
+      <AdvancedResultsEmail
+        onView={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
+        onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
+      />
     );
   }
 
@@ -4798,12 +4793,7 @@ export default function App() {
           onContinue={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
           onBack={() => setPhase(portalReturn)}
         />
-        <GuideArrow
-          onBack={() => setPhase(portalReturn)}
-          backLabel="Back to Home"
-          onNext={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
-          nextLabel="Continue to Full Health Medical"
-        />
+        <GuideArrow onBack={() => setPhase(portalReturn)} backLabel="Back to Home" />
       </>
     );
   }
@@ -4842,31 +4832,18 @@ export default function App() {
     // Janelle, 4 Sep: "when the user clicks on the email for the results, it
     // should show the sso to FHM portal", and the SSO shows on every FHM
     // crossing: "always show to FHM also".
-    return (
-      <>
-        <ResultsEmail onView={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} />
-        <GuideArrow onNext={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} nextLabel="View the report" />
-      </>
-    );
+    return <ResultsEmail onView={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} />;
   }
 
   // The results on FHM's side; the Profile pill is the way back to the DCA
   // account, where the report also sits in Uploads.
   if (phase === "fhmResults") {
     return (
-      <>
-        <FhmResults
-          stage={resultsStage}
-          onExit={() => setPhase(resultsStage === "advanced" ? "portalAdvanced" : "portal")}
-          onBook={() => { setBookingStart("location"); setPhase("booking"); }}
-        />
-        <GuideArrow
-          onNext={resultsStage === "prescreen"
-            ? () => { setBookingStart("location"); setPhase("booking"); }
-            : () => setPhase("portalAdvanced")}
-          nextLabel={resultsStage === "prescreen" ? "Book the assessment" : "Back to your DCA account"}
-        />
-      </>
+      <FhmResults
+        stage={resultsStage}
+        onExit={() => setPhase(resultsStage === "advanced" ? "portalAdvanced" : "portal")}
+        onBook={() => { setBookingStart("location"); setPhase("booking"); }}
+      />
     );
   }
 
@@ -4915,16 +4892,10 @@ export default function App() {
                 landing or create account. Janelle, 2 Sep: remove it. */}
 
             {phase === "landing" ? (
-              <>
-                <ProfileComplete
-                  theme={brandTheme}
-                  onContinue={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
-                />
-                <GuideArrow
-                  onNext={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
-                  nextLabel="Continue to questionnaire"
-                />
-              </>
+              <ProfileComplete
+                theme={brandTheme}
+                onContinue={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
+              />
             ) : (
             <>
             {/* Main container card */}

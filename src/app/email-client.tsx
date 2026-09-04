@@ -66,6 +66,7 @@ export function EmailClient({ subject, date, onNext, children }: {
               type="button"
               onClick={onNext}
               aria-label="Newer message"
+              data-guide-primary
               className="flex items-center justify-center w-[32px] h-[32px] rounded-[9999px] cursor-pointer bg-transparent border-none p-0"
             >
               <ChevronRight size={18} color={MUTED} strokeWidth={2} />

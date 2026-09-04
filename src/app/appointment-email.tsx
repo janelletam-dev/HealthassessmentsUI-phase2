@@ -10,7 +10,6 @@
 // Latchmere Pharmacy, Wed 16 Sep, 10:15 AM.
 
 import { CircleCheck } from "lucide-react";
-import { GuideArrow } from "./guide-arrow.tsx";
 import { EmailShell, INK } from "./email-chrome.tsx";
 import { EmailClient } from "./email-client.tsx";
 import { APPOINTMENT_EMAIL as E, MAILBOX, EMAIL_FOOTER } from "./email-copy.ts";
@@ -34,22 +33,7 @@ function TickList({ items }: { items: string[] }) {
   );
 }
 
-function NavyButton({ label, onClick }: { label: string; onClick?: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={onClick ? "cursor-pointer" : undefined}
-      style={{ background: INK, borderRadius: 6, border: "none", padding: "12px 45px" }}
-    >
-      <span className="font-bold" style={{ fontSize: 17, lineHeight: "25px", color: "#ffffff" }}>{label}</span>
-    </button>
-  );
-}
-
-export function AppointmentEmail({ onQuestionnaire, onNext }: {
-  /** The frame's CTA. In the demo journey the questionnaire is already done,
-      so the caller decides where this lands. */
-  onQuestionnaire?: () => void;
+export function AppointmentEmail({ onNext }: {
   onNext?: () => void;
 }) {
   return (
@@ -78,8 +62,14 @@ export function AppointmentEmail({ onQuestionnaire, onNext }: {
         <div className="w-full rounded-[8px] p-[30px] mt-[28px]" style={{ background: CARD }}>
           <div className="flex flex-col items-center gap-[20px] w-full">
             <p className="text-center font-bold" style={{ fontSize: 25, lineHeight: 1.5, color: INK }}>{E.prepareHeading}</p>
+            {/* THE FRAME'S "Complete your questionnaire" BUTTON IS NOT DRAWN.
+                Janelle, 4 Sep: "remove the complete your questionnaire button
+                here as they have finished it" - in this journey the advanced
+                questionnaire is completed at booking, so the CTA would point
+                at a form already submitted. Its copy stays in email-copy.ts as
+                the frame's, and the tick-list line above keeps its own
+                conditional "if you haven't yet done so". */}
             <TickList items={E.prepare} />
-            <NavyButton label={E.cta} onClick={onQuestionnaire} />
           </div>
         </div>
 
@@ -109,7 +99,6 @@ export function AppointmentEmail({ onQuestionnaire, onNext }: {
           </p>
         </div>
       </EmailShell>
-      {onNext && <GuideArrow onNext={onNext} nextLabel="Next email" />}
     </EmailClient>
   );
 }

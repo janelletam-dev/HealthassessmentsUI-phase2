@@ -29,7 +29,6 @@ import { FhmShell, FhmNav, WS, PAGE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
 import { NextStepExplainer } from "./fhm-results.tsx";
 import { SECTIONS as PRE_APPOINTMENT, missingAnswers, type Answers } from "./pre-appointment-questionnaire.ts";
 import { useScrollTop } from "./use-scroll-top.ts";
-import { GuideArrow } from "./guide-arrow.tsx";
 
 const BORDER = "#d2d2d2";
 const CARD_LABEL = BLUE;
@@ -129,6 +128,7 @@ function PrimaryButton({ label, onClick, disabled }: { label: string; onClick?: 
       type="button"
       onClick={onClick}
       disabled={disabled}
+      data-guide-primary
       className="rounded-[4px] px-[24px] py-[8px] text-[16px] font-medium leading-[24px]"
       style={{
         background: disabled ? "transparent" : BLUE,
@@ -241,6 +241,7 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
           <button
             type="button"
             onClick={onExit}
+            data-guide-primary
             className="flex items-center gap-[8px] rounded-[9999px] px-[16px] py-[8px] bg-transparent border-none cursor-pointer text-[16px] leading-[24px] text-white"
             style={{ fontFamily: WS }}
           >
@@ -285,7 +286,6 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
           </Card>
         </div>
       </div>
-      <GuideArrow onNext={onExit} nextLabel="Continue" />
     </div>
   );
 }
@@ -490,6 +490,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
               <button
                 type="button"
                 onClick={() => { setLocation(place); setStep("datetime"); }}
+                data-guide-primary={place === LOCATIONS[0] || undefined}
                 className="w-full rounded-[4px] py-[8px] text-[15px] leading-[22px] cursor-pointer"
                 style={{ background: BLUE, color: "#ffffff", border: "none" }}
               >
@@ -540,6 +541,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
                     key={d}
                     type="button"
                     disabled={!open}
+                    data-guide-primary={(!day && d === 16) || undefined}
                     onClick={() => { setDay(d); setSlot(undefined); }}
                     className="h-[30px] w-[30px] relative text-[13px] leading-[18px] border-none"
                     style={{
@@ -574,6 +576,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
                     <button
                       key={time}
                       type="button"
+                      data-guide-primary={(!slot && time === "10:15 AM") || undefined}
                       onClick={() => setSlot(time)}
                       className="w-full text-left px-[16px] py-[10px] border-none cursor-pointer block"
                       style={{
@@ -609,6 +612,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
             <button
               type="button"
               onClick={() => setStep("confirmed")}
+              data-guide-primary
               className="rounded-[4px] px-[24px] py-[10px] text-[16px] font-medium leading-[24px] cursor-pointer"
               style={{ background: BLUE, color: "#ffffff", border: "none" }}
             >
@@ -685,6 +689,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
             <button
               type="button"
               onClick={() => setStep("questionnaire")}
+              data-guide-primary
               className="w-full rounded-[2px] py-[8px] text-[15px] leading-[22px] border-none mt-[4px] cursor-pointer"
               style={{ background: "#facc14", color: "#713f12" }}
             >
@@ -717,7 +722,6 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
       </Card>
 
       <Card label="WHAT YOU'VE BOOKED"><ProductRow /></Card>
-      <GuideArrow onNext={() => setStep("questionnaire")} nextLabel="Complete the questionnaire" />
     </FhmShell>
   );
 }
