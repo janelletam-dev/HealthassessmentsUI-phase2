@@ -3968,7 +3968,11 @@ function ProfileStep_PersonalDetails({ onNext, onBack, theme, initialState }: {
   const [postcode, setPostcode] = useState(demo?.input.postcode ?? "");
   const [selectedAddress, setSelectedAddress] = useState(demo?.input.selectedAddress ?? "");
   const [lookupRun, setLookupRun] = useState(demo?.input.lookupRun ?? false);
-  const [manual, setManual] = useState(demo?.input.manual ?? false);
+  // ALWAYS MANUAL. Janelle, 4 Sep: "the address should always be set to
+  // manual as we dont have look up address yet". The postcode-lookup branch
+  // and its demo addresses stay in the file for the day the service exists;
+  // until then nothing renders it, and the way back to it is hidden below.
+  const [manual, setManual] = useState(true);
   const [addressLine1, setAddressLine1] = useState(demo?.input.addressLine1 ?? "");
   const [addressLine2, setAddressLine2] = useState(demo?.input.addressLine2 ?? "");
   const [townOrCity, setTownOrCity] = useState(demo?.input.townOrCity ?? "");
@@ -4153,16 +4157,8 @@ function ProfileStep_PersonalDetails({ onNext, onBack, theme, initialState }: {
             onChange={(v) => { setCountry(v); setErrors((e) => ({ ...e, country: undefined })); }}
             error={errors.country}
           />
-          {/* Not in the manual-entry frames, but without it there is no way back
-              to the postcode lookup once you switch. */}
-          <button
-            type="button"
-            onClick={startOver}
-            className="text-[12px] font-semibold leading-[16px] w-fit"
-            style={{ color: "#135cff" }}
-          >
-            Search for address instead
-          </button>
+          {/* The "Search for address instead" link lived here; hidden with
+              the lookup until the address service exists. */}
         </>
       )}
 

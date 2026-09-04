@@ -65,10 +65,9 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Next: GP details", timeoutMs: 12000 },
   { kind: "pause", ms: 400 },
   { kind: "click", label: "Female" },
+  // The address is manual-only (no lookup service yet), so fillAll types
+  // line 1, town and postcode itself.
   { kind: "fillAll" },
-  { kind: "click", label: "Find address" },
-  { kind: "pause", ms: 600 },
-  { kind: "pick", trigger: "Select an address" },
   { kind: "click", label: "Next: GP details" },
 
   { kind: "scene", label: "GP details" },
