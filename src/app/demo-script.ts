@@ -112,6 +112,9 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 900 },
   { kind: "zoom", text: "Approve or reject: nothing reaches the patient without this" },
   { kind: "click", label: "Approve" },
+  { kind: "pause", ms: 1200 },
+  { kind: "zoom", text: "Approved. The Patient Experience team dispatches the report" },
+  { kind: "click", label: "Dispatch" },
 
   // ── 8. Results arrive and the report is read ──────────────────────────────
   { kind: "scene", label: "Results email" },
@@ -119,6 +122,16 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Lifestyle Questionnaire Report Ready" },
   { kind: "click", label: "View report" },
+  { kind: "waitFor", text: "Signing you in to Full Health Medical" },
+  { kind: "scene", label: "Results on FHM" },
+  { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
+  { kind: "pause", ms: 900 },
+  { kind: "zoom", text: "Reviewed, with a note from the clinician" },
+  { kind: "pause", ms: 1600 },
+  // Download report opens the PDF in its own tab, as FHM serves it.
+  { kind: "click", label: "Download report" },
+  { kind: "pause", ms: 2000 },
+  { kind: "click", label: "Profile" },
   { kind: "scene", label: "Report in the portal" },
   { kind: "waitFor", text: "Health Insights Pre-screen test results" },
   { kind: "click", label: "Health Insights Pre-screen test results" },

@@ -71,12 +71,15 @@ const QUEUE = [
 ];
 
 // Sections as the pre-screen report groups them, statuses from Jane's PDF.
+// Tones follow the staging screenshots of this review and the patient's
+// results page: Family History carries the Attention. The sample PDF's own
+// ambers differ (alcohol, BMI); the screens are the source here.
 const REPORT_ROWS = [
   { label: "Demographics", tone: "green" },
   { label: "Known Medical Conditions", tone: "green" },
-  { label: "Family History", tone: "green" },
-  { label: "Lifestyle Factors", tone: "amber" },
-  { label: "Body Metrics", tone: "amber" },
+  { label: "Family History", tone: "amber" },
+  { label: "Lifestyle Factors", tone: "green" },
+  { label: "Body Metrics", tone: "green" },
 ];
 
 const MENU: [string, string[]][] = [
@@ -229,7 +232,7 @@ function SideCard({ children }: { children: React.ReactNode }) {
   return <div className="bg-white rounded-[6px] w-[280px]" style={{ border: `1px solid ${RULE}` }}>{children}</div>;
 }
 
-function Detail({ approved, onApprove, onReports }: { approved: boolean; onApprove: () => void; onReports: () => void }) {
+function Detail({ approved, onApprove, onDispatch, onReports }: { approved: boolean; onApprove: () => void; onDispatch: () => void; onReports: () => void }) {
   return (
     <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: SYS }}>
       <TopNav onReports={onReports} onMedicals={() => {}} />
@@ -246,13 +249,15 @@ function Detail({ approved, onApprove, onReports }: { approved: boolean; onAppro
           <span className="rounded-[4px] px-[14px] py-[8px] text-[13px] font-semibold" style={{ border: `1px solid ${RULE}`, color: INK }}>
             Revert
           </span>
+          {/* Approved medicals show Revert and Dispatch, per the staging
+              screenshot; dispatching is what sends the patient their email. */}
           <button
             type="button"
-            onClick={approved ? undefined : onApprove}
-            className="rounded-[4px] px-[14px] py-[8px] text-[13px] font-semibold text-white border-none"
-            style={{ background: approved ? "#5f9e8f" : TEAL, cursor: approved ? "default" : "pointer", fontFamily: SYS }}
+            onClick={approved ? onDispatch : onApprove}
+            className="rounded-[4px] px-[14px] py-[8px] text-[13px] font-semibold text-white border-none cursor-pointer"
+            style={{ background: TEAL, fontFamily: SYS }}
           >
-            {approved ? "Approved ✓" : "Approve"}
+            {approved ? "Dispatch" : "Approve"}
           </button>
         </div>
       </div>
@@ -260,7 +265,7 @@ function Detail({ approved, onApprove, onReports }: { approved: boolean; onAppro
       {approved && (
         <div className="w-full px-[16px] py-[8px]" style={{ background: GREEN_BG }} role="status">
           <p className="text-[13px]" style={{ color: GREEN_INK }}>
-            Medical approved. The report will be released to Doctor Care Anywhere for upload to the patient record.
+            Medical approved. The Patient Experience team can now dispatch the report, which sends the patient their results email.
           </p>
         </div>
       )}
@@ -590,22 +595,26 @@ function OrgReports({ onMedicals }: { onMedicals: () => void }) {
   );
 }
 
-export function ClinicianPortal({ onApproved }: {
-  /** Approve releases the report to DCA, whose next beat is the results email. */
-  onApproved: () => void;
+export function ClinicianPortal({ onDispatched }: {
+  /** Dispatch, not Approve, is what sends the results email. Janelle, 4 Sep:
+      after the clinician approves, "they need to show Revert/Dispatch before
+      sending the email for results" - the Patient Experience team's step. */
+  onDispatched: () => void;
 }) {
   const [screen, setScreen] = useState<"queue" | "detail" | "reports">("queue");
   const [approved, setApproved] = useState(false);
   useScrollTop(screen);
 
-  // A short dwell after Approve so cause and effect read: the chip flips, the
-  // release strip appears, then the patient's email arrives.
-  function approve() {
-    setApproved(true);
-    window.setTimeout(onApproved, 2200);
-  }
-
   if (screen === "reports") return <OrgReports onMedicals={() => setScreen("queue")} />;
-  if (screen === "detail") return <Detail approved={approved} onApprove={approve} onReports={() => setScreen("reports")} />;
+  if (screen === "detail") {
+    return (
+      <Detail
+        approved={approved}
+        onApprove={() => setApproved(true)}
+        onDispatch={onDispatched}
+        onReports={() => setScreen("reports")}
+      />
+    );
+  }
   return <Queue onOpenJane={() => setScreen("detail")} onReports={() => setScreen("reports")} />;
 }

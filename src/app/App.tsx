@@ -31,6 +31,7 @@ import { ClinicianPortal } from "./clinician-portal.tsx";
 import { MyHealthAssessments } from "./my-health-assessments.tsx";
 import { BookFollowUp } from "./book-followup.tsx";
 import { SleepProgramme } from "./sleep-programme.tsx";
+import { FhmResults } from "./fhm-results.tsx";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
@@ -4524,7 +4525,7 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp" | "sleep">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp" | "sleep" | "fhmResults">("email");
 
   // Which portal phase the DCA side-screens (My health assessments, the
   // follow-up booking) return to.
@@ -4550,7 +4551,7 @@ export default function App() {
   // assessments it opens the booking flow. Janelle, 4 Sep: "there is a
   // pre-assessment the one we did already and then when approved, they go back
   // to book their appointment".
-  const [ssoTarget, setSsoTarget] = useState<"questionnaire" | "booking">("questionnaire");
+  const [ssoTarget, setSsoTarget] = useState<"questionnaire" | "booking" | "fhmResults">("questionnaire");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4802,13 +4803,22 @@ export default function App() {
   // lifestyle / and advanced assessment results". Approving is what lets the
   // results email exist, so the beat runs between submission and that email.
   if (phase === "clinician") {
-    return <ClinicianPortal onApproved={() => setPhase("resultsEmail")} />;
+    return <ClinicianPortal onDispatched={() => setPhase("resultsEmail")} />;
   }
 
   // The results email, which arrives after the clinical team has reviewed the
   // answers, and the portal page View report opens.
   if (phase === "resultsEmail") {
-    return <ResultsEmail onView={() => setPhase("portal")} />;
+    // Janelle, 4 Sep: "when the user clicks on the email for the results, it
+    // should show the sso to FHM portal", and the SSO shows on every FHM
+    // crossing: "always show to FHM also".
+    return <ResultsEmail onView={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} />;
+  }
+
+  // The results on FHM's side; the Profile pill is the way back to the DCA
+  // account, where the report also sits in Uploads.
+  if (phase === "fhmResults") {
+    return <FhmResults onExit={() => setPhase("portal")} />;
   }
 
   if (phase === "portal") {
