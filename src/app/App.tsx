@@ -2352,6 +2352,8 @@ function DsCheckbox({ checked, onChange, error, children }: {
   return (
     <button
       type="button"
+      role="checkbox"
+      aria-checked={checked}
       onClick={() => onChange(!checked)}
       className="flex gap-[8px] items-start w-full text-left cursor-pointer"
     >
