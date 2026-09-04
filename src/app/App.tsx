@@ -30,6 +30,7 @@ import { AdvancedResultsEmail } from "./advanced-results-email.tsx";
 import { ClinicianPortal } from "./clinician-portal.tsx";
 import { MyHealthAssessments } from "./my-health-assessments.tsx";
 import { BookFollowUp } from "./book-followup.tsx";
+import { SleepProgramme } from "./sleep-programme.tsx";
 import { matchesPolicy, DEMO_POLICY_RECORD, type PolicyPlan } from "./axa-policy";
 import { PaymentScreen } from "./components/payment-screen";
 import { DEMO_PAYMENT } from "./payment";
@@ -4526,7 +4527,7 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp" | "sleep">("email");
 
   // Which portal phase the DCA side-screens (My health assessments, the
   // follow-up booking) return to.
@@ -4761,6 +4762,7 @@ export default function App() {
         showAdvanced
         onOpenAssessments={() => { setPortalReturn("portalAdvanced"); setPhase("myAssessments"); }}
         onBookFollowUp={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
+        onOpenSleep={() => { setPortalReturn("portalAdvanced"); setPhase("sleep"); }}
       />
     );
   }
@@ -4779,6 +4781,10 @@ export default function App() {
 
   if (phase === "bookFollowUp") {
     return <BookFollowUp onBack={() => setPhase(portalReturn)} />;
+  }
+
+  if (phase === "sleep") {
+    return <SleepProgramme onBack={() => setPhase(portalReturn)} />;
   }
 
 
@@ -4813,6 +4819,7 @@ export default function App() {
         initialTab="Uploads"
         onOpenAssessments={() => { setPortalReturn("portal"); setPhase("myAssessments"); }}
         onBookFollowUp={() => { setPortalReturn("portal"); setPhase("bookFollowUp"); }}
+        onOpenSleep={() => { setPortalReturn("portal"); setPhase("sleep"); }}
       />
     );
   }

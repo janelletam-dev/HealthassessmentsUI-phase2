@@ -193,8 +193,12 @@ export function DemoDriver() {
             // through the pdfs please... most especially the message from
             // their clinician".
             const frame = await poll(() => document.querySelector<HTMLIFrameElement>("iframe") ?? undefined);
-            frame.src = `${frame.src.split("#")[0]}#page=${step.page}`;
-            await sleep(400);
+            // A fragment-only change does not reload the embedded viewer, so
+            // the hash alone left the PDF on page one. The query makes each
+            // turn a genuinely new URL, which does.
+            const base = frame.src.split("#")[0].split("?")[0];
+            frame.src = `${base}?turn=${step.page}#page=${step.page}`;
+            await sleep(900);
             break;
           }
           case "jumpPhase": {

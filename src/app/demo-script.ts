@@ -234,10 +234,13 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Recommended from the results: a 10 week sleep guide" },
   // Janelle, 4 Sep: "i do not see the sleep content - so have a walk through
-  // tile and click on it". The tile is a real link, so this opens the team's
-  // page in a new tab and the run carries on here.
+  // tile and click on it". The tile opens the built page in the app.
   { kind: "click", label: "Open your sleep guide" },
-  { kind: "pause", ms: 2200 },
+  { kind: "waitFor", text: "Live page" },
+  { kind: "pause", ms: 2600 },
+  // Week 1 is live on the site; the walkthrough opens the real article.
+  { kind: "click", label: "Read Week 1" },
+  { kind: "pause", ms: 2000 },
 
   // ── 15. The organisational picture, where the demo ends ───────────────────
   // Janelle, 4 Sep: "we also need to show a sample demographic/organisational

@@ -260,10 +260,11 @@ function PortalShell({ active, onSelectTab, children }: {
   );
 }
 
-function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp }: {
+function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep }: {
   showAdvanced: boolean;
   onOpenAssessments: () => void;
   onBookFollowUp: () => void;
+  onOpenSleep: () => void;
 }) {
   return (
     <>
@@ -354,25 +355,27 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp }: {
             />
 
             {/* NO FRAME: the deck's HealthStyle ending (slides 16 and 20), a
-                clinician-recommended lifestyle programme. Janelle, 4 Sep: "for
-                the 10 week sleep guide just use the link given by the team".
-                The link is a temporary HubSpot preview slug and will die when
-                the page publishes; swap in the published URL then. */}
+                clinician-recommended lifestyle programme. The card opened the
+                team's live page directly for a day, but that URL is a HubSpot
+                preview slug behind preview auth, so anyone without it saw
+                nothing. Janelle, 4 Sep: "i still dont see the contents of the
+                sleep content at least show the url file or the one you made".
+                So it opens the built page, which keeps the live link in its
+                corner. */}
             {showAdvanced && (
               <ActionCard
                 title="Your 10 week sleep guide"
                 body="Recommended from your results: a clinically guided programme to better rest, one week at a time."
                 action={
-                  <a
-                    href="https://doctorcareanywhere.com/-temporary-slug-d37a2618-78a5-47e0-8f01-92ac33a19f62?hs_preview=rnorZgzz-454684014815"
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
                     aria-label="Open your sleep guide"
+                    onClick={onOpenSleep}
                     className="flex items-center justify-center size-[44px] rounded-full cursor-pointer shrink-0"
                     style={{ background: "rgba(10,10,10,0.01)", border: "1px solid rgba(10,10,10,0.05)" }}
                   >
                     <CircleChevronRight size={16} color={CARD_BODY} strokeWidth={1.5} />
-                  </a>
+                  </button>
                 }
               />
             )}
@@ -516,7 +519,7 @@ function PdfViewer({ name, pages, src, onClose }: { name: string; pages: number;
   );
 }
 
-export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAssessments, onBookFollowUp }: {
+export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAssessments, onBookFollowUp, onOpenSleep }: {
   initialTab?: TabName;
   /** True when entered from the advanced results email: the advanced report
       row exists and animates in, and Home gains the follow-up and sleep
@@ -527,6 +530,7 @@ export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAss
       journey runs the SSO into Full Health Medical. */
   onOpenAssessments: () => void;
   onBookFollowUp: () => void;
+  onOpenSleep: () => void;
 }) {
   const [tab, setTab] = useState<TabName>(initialTab);
   const [openFile, setOpenFile] = useState<typeof FILES[number] | undefined>(undefined);
@@ -541,7 +545,7 @@ export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAss
   return (
     <PortalShell active={tab} onSelectTab={selectTab}>
       {tab === "Home" ? (
-        <HomeBody showAdvanced={showAdvanced} onOpenAssessments={onOpenAssessments} onBookFollowUp={onBookFollowUp} />
+        <HomeBody showAdvanced={showAdvanced} onOpenAssessments={onOpenAssessments} onBookFollowUp={onBookFollowUp} onOpenSleep={onOpenSleep} />
       ) : openFile ? (
         <PdfViewer name={openFile.name} pages={openFile.pages} src={openFile.pdf} onClose={() => setOpenFile(undefined)} />
       ) : (
