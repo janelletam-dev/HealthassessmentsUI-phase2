@@ -103,80 +103,138 @@ export const EMAIL_PRIVACY = {
   body: "Your information is confidential and secure. Your results are clinician-reviewed, not just raw data -  so you'll know where you stand and what to do next.",
 };
 
+/*
+ * THE TWO LEGAL LINES, WRITTEN ONCE.
+ *
+ * They were copied into both small-print lists, and now a third email wants
+ * them. A 200-character legal paragraph kept in three places drifts, and the
+ * copy that drifts is the one nobody rereads.
+ */
+// 449:528, and the same pair in the Lifestyle Questionnaire Report Ready frame.
+const LEGAL = [
+  "For information about how we process data and monitor communications, please see our Privacy Policy. For information on our service, subscription usage and cancellation policy, please see our Terms & Conditions.",
+  "If you no longer wish to receive these emails please unsubscribe here.",
+];
+
 export const EMAIL_FOOTER = {
   heading: "Need help?",
   email: "contactus@doctorcareanywhere.com",
   phone: "0330 088 4980",
-  // 449:528 opens the small print with the footnote instead of the membership
-  // line. The results email, which is from the other file, still uses the
-  // membership line, so both lists exist rather than one being imposed on both.
-  smallPrintMarketing: [
-    "*If recommended by the Clinician.",
-    "For information about how we process data and monitor communications, please see our Privacy Policy. For information on our service, subscription usage and cancellation policy, please see our Terms & Conditions.",
-    "If you no longer wish to receive these emails please unsubscribe here.",
-  ],
-  smallPrint: [
-    "You are receiving this email as part of your Doctor Care Anywhere membership.",
-    "For information about how we process data and monitor communications, please see our Privacy Policy. For information on our service, subscription usage and cancellation policy, please see our Terms & Conditions.",
-    "If you no longer wish to receive these emails please unsubscribe here.",
-  ],
+  // 449:528 opens the small print with the footnote, because its step 4 carries
+  // an asterisk. No other email has one.
+  smallPrintMarketing: ["*If recommended by the Clinician.", ...LEGAL],
+  // The results frame runs the legal pair alone, then a Braze address block.
+  //
+  // THE MEMBERSHIP LINE IS GONE, along with the smallPrint list that held it.
+  // It came from e10 at 5193:8107, which this email replaces, and no current
+  // frame draws it.
+  smallPrintResults: LEGAL,
 };
 
-// ─── e10, results ready, Advanced HA recommended ─────────────────────────────
+// ─── Results ready, the lifestyle questionnaire report ─────────────────
 //
-// A DIFFERENT FILE FROM THE INVITATION. This one is Health assessments
-// rDltwIr2dJvUUNaXEqEYFO, page "B2B2C (Email comms)", frame 5193:8107
-// "e010-results-ready-prescreen-yesadv", 600x1309. Janelle pointed at that node
-// directly on 3 Sep: "the medical team will review and if further tseting
-// needed they receive this email".
+// Frame "Health Insights Assessment - Lifestyle Questionnaire Report Ready",
+// 600x943. Janelle pasted its exported CSS and a render on 3 Sep, after
+// "after a few bits the questionnaire is reviewed by CTM, here is the email".
 //
-// Its house style is not identical to the transactional file's invitation: the
-// title is 40 SemiBold here against 30 Medium there, and the numbered badges
-// are 12 SemiBold #edf6ff with a white ring against 14 Bold white. Both are
-// reproduced as their own frame draws them rather than averaged.
+// IT REPLACES e10 AT 5193:8107, and it is a different email rather than a
+// restyle. e10 told the reader they had been recommended an Advanced Corporate
+// Health Assessment and gave two numbered steps to book it. This one is the
+// generic report-ready mail: it covers both outcomes in one sentence, "if a
+// more in-depth Health Assessment has been recommended for you", so it can send
+// to everyone who finishes the questionnaire. Gone with e10: the two steps, the
+// Full Health Medical and Tuli partner line, the sign-off, and the support
+// paragraph that carried 02046 469 390, the number Janelle corrected out of the
+// app on the same day. That contradiction is resolved by deletion.
 //
-// THE SUPPORT NUMBER IN THE BODY CONTRADICTS THE FOOTER, and both are in this
-// one frame: the body says 02046 469 390, the footer says 0330 088 4980.
-// Janelle, 3 Sep, gave 0330 088 4980 as the correct Health Assessments number
-// and 02046 469 390 is the one she corrected out of the app's Need help card.
-// Reproduced verbatim anyway, because this is the design and quietly "fixing"
-// it would hide the conflict. Raised with her.
-
+// NO FRAME ID. The transactional file lists only its "Early Designs" page
+// through the MCP and this frame is not on it, so there is no node to cite.
+// Every string below is from the render and the CSS she sent.
 export const RESULTS_EMAIL = {
-  // 5193:8107 Header
-  title: "Your results are ready",
+  title: "Your lifestyle questionnaire results are ready",
+  // Greeting and paragraph are one centred block, as in marketing's invitation.
+  body: "Hi Jane,\n\nYour clinician-reviewed results are ready to view. Your report explains what we found and your recommended next steps — in clear language, not just raw data.",
+  // The arrow is inside the label in the frame, not a separate icon.
+  cta: "View report →",
+  closing: "If a more in-depth Health Assessment has been recommended for you, your report will explain it and you'll be able to book from there.",
+};
+
+// ─── Pharmacy appointment confirmation ─────────────────────────────────────
+//
+// jemhxV3hfyu7XbfumER8xF frame 449:1576, "Health Insights Assessment - Pharmacy
+// Appointment Confirmation", 600x2295. Janelle, 4 Sep: "we end up with another
+// email transaction supposing before they go to their appointment".
+//
+// THE SUPPORT NUMBER IS CORRECTED, NOT THE FRAME'S. The frame's body says
+// 02046 469 390 for the "Health Assessments Customer Support team" while its
+// own footer says 0330 088 4980. Raised, and Janelle ruled on 4 Sep: "again
+// 0330 088 4980 is what needs to be followed". So every support number in this
+// prototype is 0330 088 4980, whatever team name sits in front of it, and
+// 02046 469 390 appears nowhere. The frame still disagrees; flagged for
+// marketing to fix at source.
+export const APPOINTMENT_EMAIL = {
+  // 449:1576
+  title: "Your appointment is booked",
+  // 449:1576. The frame greets {{first_name}}; Jane, as everywhere else.
   greeting: "Hi Jane,",
-  intro: [
-    // 5193:8107 Body, first section
-    "A clinician has reviewed your lifestyle questionnaire — and based on your answers, you've been recommended a free, more in-depth Advanced Corporate Health Assessment, funded by your employer.",
-    // 5193:8107
-    "It includes blood tests and health measurements, and gives you a fuller picture of your health with a clinician-reviewed report — so you'll know where you stand and what to do next.",
+  // 449:1576
+  lead: "Great news — your pharmacy appointment for your Health Assessment is now booked:",
+  // 449:1576, the four label cells. Their values are the booking's.
+  labels: ["Type:", "Location:", "Date:", "Time:"],
+  // 449:1576
+  prepareHeading: "How to prepare",
+  prepare: [
+    "Check how to get there, and allow plenty of time for your appointment",
+    "Make sure to drink plenty of water before your visit. Being well hydrated can make sample collection easier and supports accurate readings.",
+    "Wear clothing that allows easy access to your arm.",
+    "Arrive a few minutes early to check in (have your booking reference handy, you may be asked for it).",
+    "Please complete your Advanced Health Assessment questionnaire (about [X minutes]), if you haven't yet done so.",
   ],
-  // 5193:8107, the What to do next heading
-  nextHeading: "What to do next",
-  steps: [
-    {
-      // 5193:8107, step 1
-      title: "View your results",
-      body: "See why you were recommended an advanced assessment.",
-    },
-    {
-      // 5193:8107, step 2
-      title: "Book your free Advanced Corporate Health Assessment",
-      body: "It only takes a few moments to choose a pharmacy, date and time that suit you.",
-    },
+  // 449:1576. The bracketed [X minutes] above is the frame's own placeholder,
+  // left in because marketing has not filled it and inventing a duration would
+  // put a number on screen that nobody has agreed.
+  cta: "Complete your questionnaire →",
+  // 449:1576
+  importantHeading: "Important health information",
+  important: "Please let the clinician know if you are taking blood-thinning medication, have a history of fainting, needle phobia, or any relevant medical conditions.",
+  // 449:1576
+  expectHeading: "What to expect",
+  expect: "Your appointment will take place at a local pharmacy or clinic, where a trained professional will carry out your tests with care — it's quick, straightforward and private.",
+  // 449:1576
+  afterHeading: "After your visit",
+  after: [
+    "Keep the plaster on for at least 2 hours.",
+    "Avoid heavy lifting with the affected arm for a few hours.",
+    "Mild bruising is normal, but contact your GP if you notice prolonged pain, redness or swelling.",
+    "Your samples will be packaged by the phlebotomist and must be posted promptly — identify your nearest postbox in advance so they're sent without delay.",
   ],
-  // 5193:8107, the button
-  cta: "View your results and book",
-  closing: [
-    // 5193:8107
-    "Your assessment is delivered in collaboration with our partners, Full Health Medical and Tuli, so you can book at a convenient local location.",
-    // 5193:8107. The number here is the frame's and disagrees with the footer.
-    "If you need any support, our team is here to help. Please contact our dedicated Health Assessments Customer Support team on 02046 469 390. Lines are open 09:00–17:30, Monday to Friday.",
-  ],
-  // 5193:8107
-  thanksLead: "With thanks,",
-  thanksTeam: "The Doctor Care Anywhere Team",
+  // 449:1576
+  changeHeading: "Need to change your appointment?",
+  changeLead: "You can reschedule or cancel via our dedicated Health Assessments Customer Support team on ",
+  changePhone: "0330 088 4980",
+  changeTail: ". Lines are open 09:00–17:30, Monday to Friday.",
+};
+
+// ─── Advanced assessment results ready ─────────────────────────────────────
+//
+// jemhxV3hfyu7XbfumER8xF frame 468:2616, "Health Insights Assessment - Advanced
+// Corporate Health Assessment Report Ready", 600x1130. Janelle, 4 Sep: "then
+// after", meaning after the appointment.
+//
+// The asterisk on "Video GP appointment*" has no footnote anywhere in the
+// frame. Kept as drawn.
+export const ADVANCED_RESULTS_EMAIL = {
+  // 468:2616
+  title: "Your health assessment results are ready",
+  // 468:2616. Greeting and paragraph are one centred block, as in the others.
+  body: "Hi Jane,\n\nYour Advanced Corporate Health Assessment is complete and your clinician-reviewed report is ready to view — with clear, personalised insights on where you stand and what to do next.",
+  // 468:2616
+  cta: "View my report →",
+  // 468:2616
+  talkHeading: "Want to talk through your results?",
+  talk: "You have a free Video GP appointment* included — book a time to discuss your results and next steps with a doctor.",
+  // 468:2616
+  bookCta: "Book an appointment →",
 };
 
 // ─── The mail client around the emails ───────────────────────────────────────
@@ -209,9 +267,27 @@ export const MAILBOX = {
     subject: "Jane, your Health Insights Assessment is ready for you",
     date: "09:14",
   },
+  appointment: {
+    // NO FRAME. The transactional file carries no subject annotation for
+    // 449:1576, so this is the email's own heading. Replace with marketing's
+    // when it lands.
+    subject: "Your appointment is booked",
+    date: "11:40",
+  },
+  advancedResults: {
+    // NO FRAME, same reason, for 468:2616.
+    subject: "Your health assessment results are ready",
+    date: "08:26",
+  },
   results: {
-    // 5193:8160
-    subject: "Jane, you've been recommended a free in-depth Health Assessment",
+    // Janelle, 3 Sep: "have this as subject: Lifestyle Questionnaire Report
+    // Ready". Replaces e10's annotation at 5193:8160, "Jane, you've been
+    // recommended a free in-depth Health Assessment", which contradicted the
+    // body: this email does not know whether one was recommended.
+    //
+    // No first name and no sentence case, unlike the invitation's subject. That
+    // is hers, not a slip.
+    subject: "Lifestyle Questionnaire Report Ready",
     date: "16:02",
   },
 };

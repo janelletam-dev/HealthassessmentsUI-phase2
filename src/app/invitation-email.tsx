@@ -27,7 +27,6 @@ import {
   EMAIL_WHY_HEADING, EMAIL_WHY, EMAIL_CTA, EMAIL_PRIVACY, EMAIL_FOOTER, MAILBOX,
 } from "./email-copy.ts";
 
-const TITLE_INK = "#1e3a5f";
 const CARD = "#fbfbfb";
 const TICK = "#183253";
 
@@ -44,9 +43,6 @@ export function InvitationEmail({ onStart }: { onStart: () => void }) {
     <EmailClient subject={MAILBOX.invitation.subject} date={MAILBOX.invitation.date}>
       <EmailShell
         title={EMAIL_HEADER.title}
-        titleSize={30}
-        titleWeight={700}
-        titleColor={TITLE_INK}
         smallPrint={EMAIL_FOOTER.smallPrintMarketing}
         padBottom={40}
       >

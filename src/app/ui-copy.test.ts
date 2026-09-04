@@ -39,11 +39,16 @@ function commentMask(lines: string[]): boolean[] {
 /*
  * ONE EXEMPTION, and it has to earn its place.
  *
- * email-copy.ts is the invitation email, reproduced verbatim from Figma
- * 354:102. It carries six em dashes. Janelle, 3 Sep: "that's fine that was
- * marketing copy, so for the email it's fine". The rule stands everywhere
- * else; changing those strings locally would make the prototype stop matching
- * the email that actually sends.
+ * email-copy.ts is the email copy, reproduced verbatim from Figma. Janelle,
+ * 3 Sep: "that's fine that was marketing copy, so for the email it's fine".
+ * The rule stands everywhere else; changing those strings locally would make
+ * the prototype stop matching the email that actually sends.
+ *
+ * IT IS DOWN TO ONE. The exemption was written for the invitation's six, from
+ * the earlier draft at 354:102. Marketing's rewrite at 449:528 spells them "-"
+ * instead, so the only em dash left in the file is the results email's "next
+ * steps - in clear language", and the rule survives its own exemption almost
+ * everywhere now.
  *
  * The two checks under the loop stop this becoming a hole: the file has to
  * exist, and it has to still contain an em dash. Rename it or clean it up and

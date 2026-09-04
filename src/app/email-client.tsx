@@ -32,9 +32,13 @@ function ToolbarIcon({ Icon }: { Icon: typeof Archive }) {
   );
 }
 
-export function EmailClient({ subject, date, children }: {
+export function EmailClient({ subject, date, onNext, children }: {
   subject: string;
   date: string;
+  /** The toolbar's newer-message chevron. Chrome the demo uses to move from
+      one email beat to the next, so it only becomes a button when a next
+      email exists. */
+  onNext?: () => void;
   children: ReactNode;
 }) {
   return (
@@ -57,7 +61,18 @@ export function EmailClient({ subject, date, children }: {
         </div>
         <div className="hidden sm:flex items-center gap-[4px]">
           <ToolbarIcon Icon={ChevronLeft} />
-          <ToolbarIcon Icon={ChevronRight} />
+          {onNext ? (
+            <button
+              type="button"
+              onClick={onNext}
+              aria-label="Newer message"
+              className="flex items-center justify-center w-[32px] h-[32px] rounded-[9999px] cursor-pointer bg-transparent border-none p-0"
+            >
+              <ChevronRight size={18} color={MUTED} strokeWidth={2} />
+            </button>
+          ) : (
+            <ToolbarIcon Icon={ChevronRight} />
+          )}
         </div>
       </div>
 
