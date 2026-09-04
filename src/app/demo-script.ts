@@ -108,7 +108,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Clinician review" },
   { kind: "click", label: "Back to Dashboard" },
   { kind: "waitFor", text: "Ready for approval" },
-  { kind: "zoom", text: "Every result is reviewed by the clinical team before the patient sees it" },
+  { kind: "zoom", text: "The lifestyle questionnaire is reviewed before anything reaches the patient" },
   { kind: "click", label: "Jane Smith" },
   { kind: "waitFor", text: "Lifestyle Factors" },
   { kind: "pause", ms: 900 },
@@ -178,6 +178,19 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "zoom", text: "Your appointment is booked" },
   { kind: "scrollThrough", ms: 3200 },
   { kind: "click", label: "Newer message" },
+
+  // ── The second review: the advanced results, same gate ────────────────────
+  { kind: "scene", label: "Advanced review" },
+  { kind: "waitFor", text: "Ready for approval" },
+  { kind: "pause", ms: 700 },
+  { kind: "zoom", text: "The Advanced Health Assessment gets the same review: approve, then dispatch" },
+  { kind: "click", label: "Jane Smith" },
+  { kind: "waitFor", text: "Blood Pressure" },
+  { kind: "pause", ms: 1100 },
+  { kind: "click", label: "Approve" },
+  { kind: "pause", ms: 1200 },
+  { kind: "click", label: "Dispatch" },
+
   { kind: "scene", label: "Advanced results email" },
   { kind: "waitFor", text: "Your health assessment results are ready" },
   { kind: "pause", ms: 600 },

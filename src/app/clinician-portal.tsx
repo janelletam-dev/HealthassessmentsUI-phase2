@@ -51,19 +51,62 @@ const AMBER_INK = "#8a6d1a";
 const GREEN_BG = "#d9f2e3";
 const GREEN_INK = "#1e7a4f";
 
+/*
+ * The review runs twice, once per report: the pre-screen on 4 Sep and the
+ * advanced on 18 Sep. PM via Janelle, 4 Sep: "after adv HA is done, there is
+ * a review (approve/dispatch) process again, same as preassessment"; deck
+ * step 18 says the same. The advanced stage's reference is the advanced
+ * report PDF's own, its product chip and section rows follow the approved
+ * advanced medical's screenshot, and its dates track the appointment (16 Sep)
+ * and the results email (18 Sep, 08:26).
+ */
+const REVIEW_STAGES = {
+  prescreen: {
+    meta: "01 Jan 1981  (45yo)  Female  -  Ref: DCAPRE7Y2Q4JS8XK  -",
+    product: "Pre-assessment",
+    date: "04/09/2026",
+    reference: "DCAPRE7Y2Q4JS8XK",
+    queueDate: "04 Sep 2026",
+    queueFlag: "DCA-PRE-ASSESSMENT",
+    fileDate: "04 Sep 2026 16:02",
+    rows: [
+      { label: "Demographics", tone: "green" },
+      { label: "Known Medical Conditions", tone: "green" },
+      { label: "Family History", tone: "amber" },
+      { label: "Lifestyle Factors", tone: "green" },
+      { label: "Body Metrics", tone: "green" },
+    ],
+  },
+  advanced: {
+    meta: "01 Jan 1981  (45yo)  Female  -  Ref: UAT1ADV3NFUPZPU9E  -",
+    product: "Advanced",
+    date: "18/09/2026",
+    reference: "UAT1ADV3NFUPZPU9E",
+    queueDate: "18 Sep 2026",
+    queueFlag: "DCA-ADVANCED",
+    fileDate: "18 Sep 2026 08:00",
+    rows: [
+      { label: "Blood Pressure", tone: "amber" },
+      { label: "Body Mass Index", tone: "amber" },
+      { label: "QRiSK 3", tone: "green" },
+      { label: "Lipid Profile", tone: "green" },
+      { label: "Heart Rate", tone: "green" },
+      { label: "Full Blood Count", tone: "green" },
+    ],
+  },
+} as const;
+
+type ReviewStage = keyof typeof REVIEW_STAGES;
+
 const PATIENT = {
   name: "Jane Smith",
-  meta: "01 Jan 1981  (45yo)  Female  -  Ref: DCAPRE7Y2Q4JS8XK  -",
-  product: "Pre-assessment",
-  date: "04/09/2026",
-  reference: "DCAPRE7Y2Q4JS8XK",
   reviewer: "Bibin Paul",
   tags: ["viewed_online", "online"],
 };
 
-// Jane first; the rest dress the queue.
+// Jane first, staged; the rest dress the queue.
 const QUEUE = [
-  { flag: "DCA-PRE-ASSESSMENT", tone: "amber", date: "04 Sep 2026", ref: "DCAPRE7Y2Q4JS8XK", client: "Jane Smith", dob: "01 Jan 1981 (45)", sex: "F", location: "South Kensington", isJane: true },
+  { flag: "", tone: "amber", date: "", ref: "", client: "Jane Smith", dob: "01 Jan 1981 (45)", sex: "F", location: "South Kensington", isJane: true },
   { flag: "DCA-PRE-ASSESSMENT", tone: "amber", date: "04 Sep 2026", ref: "DCAPREXVM4UFU98F", client: "George Tyson", dob: "29 Jun 2002 (24)", sex: "M", location: "South Kensington" },
   { flag: "DCA-PRE-ASSESSMENT", tone: "red", date: "03 Sep 2026", ref: "DCAPRELQ4VGCZ44", client: "Branden Nguyen", dob: "29 Jun 1987 (39)", sex: "F", location: "South Kensington" },
   { flag: "Clear", tone: "green", date: "03 Sep 2026", ref: "DCAPRENBGAE9LQZD", client: "Scarlett Carney", dob: "01 Jul 1978 (48)", sex: "F", location: "South Kensington" },
@@ -72,17 +115,6 @@ const QUEUE = [
 ];
 
 // Sections as the pre-screen report groups them, statuses from Jane's PDF.
-// Tones follow the staging screenshots of this review and the patient's
-// results page: Family History carries the Attention. The sample PDF's own
-// ambers differ (alcohol, BMI); the screens are the source here.
-const REPORT_ROWS = [
-  { label: "Demographics", tone: "green" },
-  { label: "Known Medical Conditions", tone: "green" },
-  { label: "Family History", tone: "amber" },
-  { label: "Lifestyle Factors", tone: "green" },
-  { label: "Body Metrics", tone: "green" },
-];
-
 const MENU: [string, string[]][] = [
   ["Clinical", ["Report", "Inputs", "Notes", "Allergies", "Medications", "Referrals", "Results over time"]],
   ["Laboratory", ["Orders", "Results"]],
@@ -147,7 +179,8 @@ function PersonaBanner() {
   );
 }
 
-function Queue({ onOpenJane, onReports }: { onOpenJane: () => void; onReports: () => void }) {
+function Queue({ stage, onOpenJane, onReports }: { stage: ReviewStage; onOpenJane: () => void; onReports: () => void }) {
+  const staged = REVIEW_STAGES[stage];
   return (
     <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: SYS }}>
       <TopNav onReports={onReports} onMedicals={() => {}} />
@@ -199,9 +232,9 @@ function Queue({ onOpenJane, onReports }: { onOpenJane: () => void; onReports: (
                       Ready for approval
                     </span>
                   </td>
-                  <td className="px-[14px] py-[10px]"><FlagChip label={row.flag} tone={row.tone} /></td>
-                  <td className="px-[14px] py-[10px]">{row.date}</td>
-                  <td className="px-[14px] py-[10px]" style={{ color: TEAL }}>{row.ref}</td>
+                  <td className="px-[14px] py-[10px]"><FlagChip label={row.isJane ? staged.queueFlag : row.flag} tone={row.tone} /></td>
+                  <td className="px-[14px] py-[10px]">{row.isJane ? staged.queueDate : row.date}</td>
+                  <td className="px-[14px] py-[10px]" style={{ color: TEAL }}>{row.isJane ? staged.reference : row.ref}</td>
                   <td className="px-[14px] py-[10px]">
                     {row.isJane ? (
                       <button
@@ -234,7 +267,8 @@ function SideCard({ children }: { children: React.ReactNode }) {
   return <div className="bg-white rounded-[6px] w-[280px]" style={{ border: `1px solid ${RULE}` }}>{children}</div>;
 }
 
-function Detail({ approved, onApprove, onDispatch, onReports }: { approved: boolean; onApprove: () => void; onDispatch: () => void; onReports: () => void }) {
+function Detail({ stage, approved, onApprove, onDispatch, onReports }: { stage: ReviewStage; approved: boolean; onApprove: () => void; onDispatch: () => void; onReports: () => void }) {
+  const staged = REVIEW_STAGES[stage];
   return (
     <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: SYS }}>
       <TopNav onReports={onReports} onMedicals={() => {}} />
@@ -244,7 +278,7 @@ function Detail({ approved, onApprove, onDispatch, onReports }: { approved: bool
         <div>
           <p className="text-[20px] font-bold" style={{ color: INK }}>{PATIENT.name}</p>
           <p className="text-[12px]" style={{ color: MUTED }}>
-            {PATIENT.meta} <span style={{ color: TEAL }}>View profile</span>
+            {staged.meta} <span style={{ color: TEAL }}>View profile</span>
           </p>
         </div>
         <div className="flex items-center gap-[10px]">
@@ -277,14 +311,14 @@ function Detail({ approved, onApprove, onDispatch, onReports }: { approved: bool
         <div className="flex flex-col gap-[12px] shrink-0">
           <SideCard>
             <div className="px-[14px] py-[12px] flex flex-col gap-[8px] text-[12px]" style={{ color: INK }}>
-              <div className="flex justify-between"><span style={{ color: MUTED }}>DCA - TEST DOMAIN</span><span style={{ color: TEAL }}>{PATIENT.product} ⓘ</span></div>
+              <div className="flex justify-between"><span style={{ color: MUTED }}>DCA - TEST DOMAIN</span><span style={{ color: TEAL }}>{staged.product} ⓘ</span></div>
               <div className="flex justify-between items-center">
-                <span style={{ color: MUTED }}>{PATIENT.date}</span>
+                <span style={{ color: MUTED }}>{staged.date}</span>
                 <span className="rounded-[10px] px-[8px] py-[2px] text-[11px]" style={{ background: approved ? GREEN_BG : CHIP_BLUE_BG, color: approved ? GREEN_INK : CHIP_BLUE_INK }}>
                   {approved ? "Approved" : "Ready for approval"}
                 </span>
               </div>
-              <div className="flex justify-between"><span style={{ color: MUTED }}>Reference</span><span>{PATIENT.reference}</span></div>
+              <div className="flex justify-between"><span style={{ color: MUTED }}>Reference</span><span>{staged.reference}</span></div>
               <div className="flex justify-between"><span style={{ color: MUTED }}>Reviewer</span><span>{PATIENT.reviewer}</span></div>
               <div className="flex justify-between items-start">
                 <span style={{ color: MUTED }}>Tags</span>
@@ -326,7 +360,7 @@ function Detail({ approved, onApprove, onDispatch, onReports }: { approved: bool
           <div>
             <p className="text-[16px] font-bold mb-[10px]" style={{ color: INK }}>Report</p>
             <div className="flex flex-col gap-[8px]">
-              {REPORT_ROWS.map((row) => (
+              {staged.rows.map((row) => (
                 <div
                   key={row.label}
                   className="flex items-center justify-between rounded-[6px] px-[18px] py-[16px]"
@@ -368,7 +402,7 @@ function Detail({ approved, onApprove, onDispatch, onReports }: { approved: bool
                         Medical report <Download size={13} strokeWidth={2} />
                       </span>
                     </td>
-                    <td className="px-[14px] py-[10px]">04 Sep 2026 16:02</td>
+                    <td className="px-[14px] py-[10px]">{staged.fileDate}</td>
                     <td className="px-[14px] py-[10px]">N/A</td>
                     <td className="px-[14px] py-[10px]">{approved ? "Yes" : "N/A"}</td>
                   </tr>
@@ -598,7 +632,9 @@ function OrgReports({ onMedicals }: { onMedicals: () => void }) {
   );
 }
 
-export function ClinicianPortal({ onDispatched }: {
+export function ClinicianPortal({ stage = "prescreen", onDispatched }: {
+  /** Which report this review is of: the same screens run for both. */
+  stage?: ReviewStage;
   /** Dispatch, not Approve, is what sends the results email. Janelle, 4 Sep:
       after the clinician approves, "they need to show Revert/Dispatch before
       sending the email for results" - the Patient Experience team's step. */
@@ -620,6 +656,7 @@ export function ClinicianPortal({ onDispatched }: {
     return (
       <>
         <Detail
+          stage={stage}
           approved={approved}
           onApprove={() => setApproved(true)}
           onDispatch={onDispatched}
@@ -631,7 +668,7 @@ export function ClinicianPortal({ onDispatched }: {
   }
   return (
     <>
-      <Queue onOpenJane={() => setScreen("detail")} onReports={() => setScreen("reports")} />
+      <Queue stage={stage} onOpenJane={() => setScreen("detail")} onReports={() => setScreen("reports")} />
     </>
   );
 }

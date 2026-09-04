@@ -45,6 +45,7 @@ const INFO_INK = "#1d4ed8";
  */
 const STAGES = {
   prescreen: {
+    reportName: "Lifestyle Questionnaire",
     date: "Sep 4 2026",
     pdf: "prescreen" as const,
     note: [
@@ -61,6 +62,7 @@ const STAGES = {
     ],
   },
   advanced: {
+    reportName: "Advanced Corporate Health Assessment",
     date: "Sep 18 2026",
     pdf: "advanced" as const,
     note: [
@@ -76,7 +78,7 @@ const STAGES = {
       { label: "Full Blood Count", tone: "info" },
     ],
   },
-} satisfies Record<string, { date: string; pdf: "prescreen" | "advanced"; note: string[]; sections: { label: string; tone: "attention" | "info" }[] }>;
+} satisfies Record<string, { reportName: string; date: string; pdf: "prescreen" | "advanced"; note: string[]; sections: { label: string; tone: "attention" | "info" }[] }>;
 
 function Chip({ tone }: { tone: "attention" | "info" }) {
   const attention = tone === "attention";
@@ -272,8 +274,10 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
               <p className="flex items-center gap-[10px] font-bold text-[16px] tracking-[0.03em]" style={{ color: BLUE }}>
                 <ClipboardList size={18} strokeWidth={2} /> YOUR LATEST RESULTS
               </p>
-              {/* The dates track the emails: results 4 Sep, advanced 18 Sep. */}
-              <p className="text-[15px] mt-[8px]" style={{ color: INK }}>{data.date}</p>
+              {/* Which report this is, said out loud: the lifestyle
+                  questionnaire and the Advanced HA are different artefacts. */}
+              <p className="font-semibold text-[15px] mt-[8px]" style={{ color: "#111827" }}>{data.reportName}</p>
+              <p className="text-[14px] mt-[2px]" style={{ color: INK }}>{data.date}</p>
             </div>
 
             <div className="px-[28px] py-[22px]" style={{ borderBottom: `1px solid ${RULE}` }}>

@@ -4565,6 +4565,10 @@ export default function App() {
   // to book their appointment".
   const [ssoTarget, setSsoTarget] = useState<"questionnaire" | "booking" | "fhmResults">("questionnaire");
 
+  // Which report the clinician portal is reviewing: the same screens run for
+  // the lifestyle questionnaire (4 Sep) and the advanced assessment (18 Sep).
+  const [reviewStage, setReviewStage] = useState<"prescreen" | "advanced">("prescreen");
+
   // Which report the FHM results page shows. PM ruling, 4 Sep: patients view
   // reports on FHM, not DCA Uploads, because the advanced process only exists
   // on the FHM platform.
@@ -4759,7 +4763,10 @@ export default function App() {
     // yet. This one has, in the booking flow, so it goes nowhere rather than
     // reopening a submitted form. The toolbar's newer-message chevron is the
     // way forward: the appointment happens, and the next email arrives.
-    return <AppointmentEmail onNext={() => setPhase("advancedResultsEmail")} />;
+    // The newer-message chevron stands for time passing: the appointment
+    // happens, the labs come back, and the advanced report goes through the
+    // same review before its email exists. PM via Janelle, 4 Sep.
+    return <AppointmentEmail onNext={() => { setReviewStage("advanced"); setPhase("clinician"); }} />;
   }
 
   if (phase === "advancedResultsEmail") {
@@ -4813,7 +4820,7 @@ export default function App() {
       <QuestionnaireScreen
         submitted={phase === "submitted"}
         onSubmitted={() => setPhase("submitted")}
-        onDashboard={() => setPhase("clinician")}
+        onDashboard={() => { setReviewStage("prescreen"); setPhase("clinician"); }}
       />
     );
   }
@@ -4823,7 +4830,12 @@ export default function App() {
   // lifestyle / and advanced assessment results". Approving is what lets the
   // results email exist, so the beat runs between submission and that email.
   if (phase === "clinician") {
-    return <ClinicianPortal onDispatched={() => setPhase("resultsEmail")} />;
+    return (
+      <ClinicianPortal
+        stage={reviewStage}
+        onDispatched={() => setPhase(reviewStage === "prescreen" ? "resultsEmail" : "advancedResultsEmail")}
+      />
+    );
   }
 
   // The results email, which arrives after the clinical team has reviewed the
