@@ -32,9 +32,9 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 | 17 | Appointment email | The confirmation email | The confirmation email: where to go, what to bring, and a short video on what to expect | The video is a placeholder; the clinical team are producing the clips. |
 | 18 | Clinician review, advanced | Blood results and measurements, flagged | After the pharmacy visit, the blood results and measurements get the same clinician review | QRISK3, blood pressure, BMI, HbA1c, lipids, liver, heart rate. |
 | 19 | Advanced results email | The second results email | The second results email, with a free video GP appointment included to talk it through | |
-| 20 | Advanced results | The advanced report | The Advanced Health Assessment report: clinician-reviewed, with every flag explained | |
+| 20 | Advanced results | The advanced results page, every section flagged | The Advanced Health Assessment results: clinician-reviewed, with every flag explained | The report PDF was opened once already, at scene 13; it is not reopened here. |
 | 21 | Back to the account | Doctor Care Anywhere sign in | Back on Doctor Care Anywhere, where both reports now live | |
-| 22 | Reports in the account | Home, My health assessments, Uploads, the PDF | Uploads: both reports filed as PDFs in the patient's own account | The patient keeps the reports for good. |
+| 22 | Reports in the account | Home, My health assessments, Uploads | Uploads: both reports filed as PDFs in the patient's own account | The patient keeps the reports for good. The files are listed, not reopened. |
 | 23 | GP follow-up | Book an appointment, all health categories, a slot today | The free GP follow-up is booked like any Doctor Care Anywhere appointment | Health Check Follow-Up is one category among the usual reasons to see a GP. |
 | 24 | Employer's view | The employer's dashboard, both programmes | The employer's dashboard: 119 took the Health Insights Assessment, 110 reports dispatched | Uptake by age, dispatch times, and the anonymised health picture. Never an individual. |
 

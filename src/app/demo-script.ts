@@ -252,19 +252,15 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scrollThrough", ms: 2200 },
   { kind: "click", label: "View my report" },
 
-  // ── 12. The advanced report ───────────────────────────────────────────────
+  // ── 12. The advanced results ──────────────────────────────────────────────
+  // The report itself was opened once already, at scene 8; the second report
+  // is shown as its results page, not the popup again. Janelle, 11 Sep: "on
+  // showing the pdfs, it seems like they have been repeated 2-3x".
   { kind: "scene", label: "Advanced results" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  { kind: "click", label: "View report" },
-  { kind: "pause", ms: 700 },
-  { kind: "pdfPage", page: 2 },
-  { kind: "pause", ms: 3400 },
-  { kind: "pdfPage", page: 5 },
-  { kind: "pause", ms: 2200 },
-  { kind: "click", label: "Close report" },
-  { kind: "zoom", text: "The Advanced Health Assessment report: clinician-reviewed, with every flag explained" },
-  { kind: "scrollThrough", ms: 2600 },
+  { kind: "zoom", text: "The Advanced Health Assessment results: clinician-reviewed, with every flag explained" },
+  { kind: "scrollThrough", ms: 3200 },
   { kind: "click", label: "Profile" },
 
   // ── 13. Back to the DCA account, through its own login ────────────────────
@@ -291,10 +287,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Advanced Health Assessment Report", timeoutMs: 8000 },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "Uploads: both reports filed as PDFs in the patient's own account" },
-  { kind: "click", label: "Advanced Health Assessment Report" },
-  { kind: "pause", ms: 700 },
-  { kind: "pdfPage", page: 2 },
-  { kind: "pause", ms: 2600 },
+  { kind: "pause", ms: 1200 },
   { kind: "click", label: "Home" },
 
   // ── 15. The GP follow-up, booked like any appointment ─────────────────────
