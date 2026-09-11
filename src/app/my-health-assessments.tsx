@@ -90,12 +90,14 @@ function AssessmentCard({ title, when, statuses, linkLabel, onLink }: {
   );
 }
 
-export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }: {
+export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp, onBack }: {
   stage: AssessmentsStage;
   /** The report links: DCA's own Uploads, not FHM. PM, 10 Sep, relaying Laura. */
   onOpenUploads: () => void;
   /** The one button out to Full Health Medical, for anything still live there. */
   onOpenFhm: () => void;
+  /** The free GP follow-up, booked like any appointment, once both reports are in. */
+  onBookGp: () => void;
   onBack: () => void;
 }) {
   return (
@@ -129,25 +131,6 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
       </div>
 
       <div className="flex flex-col items-center gap-[24px] pt-[40px] pb-[80px] flex-1">
-        {/* The blurb the PM asked for: what the programme is, in the words of
-            the landing page's own steps. */}
-        <div className="bg-white rounded-[8px] w-[700px] p-[26px]">
-          <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>How your health assessment works</p>
-          <div className="flex flex-col gap-[12px] mt-[14px]">
-            {HOW_IT_WORKS.map(({ Icon, title, body }) => (
-              <div key={title} className="flex gap-[12px] items-start">
-                <div className="flex items-center justify-center shrink-0 w-[32px] h-[32px] rounded-[8px]" style={{ background: "#edf6ff" }}>
-                  <Icon size={16} color={BLUE} strokeWidth={2} />
-                </div>
-                <div>
-                  <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
-                  <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="bg-white rounded-[8px] w-[700px] p-[26px] flex flex-col gap-[16px]">
           <p className="text-[20px] font-bold leading-[28px]" style={{ color: HEADING }}>My health assessments</p>
           {/* The feed behind the statuses is hours old at worst. Irina, Figma
@@ -178,7 +161,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
                 { done: true, label: "Health Insights Assessment submitted" },
                 { done: true, label: "Reviewed by a clinician, your report is ready" },
               ]}
-              linkLabel="See your Health Insights report"
+              linkLabel="View report in Uploads"
               onLink={onOpenUploads}
             />
           )}
@@ -191,24 +174,57 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
                 { done: true, label: "Appointment completed" },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },
               ]}
-              linkLabel="See your Advanced Health Assessment report"
+              linkLabel="View report in Uploads"
               onLink={onOpenUploads}
             />
           )}
 
-          {/* The way to anything still live (appointments, the next
-              assessment). Not named after where it goes: Janelle, 10 Sep,
-              "we dont mention FHM already so a different cta". Label per
-              Irina's Figma comment #160, "View next steps". */}
-          <button
-            type="button"
-            onClick={onOpenFhm}
-            className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
-            style={{ background: BLUE }}
-          >
-            <span className="text-[13px] font-semibold text-white">View next steps</span>
-            <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
-          </button>
+          {/* One next step, only when there is one: the Advanced Health
+              Assessment once the first report is in, the free GP follow-up
+              once the second is. Nothing while a report is still being
+              prepared. Label per Irina's Figma comment #160, "View next
+              steps"; Janelle, 11 Sep: "make it a better UX". */}
+          {stage === "insights" && (
+            <button
+              type="button"
+              onClick={onOpenFhm}
+              className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
+              style={{ background: BLUE }}
+            >
+              <span className="text-[13px] font-semibold text-white">View next steps</span>
+              <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
+            </button>
+          )}
+          {stage === "advanced" && (
+            <button
+              type="button"
+              onClick={onBookGp}
+              className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
+              style={{ background: BLUE }}
+            >
+              <span className="text-[13px] font-semibold text-white">Book your free GP follow-up</span>
+              <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
+            </button>
+          )}
+        </div>
+
+        {/* The blurb the PM asked for: what the programme is, in the words of
+            the landing page's own steps. */}
+        <div className="bg-white rounded-[8px] w-[700px] p-[26px]">
+          <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>How your health assessment works</p>
+          <div className="flex flex-col gap-[12px] mt-[14px]">
+            {HOW_IT_WORKS.map(({ Icon, title, body }) => (
+              <div key={title} className="flex gap-[12px] items-start">
+                <div className="flex items-center justify-center shrink-0 w-[32px] h-[32px] rounded-[8px]" style={{ background: "#edf6ff" }}>
+                  <Icon size={16} color={BLUE} strokeWidth={2} />
+                </div>
+                <div>
+                  <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
+                  <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div

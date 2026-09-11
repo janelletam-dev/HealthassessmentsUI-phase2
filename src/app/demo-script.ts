@@ -283,7 +283,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "My health assessments: each report, its status, and the way to it" },
   { kind: "pause", ms: 600 },
-  { kind: "click", label: "See your Advanced Health Assessment report" },
+  { kind: "click", label: "View report in Uploads" },
   { kind: "waitFor", text: "Advanced Health Assessment Report", timeoutMs: 8000 },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "Uploads: both reports filed as PDFs in the patient's own account" },

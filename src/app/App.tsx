@@ -4919,6 +4919,7 @@ export default function App() {
             else setPhase("portal");
           }}
           onOpenFhm={() => { setBookingStart("about"); setPhase("booking"); }}
+          onBookGp={() => setPhase("bookAppointment")}
           onBack={() => setPhase(portalReturn)}
         />
         {/* While the report is pending there is nothing here to press, so the
