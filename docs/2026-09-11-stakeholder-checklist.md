@@ -14,7 +14,7 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 | Thank-you page: the report, a timeline, one report or a full assessment; no Come back later or Back to Dashboard; arrows | Done. "Within 2 days" is a placeholder | After Submit |
 | Remove the follow-up booking as a health assessment step | Done. The GP follow-up is now booked from Home's Book an appointment (11 Sep) | Scene 23 |
 | What the patient sees on Doctor Care Anywhere while the report is pending: sign in, Home tile, My health assessments | Done | Scene 10 |
-| My health assessments, new version: blurb, status per assessment, no cancellation card, one way to anything live | Done. Statuses copied from the D2C view; the help box no longer mentions cancelling; the button reads Manage my health assessments | Scenes 10 and 22 |
+| My health assessments, new version: blurb, status per assessment, no cancellation card, one way to anything live | Done. Statuses copied from the D2C view; the help box no longer mentions cancelling; the button reads View next steps, per Irina's Figma comment | Scenes 10 and 22 |
 | Green results first with the sleep link, then amber with a separate next steps page | Done | Scenes 13 and 14 |
 | Clinician detail page mirroring the clinical partner's screens | Done | Scenes 11 and 18 |
 | Uptake dashboards for both programmes, ending the demo | Done. The demo ends on the employer's view | Scene 24 |
@@ -29,7 +29,7 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 | Back arrow on every page, going back one page, not to the start | Done |
 | No unhappy or error path from the right arrow | Done |
 | Sign-in card centred | Done |
-| My health assessments: no Uploads link on the pending card; submitted statuses; the pasted design bits; no partner mention; the CTA | Done |
+| My health assessments: no Uploads link on the pending card; submitted statuses; the pasted design bits; no partner mention; the CTA | Done. Irina's Figma comments applied 11 Sep: real FAQ and how-it-works links, month-and-year descriptions, a note that statuses are not real time, View next steps |
 | Green, then sleep guide, then amber, then next steps, then booking; no loop | Done |
 | Uploads: the added PDF, then on to the next screen; no loop | Done |
 | Home: Book an appointment enabled and working, with every health category | Done, twelve categories from the capture |

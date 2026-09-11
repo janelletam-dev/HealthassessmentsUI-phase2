@@ -30,6 +30,8 @@ const HEADING = "#0e1e3e";
 const CARD_TITLE = "#133595";
 const LINK = "#337aff";
 const CARD_SHADOW = "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)";
+const FAQS_URL = "https://doctorcareanywhere.com/faqs";
+const HOW_URL = "https://doctorcareanywhere.com/health-assessment";
 
 export type AssessmentsStage = "pending" | "insights" | "advanced";
 
@@ -114,9 +116,11 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
         >
           <ArrowLeft size={14} strokeWidth={2.5} /> Back a step
         </button>
+        {/* Real pages. Irina, Figma comment #159: "right links and right
+            content". */}
         <div className="flex items-center gap-[32px] text-white font-semibold text-[13px]">
-          <span>Health assessment FAQs</span>
-          <span>How health assessments work</span>
+          <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-white no-underline">Health assessment FAQs</a>
+          <a href={HOW_URL} target="_blank" rel="noreferrer" className="text-white no-underline">How health assessments work</a>
         </div>
       </div>
 
@@ -146,6 +150,11 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
 
         <div className="bg-white rounded-[8px] w-[700px] p-[26px] flex flex-col gap-[16px]">
           <p className="text-[20px] font-bold leading-[28px]" style={{ color: HEADING }}>My health assessments</p>
+          {/* The feed behind the statuses is hours old at worst. Irina, Figma
+              comment #157: "info icon about out of real time". */}
+          <p className="flex items-center gap-[6px] text-[13px] leading-[18px] mt-[-8px]" style={{ color: MUTED }}>
+            <Info size={14} strokeWidth={2} /> Statuses can take a few hours to update.
+          </p>
 
           {/* Nothing to open yet, so no link. Janelle, 10 Sep: "there should
               be no go to uploads as it should be the health Insights
@@ -153,7 +162,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "pending" ? (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="Submitted 4 September 2026. We will email you when your report is ready."
+              when="September 2026"
               // Review and report arrive as one event. Janelle, 11 Sep:
               // "review and results come together".
               statuses={[
@@ -164,7 +173,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           ) : (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="Report dispatched 4 September 2026. It is in your Uploads."
+              when="September 2026"
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
                 { done: true, label: "Reviewed by a clinician, your report is ready" },
@@ -177,7 +186,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "advanced" && (
             <AssessmentCard
               title="Advanced Corporate Health Assessment"
-              when="Report dispatched 18 September 2026. It is in your Uploads, and a free video GP appointment is included to talk it through."
+              when="September 2026"
               statuses={[
                 { done: true, label: "Appointment completed" },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },
@@ -189,15 +198,15 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
 
           {/* The way to anything still live (appointments, the next
               assessment). Not named after where it goes: Janelle, 10 Sep,
-              "we dont mention FHM already so a different cta", then "manage
-              my health assessments". */}
+              "we dont mention FHM already so a different cta". Label per
+              Irina's Figma comment #160, "View next steps". */}
           <button
             type="button"
             onClick={onOpenFhm}
             className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
             style={{ background: BLUE }}
           >
-            <span className="text-[13px] font-semibold text-white">Manage my health assessments</span>
+            <span className="text-[13px] font-semibold text-white">View next steps</span>
             <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
           </button>
         </div>
@@ -219,7 +228,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             <span className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline" style={{ color: LINK }}>
               <Headphones size={22} strokeWidth={2} /> Contact Patient Experience
             </span>
-            <span className="text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>Health assessment FAQs</span>
+            <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>Health assessment FAQs</a>
           </div>
         </div>
       </div>

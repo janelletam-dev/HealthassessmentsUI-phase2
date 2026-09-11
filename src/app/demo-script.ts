@@ -279,7 +279,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Home: both assessments done, and where the reports are" },
   { kind: "click", label: "Open my health assessments" },
-  { kind: "waitFor", text: "Report dispatched 18 September" },
+  { kind: "waitFor", text: "your results and report are ready" },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "My health assessments: each report, its status, and the way to it" },
   { kind: "pause", ms: 600 },
