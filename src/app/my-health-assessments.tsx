@@ -179,8 +179,9 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
           {/* One next step, only when there is one: the Advanced Health
               Assessment once the first report is in, the free GP follow-up
               once the second is. Nothing while a report is still being
-              prepared. Label per Irina's Figma comment #160, "View next
-              steps"; Janelle, 11 Sep: "make it a better UX". */}
+              prepared. Janelle, 11 Sep: "make it a better UX", then, on
+              Irina's "View next steps", "go back to the previous CTA for the
+              general one". */}
           {stage === "insights" && (
             <button
               type="button"
@@ -188,7 +189,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
               className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
               style={{ background: BLUE }}
             >
-              <span className="text-[13px] font-semibold text-white">View next steps</span>
+              <span className="text-[13px] font-semibold text-white">Manage my health assessments</span>
               <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
             </button>
           )}
