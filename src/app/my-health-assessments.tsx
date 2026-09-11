@@ -151,7 +151,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           ) : (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="Report ready 4 September 2026"
+              when="Submitted 4 September 2026"
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
                 { done: true, label: "Reviewed by a clinician, your report is ready" },
@@ -164,9 +164,9 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "advanced" && (
             <AssessmentCard
               title="Advanced Corporate Health Assessment"
-              when="Report ready 18 September 2026"
+              when="Appointment 16 September 2026"
               statuses={[
-                { done: true, label: "Appointment completed" },
+                { done: true, label: "Appointment completed on 16 September, 10:15am" },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },
               ]}
               linkLabel="View report in Uploads"

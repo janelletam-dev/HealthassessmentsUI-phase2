@@ -24,7 +24,7 @@
 // have shown a form this patient finished days ago.
 
 import { useState } from "react";
-import { ArrowLeft, Calendar, MapPin, CircleCheck, ClipboardList, ChevronRight, Check, House, CircleUserRound } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, CircleCheck, ClipboardList, ChevronRight, Check, House, CircleUserRound, Info } from "lucide-react";
 import { FhmShell, FhmNav, WS, PAGE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
 import { NextStepExplainer } from "./fhm-results.tsx";
 import { SECTIONS as PRE_APPOINTMENT, missingAnswers, type Answers } from "./pre-appointment-questionnaire.ts";
@@ -97,7 +97,19 @@ function Card({ label, children }: { label?: string; children: React.ReactNode }
   );
 }
 
-function StickyBar({ children }: { children: React.ReactNode }) {
+// The partner's banner for this page: an info mark and "Introduction".
+// Janelle, 11 Sep: "add a header as well the Info icon and Introduction as
+// this one is from FHM themselves".
+export function IntroductionTitle() {
+  return (
+    <span className="flex items-center justify-center gap-[14px]">
+      <Info size={30} strokeWidth={2} color="#ffffff" />
+      Introduction
+    </span>
+  );
+}
+
+export function StickyBar({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="fixed left-0 right-0 bottom-0 z-[100] flex justify-center px-[24px]"
@@ -108,7 +120,7 @@ function StickyBar({ children }: { children: React.ReactNode }) {
   );
 }
 
-function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
+export function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -123,7 +135,7 @@ function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
   );
 }
 
-function PrimaryButton({ label, onClick, disabled }: { label: string; onClick?: () => void; disabled?: boolean }) {
+export function PrimaryButton({ label, onClick, disabled }: { label: string; onClick?: () => void; disabled?: boolean }) {
   return (
     <button
       type="button"
@@ -450,7 +462,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
     // Choose a location directly.
     return (
       <FhmShell
-        title="Introduction"
+        title={<IntroductionTitle />}
         footer={<StickyBar><BackLink label="Back" onClick={onExit} /><PrimaryButton label="Next" onClick={() => setStep("location")} /></StickyBar>}
       >
         <NextStepExplainer />
