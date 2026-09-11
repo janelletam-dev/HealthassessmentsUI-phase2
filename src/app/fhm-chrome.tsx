@@ -37,7 +37,7 @@ export function FhmNav({ menu = true }: { menu?: boolean }) {
 export function FhmShell({ children, footer, title, subtitle }: {
   children: React.ReactNode;
   footer?: React.ReactNode;
-  title: string;
+  title: React.ReactNode;
   /** Review & confirm is the only step that runs a line under its title. */
   subtitle?: string;
 }) {
