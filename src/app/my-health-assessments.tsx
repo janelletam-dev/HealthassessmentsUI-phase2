@@ -140,7 +140,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "pending" ? (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="September 2026"
+              when="Submitted 4 September 2026"
               // Review and report arrive as one event. Janelle, 11 Sep:
               // "review and results come together".
               statuses={[
@@ -151,7 +151,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           ) : (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="September 2026"
+              when="Report ready 4 September 2026"
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
                 { done: true, label: "Reviewed by a clinician, your report is ready" },
@@ -164,7 +164,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "advanced" && (
             <AssessmentCard
               title="Advanced Corporate Health Assessment"
-              when="September 2026"
+              when="Report ready 18 September 2026"
               statuses={[
                 { done: true, label: "Appointment completed" },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },

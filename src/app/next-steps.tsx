@@ -46,11 +46,12 @@ export function NextStepsPage({ onBack, onBook }: { onBack: () => void; onBook: 
           </button>
           <p className="text-[22px] leading-[30px]" style={{ color: "#111827" }}>Your next steps</p>
 
-          {/* PM, 10 Sep: a mock video on "Full health assessment recommended
-              and next steps page". */}
-          <MockVideo title="What happens at an Advanced Corporate Health Assessment" duration="1 min" />
-
           <NextStepExplainer onBook={onBook} />
+
+          {/* PM, 10 Sep: a mock video on "Full health assessment recommended
+              and next steps page". Below the content: Janelle, 11 Sep, "the
+              contents should be this, you could put the video at the bottom". */}
+          <MockVideo title="What happens at an Advanced Corporate Health Assessment" duration="1 min" />
         </div>
       </div>
     </div>
