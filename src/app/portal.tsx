@@ -281,15 +281,13 @@ function PortalShell({ active, onSelectTab, children }: {
   );
 }
 
-function HomeBody({ stage, onOpenAssessments, onBook, bookIsPrimary }: {
+function HomeBody({ stage, onOpenAssessments, onBook }: {
   stage: PortalStage;
   onOpenAssessments: () => void;
   /** Book an appointment, the normal DCA journey. Janelle, 11 Sep: "enable
-      the book an appointment button, make it work". */
+      the book an appointment button, make it work". It works by hand; the
+      guide arrow never takes it, the flow goes on to the employer's view. */
   onBook: () => void;
-  /** Once a report has been read, the guide's next press is the booking,
-      not the assessments tile. */
-  bookIsPrimary: boolean;
 }) {
   // What the tile says is what has already happened at that stage: PM, 10 Sep,
   // show nothing the three-hour-old feed could contradict.
@@ -320,7 +318,6 @@ function HomeBody({ stage, onOpenAssessments, onBook, bookIsPrimary }: {
               <button
                 type="button"
                 onClick={onBook}
-                data-guide-primary={bookIsPrimary || undefined}
                 className="flex items-center gap-[8px] justify-center px-[16px] py-[12px] rounded-full border-none cursor-pointer shrink-0"
                 style={{ background: BLUE, filter: "drop-shadow(0px 4px 3px rgba(15,55,190,0.05))" }}
               >
@@ -357,7 +354,7 @@ function HomeBody({ stage, onOpenAssessments, onBook, bookIsPrimary }: {
                 <button
                   type="button"
                   aria-label="Open my health assessments"
-                  data-guide-primary={!bookIsPrimary || undefined}
+                  data-guide-primary
                   onClick={onOpenAssessments}
                   className="flex items-center justify-center size-[44px] rounded-full cursor-pointer shrink-0"
                   style={{ background: "rgba(10,10,10,0.01)", border: "1px solid rgba(10,10,10,0.05)" }}
@@ -521,7 +518,7 @@ function PdfViewer({ name, pages, src, onClose }: { name: string; pages: number;
   );
 }
 
-export function Portal({ initialTab = "Uploads", stage = "prescreen", onOpenAssessments, onBookAppointment }: {
+export function Portal({ initialTab = "Uploads", stage = "prescreen", onOpenAssessments, onBookAppointment, onAfterReport }: {
   initialTab?: TabName;
   /** Where the journey is: pending (report not yet dispatched), prescreen
       (the Health Insights report is in), advanced (both reports are in and
@@ -533,13 +530,13 @@ export function Portal({ initialTab = "Uploads", stage = "prescreen", onOpenAsse
   /** Home's Book now: the normal appointment journey, where the GP follow-up
       is booked. */
   onBookAppointment: () => void;
+  /** Where the story goes from an open report: the employer's view. One
+      tunnel, not a loop between Uploads and its documents. Janelle, 11 Sep:
+      "from pdf uploads seeing the added pdf then also go to the next". */
+  onAfterReport: () => void;
 }) {
   const [tab, setTab] = useState<TabName>(initialTab);
   const [openFile, setOpenFile] = useState<typeof FILES[number] | undefined>(undefined);
-  // One tunnel, not a loop between Uploads and its documents. Janelle,
-  // 11 Sep: "from pdf uploads seeing the added pdf then also go to the next".
-  // Reading a report is what turns Home's Book now into the next step.
-  const [seenReport, setSeenReport] = useState(false);
   useScrollTop(tab, openFile);
 
   // Changing tab closes the document, so Uploads is never returned to with a
@@ -553,16 +550,14 @@ export function Portal({ initialTab = "Uploads", stage = "prescreen", onOpenAsse
     <>
       <PortalShell active={tab} onSelectTab={selectTab}>
         {tab === "Home" ? (
-          <HomeBody stage={stage} onOpenAssessments={onOpenAssessments} onBook={onBookAppointment} bookIsPrimary={seenReport} />
+          <HomeBody stage={stage} onOpenAssessments={onOpenAssessments} onBook={onBookAppointment} />
         ) : openFile ? (
           <PdfViewer name={openFile.name} pages={openFile.pages} src={openFile.pdf} onClose={() => setOpenFile(undefined)} />
         ) : (
-          <UploadsBody stage={stage} onOpenFile={(file) => { setOpenFile(file); setSeenReport(true); }} onBook={onBookAppointment} />
+          <UploadsBody stage={stage} onOpenFile={setOpenFile} onBook={onBookAppointment} />
         )}
       </PortalShell>
-      {openFile && (
-        <GuideArrow onNext={() => { setOpenFile(undefined); setTab("Home"); }} nextLabel="Next: book the GP follow-up" />
-      )}
+      {openFile && <GuideArrow onNext={onAfterReport} nextLabel="Next: the employer's view" />}
     </>
   );
 }

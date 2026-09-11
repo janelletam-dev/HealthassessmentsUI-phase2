@@ -287,43 +287,13 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Advanced Health Assessment Report", timeoutMs: 8000 },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "Uploads: both reports filed as PDFs in the patient's own account" },
-  { kind: "pause", ms: 1200 },
-  { kind: "click", label: "Home" },
+  { kind: "pause", ms: 1400 },
 
-  // ── 15. The GP follow-up, booked like any appointment ─────────────────────
-  // PM, 10 Sep: the follow-up is the normal Book an appointment journey.
-  // Janelle, 11 Sep: "enable the book an appointment button, make it work,
-  // but show all the health concerns".
-  { kind: "scene", label: "GP follow-up" },
-  // 27052:15761, the Home greeting: a waitFor target, not new copy.
-  { kind: "waitFor", text: "What can we help you with?" },
-  { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "The free GP follow-up is booked like any Doctor Care Anywhere appointment" },
-  { kind: "click", label: "Book now" },
-  { kind: "waitFor", text: "Not for emergencies" },
-  { kind: "pause", ms: 400 },
-  { kind: "click", label: "Continue" },
-  { kind: "waitFor", text: "Select a health category" },
-  { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "Every reason to see a GP, and one for the health assessment follow-up" },
-  { kind: "click", label: "Health Check Follow-Up" },
-  { kind: "waitFor", text: "Select a health concern" },
-  { kind: "pause", ms: 500 },
-  { kind: "click", label: "Blood Test Review" },
-  { kind: "waitFor", text: "Attach File" },
-  { kind: "pause", ms: 500 },
-  { kind: "click", label: "Continue" },
-  { kind: "waitFor", text: "Select date and time" },
-  { kind: "pause", ms: 600 },
-  { kind: "click", label: "9:20am" },
-  { kind: "pause", ms: 400 },
-  { kind: "click", label: "Book now for today" },
-  { kind: "waitFor", text: "Appointment booked" },
-  { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "A video GP appointment today, with the results already to hand" },
-  { kind: "pause", ms: 1200 },
+  // The GP follow-up is booked from Home's Book an appointment, by hand in a
+  // demo, not as a scene. Janelle, 11 Sep: "it should be removed already
+  // however the function should still work on the dca home screen".
 
-  // ── 16. The employer's view, where the demo ends ──────────────────────────
+  // ── 15. The employer's view, where the demo ends ──────────────────────────
   // Janelle, 4 Sep: "we also need to show a sample demographic/organisational
   // health report" and, 11 Sep, "the end of the journey should show the
   // corporate view". No real control crosses personas, so this is the

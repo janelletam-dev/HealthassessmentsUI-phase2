@@ -12,12 +12,12 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 | Remove the single sign-on handover pages | Done | Profile complete goes straight to the assessment |
 | Questionnaire titles as "Jane Smith - Health Insights Assessment" | Done | Both questionnaires |
 | Thank-you page: the report, a timeline, one report or a full assessment; no Come back later or Back to Dashboard; arrows | Done. "Within 2 days" is a placeholder | After Submit |
-| Remove the follow-up booking as a health assessment step | Done. The GP follow-up is now booked from Home's Book an appointment (11 Sep) | Scene 23 |
+| Remove the follow-up booking as a health assessment step | Done. The GP follow-up is booked from Home's Book an appointment (11 Sep), outside the demo flow | Home, Book now |
 | What the patient sees on Doctor Care Anywhere while the report is pending: sign in, Home tile, My health assessments | Done | Scene 10 |
 | My health assessments, new version: blurb, status per assessment, no cancellation card, one way to anything live | Done. Statuses copied from the D2C view; the help box no longer mentions cancelling; the button reads Manage my health assessments | Scenes 10 and 22 |
 | Green results first with the sleep link, then amber with a separate next steps page | Done | Scenes 13 and 14 |
 | Clinician detail page mirroring the clinical partner's screens | Done | Scenes 11 and 18 |
-| Uptake dashboards for both programmes, ending the demo | Done. The demo ends on the employer's view | Scene 24 |
+| Uptake dashboards for both programmes, ending the demo | Done. The demo ends on the employer's view | Scene 23 |
 | Static video placeholders in the invitation email, the next steps page and the appointment email | Done, showing the face | Scenes 1, 14, 17 |
 
 ## Janelle's asks, 10 and 11 September

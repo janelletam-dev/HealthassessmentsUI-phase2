@@ -34,9 +34,8 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 | 19 | Advanced results email | The second results email | The second results email, with a free video GP appointment included to talk it through | |
 | 20 | Advanced results | The advanced results page, every section flagged | The Advanced Health Assessment results: clinician-reviewed, with every flag explained | The report PDF was opened once already, at scene 13; it is not reopened here. |
 | 21 | Back to the account | Doctor Care Anywhere sign in | Back on Doctor Care Anywhere, where both reports now live | |
-| 22 | Reports in the account | Home, My health assessments, Uploads | Uploads: both reports filed as PDFs in the patient's own account | Each card's View report in Uploads opens the same list. The patient keeps the reports for good. |
-| 23 | GP follow-up | Book an appointment, all health categories, a slot today | The free GP follow-up is booked like any Doctor Care Anywhere appointment | Health Check Follow-Up is one category among the usual reasons to see a GP. |
-| 24 | Employer's view | The employer's dashboard, both programmes | The employer's dashboard: 119 took the Health Insights Assessment, 110 reports dispatched | Uptake by age, dispatch times, and the anonymised health picture. Never an individual. |
+| 22 | Reports in the account | Home, My health assessments, Uploads | Uploads: both reports filed as PDFs in the patient's own account | Each card's View report in Uploads opens the same list. The patient keeps the reports for good. The free GP follow-up is booked from Home's Book an appointment; show it by hand if asked, it is not a scene. |
+| 23 | Employer's view | The employer's dashboard, both programmes | The employer's dashboard: 119 took the Health Insights Assessment, 110 reports dispatched | Uptake by age, dispatch times, and the anonymised health picture. Never an individual. |
 
 ## Things not to say
 

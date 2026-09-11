@@ -4886,6 +4886,7 @@ export default function App() {
           stage="pending"
           onOpenAssessments={() => { setPortalReturn("portalPending"); setPhase("myAssessments"); }}
           onBookAppointment={() => { setPortalReturn("portalPending"); setPhase("bookAppointment"); }}
+          onAfterReport={() => setPhase("orgReport")}
         />
         {/* The visit goes on to My health assessments by the Home tile; that
             page carries the story back to the clinician. */}
@@ -4901,6 +4902,7 @@ export default function App() {
         stage="advanced"
         onOpenAssessments={() => { setPortalReturn("portalAdvanced"); setPhase("myAssessments"); }}
         onBookAppointment={() => { setPortalReturn("portalAdvanced"); setPhase("bookAppointment"); }}
+        onAfterReport={() => setPhase("orgReport")}
       />
     );
   }
@@ -5043,6 +5045,7 @@ export default function App() {
         initialTab="Uploads"
         onOpenAssessments={() => { setPortalReturn("portal"); setPhase("myAssessments"); }}
         onBookAppointment={() => { setPortalReturn("portal"); setPhase("bookAppointment"); }}
+        onAfterReport={() => setPhase("orgReport")}
       />
     );
   }
