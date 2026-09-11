@@ -17,6 +17,9 @@
 
 /** The one six-digit code that fails, so the failure path can be typed. */
 export const DEMO_WRONG_OTP = "000000";
+/** Arrives pre-typed in the prototype. Janelle, 10 Sep: "default into putting
+ *  the code so the user is not stuck". Any other six digits verify too. */
+export const DEMO_OTP = "123456";
 
 export const OTP_LENGTH = 6;
 

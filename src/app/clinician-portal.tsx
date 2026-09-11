@@ -32,7 +32,7 @@
 
 import { useState } from "react";
 import {
-  Search, Plus, Bell, ChevronDown, ChevronRight, Phone, CircleCheck, Download,
+  Search, Plus, Bell, ChevronDown, ChevronRight, Phone, Download, Info, TriangleAlert, CircleAlert,
 } from "lucide-react";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { GuideArrow } from "./guide-arrow.tsx";
@@ -60,6 +60,11 @@ const GREEN_INK = "#1e7a4f";
  * advanced medical's screenshot, and its dates track the appointment (16 Sep)
  * and the results email (18 Sep, 08:26).
  */
+// Rows, tones, product chips and tags follow FHM's own medical pages, from the
+// staging screenshots the PM sent on 10 Sep: the pre-assessment lists six
+// "DCA - " sections with Summary on Attention, the Heart Health medical lists
+// seven, four red and three amber. Same as the patient's results page, so the
+// two sides of the story agree.
 const REVIEW_STAGES = {
   prescreen: {
     meta: "01 Jan 1981  (45yo)  Female  -  Ref: DCAPRE7Y2Q4JS8XK  -",
@@ -69,31 +74,41 @@ const REVIEW_STAGES = {
     queueDate: "04 Sep 2026",
     queueFlag: "DCA-PRE-ASSESSMENT",
     fileDate: "04 Sep 2026 16:02",
+    tags: ["paid", "online"],
     rows: [
-      { label: "Demographics", tone: "green" },
-      { label: "Known Medical Conditions", tone: "green" },
-      { label: "Family History", tone: "amber" },
-      { label: "Lifestyle Factors", tone: "green" },
-      { label: "Body Metrics", tone: "green" },
+      { label: "DCA - Summary", tone: "red" },
+      { label: "DCA - Demographics", tone: "info" },
+      { label: "DCA - Known Medical Conditions", tone: "info" },
+      { label: "DCA - Family History", tone: "amber" },
+      { label: "DCA - Lifestyle Factors", tone: "info" },
+      { label: "DCA - Body Metrics", tone: "info" },
     ],
   },
   advanced: {
     meta: "01 Jan 1981  (45yo)  Female  -  Ref: UAT1ADV3NFUPZPU9E  -",
-    product: "Advanced",
+    product: "Heart Health",
     date: "18/09/2026",
     reference: "UAT1ADV3NFUPZPU9E",
     queueDate: "18 Sep 2026",
     queueFlag: "DCA-ADVANCED",
     fileDate: "18 Sep 2026 08:00",
+    tags: ["paid", "phone_call_required", "online"],
     rows: [
-      { label: "Blood Pressure", tone: "amber" },
-      { label: "Body Mass Index", tone: "amber" },
-      { label: "QRiSK 3", tone: "green" },
-      { label: "Lipid Profile", tone: "green" },
-      { label: "Heart Rate", tone: "green" },
-      { label: "Full Blood Count", tone: "green" },
+      { label: "QRiSK3", tone: "red" },
+      { label: "Blood Pressure", tone: "red" },
+      { label: "Body Mass Index", tone: "red" },
+      { label: "HbA1c", tone: "red" },
+      { label: "Lipid Profile", tone: "amber" },
+      { label: "Heart Rate", tone: "amber" },
+      { label: "Liver", tone: "amber" },
     ],
   },
+} as const;
+
+const ROW_TONES = {
+  red: { bg: "#fde2e1", ink: "#a33030", label: "Attention", Icon: TriangleAlert },
+  amber: { bg: AMBER_BG, ink: AMBER_INK, label: "Attention", Icon: CircleAlert },
+  info: { bg: CHIP_BLUE_BG, ink: CHIP_BLUE_INK, label: "Information", Icon: Info },
 } as const;
 
 type ReviewStage = keyof typeof REVIEW_STAGES;
@@ -101,7 +116,6 @@ type ReviewStage = keyof typeof REVIEW_STAGES;
 const PATIENT = {
   name: "Jane Smith",
   reviewer: "Bibin Paul",
-  tags: ["viewed_online", "online"],
 };
 
 // Jane first, staged; the rest dress the queue.
@@ -311,7 +325,7 @@ function Detail({ stage, approved, onApprove, onDispatch, onReports }: { stage: 
         <div className="flex flex-col gap-[12px] shrink-0">
           <SideCard>
             <div className="px-[14px] py-[12px] flex flex-col gap-[8px] text-[12px]" style={{ color: INK }}>
-              <div className="flex justify-between"><span style={{ color: MUTED }}>DCA - TEST DOMAIN</span><span style={{ color: TEAL }}>{staged.product} ⓘ</span></div>
+              <div className="flex justify-between"><span style={{ color: MUTED }}>Doctor Care Anywhere</span><span style={{ color: TEAL }}>{staged.product} ⓘ</span></div>
               <div className="flex justify-between items-center">
                 <span style={{ color: MUTED }}>{staged.date}</span>
                 <span className="rounded-[10px] px-[8px] py-[2px] text-[11px]" style={{ background: approved ? GREEN_BG : CHIP_BLUE_BG, color: approved ? GREEN_INK : CHIP_BLUE_INK }}>
@@ -323,7 +337,7 @@ function Detail({ stage, approved, onApprove, onDispatch, onReports }: { stage: 
               <div className="flex justify-between items-start">
                 <span style={{ color: MUTED }}>Tags</span>
                 <span className="flex flex-wrap gap-[4px] justify-end">
-                  {PATIENT.tags.map((tag) => (
+                  {staged.tags.map((tag) => (
                     <span key={tag} className="rounded-[3px] px-[6px] py-[1px] text-[10px] text-white" style={{ background: "#3d5265" }}>{tag}</span>
                   ))}
                 </span>
@@ -360,22 +374,25 @@ function Detail({ stage, approved, onApprove, onDispatch, onReports }: { stage: 
           <div>
             <p className="text-[16px] font-bold mb-[10px]" style={{ color: INK }}>Report</p>
             <div className="flex flex-col gap-[8px]">
-              {staged.rows.map((row) => (
-                <div
-                  key={row.label}
-                  className="flex items-center justify-between rounded-[6px] px-[18px] py-[16px]"
-                  style={{ background: row.tone === "amber" ? AMBER_BG : GREEN_BG }}
-                >
-                  <p className="text-[14px]" style={{ color: INK }}>{row.label}</p>
-                  <span
-                    className="rounded-[10px] px-[10px] py-[3px] text-[11px] font-semibold flex items-center gap-[4px] bg-white"
-                    style={{ color: row.tone === "amber" ? AMBER_INK : GREEN_INK }}
+              {staged.rows.map((row) => {
+                const t = ROW_TONES[row.tone];
+                return (
+                  <div
+                    key={row.label}
+                    className="flex items-center justify-between rounded-[6px] px-[18px] py-[16px]"
+                    style={{ background: t.bg }}
                   >
-                    {row.tone === "amber" ? "Attention" : "No concerns"}
-                    <CircleCheck size={12} strokeWidth={2} />
-                  </span>
-                </div>
-              ))}
+                    <p className="text-[14px]" style={{ color: INK }}>{row.label}</p>
+                    <span
+                      className="rounded-[10px] px-[10px] py-[3px] text-[11px] font-semibold flex items-center gap-[4px] bg-white"
+                      style={{ color: t.ink }}
+                    >
+                      {t.label}
+                      <t.Icon size={12} strokeWidth={2} />
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -396,16 +413,20 @@ function Detail({ stage, approved, onApprove, onDispatch, onReports }: { stage: 
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="px-[14px] py-[10px]">
-                      <span className="flex items-center gap-[6px]" style={{ color: TEAL }}>
-                        Medical report <Download size={13} strokeWidth={2} />
-                      </span>
-                    </td>
-                    <td className="px-[14px] py-[10px]">{staged.fileDate}</td>
-                    <td className="px-[14px] py-[10px]">N/A</td>
-                    <td className="px-[14px] py-[10px]">{approved ? "Yes" : "N/A"}</td>
-                  </tr>
+                  {/* Two files per medical, as FHM lists them: the report and
+                      the raw results. */}
+                  {["Medical report", "Test results"].map((file) => (
+                    <tr key={file} style={{ borderTop: `1px solid ${RULE}` }}>
+                      <td className="px-[14px] py-[10px]">
+                        <span className="flex items-center gap-[6px]" style={{ color: TEAL }}>
+                          {file} <Download size={13} strokeWidth={2} />
+                        </span>
+                      </td>
+                      <td className="px-[14px] py-[10px]">{staged.fileDate}</td>
+                      <td className="px-[14px] py-[10px]">N/A</td>
+                      <td className="px-[14px] py-[10px]">{approved ? "Yes" : "N/A"}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -418,21 +439,43 @@ function Detail({ stage, approved, onApprove, onDispatch, onReports }: { stage: 
 
 // ─── Organisational report ───────────────────────────────────────────────────
 
-const KPIS = [
-  { label: "Total participants", value: "20" },
-  { label: "Total cancellations", value: "0" },
-  { label: "Total DNAs", value: "0" },
-  { label: "Median distance", value: "120.55" },
-  { label: "Median work days to appointment", value: "5" },
-  { label: "Median work days to dispatch", value: "No data" },
-];
+/*
+ * The Uptake dashboard, one dataset per programme, from the two FHM Reports
+ * screenshots the PM sent on 10 Sep: Health Insights Assessment (119
+ * participants, 110 reports dispatched, median 2 work days) and the Advanced
+ * HA, sold as Heart Health (7 participants, 6 dispatched, median 4.5). Nothing
+ * has been attended or booked in either, because the pre-screen has no
+ * appointment and the advanced cohort is booked through a separate product.
+ * Demographics are read off the bar charts, so they are close, not exact.
+ */
+type Programme = "insights" | "advanced";
 
-// The demographics bars: [female, male] per age band, from the screenshot.
-const DEMOGRAPHICS: [string, number, number][] = [
-  ["<30", 1, 3], ["30-39", 4, 2], ["40-49", 4, 0], ["50-59", 1, 1], [">60", 1, 3],
-];
+const UPTAKE: Record<Programme, {
+  label: string; participants: number; attendedPct: number; bookedPct: number;
+  dispatchedPct: number; dispatched: number; cancellations: number; dnas: number;
+  medianDistance: string; workDaysToAppointment: string; workDaysToDispatch: string;
+  demographics: [string, number, number][]; product: { label: string; count: number };
+  dispatchChart: { median: [number, number]; p90: [number, number]; leftMax: number; rightMax: number };
+}> = {
+  insights: {
+    label: "Health Insights Assessment",
+    participants: 119, attendedPct: 0, bookedPct: 0, dispatchedPct: 92.44, dispatched: 110,
+    cancellations: 0, dnas: 0, medianDistance: "No data", workDaysToAppointment: "No data", workDaysToDispatch: "2",
+    demographics: [["<30", 6, 3], ["30-39", 20, 17], ["40-49", 40, 8], ["50-59", 13, 6], [">60", 7, 0]],
+    product: { label: "Health Insights Assessment", count: 146 },
+    dispatchChart: { median: [2, 2], p90: [7, 4], leftMax: 2, rightMax: 7 },
+  },
+  advanced: {
+    label: "Advanced Health Assessment",
+    participants: 7, attendedPct: 0, bookedPct: 0, dispatchedPct: 85.71, dispatched: 6,
+    cancellations: 0, dnas: 0, medianDistance: "No data", workDaysToAppointment: "No data", workDaysToDispatch: "4.5",
+    demographics: [["30-39", 0, 2], ["40-49", 3, 0], ["50-59", 1, 1]],
+    product: { label: "Heart Health", count: 6 },
+    dispatchChart: { median: [4, 5.5], p90: [2.5, 9], leftMax: 6, rightMax: 10 },
+  },
+};
 
-function Gauge({ label, pct }: { label: string; pct: number }) {
+function Gauge({ label, pct, max }: { label: string; pct: number; max?: number }) {
   return (
     <div className="bg-white rounded-[6px] p-[16px] flex flex-col gap-[8px]" style={{ border: `1px solid ${RULE}` }}>
       <p className="text-[13px]" style={{ color: INK }}>{label}</p>
@@ -447,9 +490,146 @@ function Gauge({ label, pct }: { label: string; pct: number }) {
         <div className="absolute rounded-full bg-white" style={{ left: 18, top: 18, width: 74, height: 74 }} />
         <p className="absolute inset-x-0 bottom-0 text-center text-[20px] font-bold" style={{ color: INK }}>{pct}%</p>
       </div>
+      {max !== undefined && (
+        <div className="flex justify-between w-[110px] mx-auto text-[10px]" style={{ color: MUTED }}><span>0</span><span>{max}</span></div>
+      )}
     </div>
   );
 }
+
+function NoData({ label }: { label: string }) {
+  return (
+    <div className="bg-white rounded-[6px] p-[16px] flex flex-col" style={{ border: `1px solid ${RULE}`, minHeight: 220 }}>
+      <p className="text-[13px]" style={{ color: INK }}>{label}</p>
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <p className="text-[12px] font-semibold" style={{ color: INK }}>No data to display</p>
+        <p className="text-[11px]" style={{ color: MUTED }}>Data may be filtered out</p>
+      </div>
+    </div>
+  );
+}
+
+/* Median work days to report dispatch: two median bars on the left axis, the
+   90th percentile as a line on the right axis, as the FHM chart draws it. */
+function DispatchChart({ data }: { data: (typeof UPTAKE)[Programme]["dispatchChart"] }) {
+  const W = 300, H = 150, pad = 28;
+  const barW = 70;
+  const xs = [pad + 40, pad + 170];
+  const yL = (v: number) => H - pad - (v / data.leftMax) * (H - 2 * pad);
+  const yR = (v: number) => H - pad - (v / data.rightMax) * (H - 2 * pad);
+  return (
+    <div className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}`, minHeight: 220 }}>
+      <p className="text-[13px]" style={{ color: INK }}>Median work days to report dispatch</p>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full mt-[8px]" role="img" aria-label="Median and 90th percentile work days to report dispatch">
+        {[0, 0.5, 1].map((t) => (
+          <g key={t}>
+            <line x1={pad} x2={W - pad} y1={yL(t * data.leftMax)} y2={yL(t * data.leftMax)} stroke="#e3e8ed" strokeWidth={1} />
+            <text x={pad - 6} y={yL(t * data.leftMax) + 4} fontSize={9} textAnchor="end" fill={MUTED}>{t * data.leftMax}</text>
+            <text x={W - pad + 6} y={yL(t * data.leftMax) + 4} fontSize={9} textAnchor="start" fill={MUTED}>{t * data.rightMax}</text>
+          </g>
+        ))}
+        {data.median.map((v, i) => (
+          <rect key={i} x={xs[i] - barW / 2} y={yL(v)} width={barW} height={H - pad - yL(v)} fill="#136f63" />
+        ))}
+        <polyline points={data.p90.map((v, i) => `${xs[i]},${yR(v)}`).join(" ")} fill="none" stroke="#2bbfa4" strokeWidth={2} />
+        <text x={10} y={H / 2} fontSize={8} fill={MUTED} transform={`rotate(-90 10 ${H / 2})`} textAnchor="middle">Work days (median)</text>
+        <text x={W - 8} y={H / 2} fontSize={8} fill={MUTED} transform={`rotate(90 ${W - 8} ${H / 2})`} textAnchor="middle">Work days (90th percentile)</text>
+      </svg>
+    </div>
+  );
+}
+
+function UptakeDashboard({ programme, onProgramme }: { programme: Programme; onProgramme: (p: Programme) => void }) {
+  const d = UPTAKE[programme];
+  const maxBar = Math.max(...d.demographics.flatMap(([, f, m]) => [f, m]));
+  return (
+    <div>
+      {/* Two programmes, one dashboard each. A filter on the real page; a pair
+          of pills here so the switch is one click in the demo. */}
+      <div className="flex items-center gap-[8px] mt-[14px]">
+        {(["insights", "advanced"] as const).map((id) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => onProgramme(id)}
+            className="rounded-full px-[14px] py-[6px] text-[12px] font-semibold cursor-pointer"
+            style={{ background: programme === id ? TEAL : "#ffffff", color: programme === id ? "#ffffff" : INK, border: `1px solid ${programme === id ? TEAL : RULE}`, fontFamily: SYS }}
+          >
+            {UPTAKE[id].label}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-4 gap-[12px] mt-[14px]">
+        <div className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}` }}>
+          <p className="text-[13px]" style={{ color: INK }}>Total participants</p>
+          <p className="text-[34px] font-bold mt-[6px]" style={{ color: INK }}>{d.participants}</p>
+        </div>
+        <Gauge label="Total attended" pct={d.attendedPct} max={d.participants} />
+        <Gauge label="Total booked" pct={d.bookedPct} max={d.participants} />
+        <Gauge label="Total reports dispatched" pct={d.dispatchedPct} max={d.participants} />
+      </div>
+
+      <div className="grid grid-cols-5 gap-[12px] mt-[12px]">
+        {[
+          ["Total cancellations", String(d.cancellations)],
+          ["Total DNAs", String(d.dnas)],
+          ["Median distance", d.medianDistance],
+          ["Median work days to appointment", d.workDaysToAppointment],
+          ["Median work days to dispatch", d.workDaysToDispatch],
+        ].map(([label, value]) => (
+          <div key={label} className="bg-white rounded-[6px] p-[14px]" style={{ border: `1px solid ${RULE}` }}>
+            <p className="text-[12px]" style={{ color: INK }}>{label}</p>
+            <p className="text-[22px] font-bold mt-[4px]" style={{ color: INK }}>{value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-2 gap-[12px] mt-[12px]">
+        <div className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}` }}>
+          <p className="text-[13px] mb-[12px]" style={{ color: INK }}>Enrollment demographics</p>
+          <div className="flex items-end gap-[18px] h-[140px] px-[8px]">
+            {d.demographics.map(([band, f, m]) => (
+              <div key={band} className="flex flex-col items-center gap-[4px] flex-1">
+                <div className="flex items-end gap-[4px] h-[120px]">
+                  <div className="w-[18px] rounded-t-[2px]" style={{ height: `${(f / maxBar) * 100}%`, background: "#136f63" }} />
+                  <div className="w-[18px] rounded-t-[2px]" style={{ height: `${(m / maxBar) * 100}%`, background: "#2bbfa4" }} />
+                </div>
+                <p className="text-[11px]" style={{ color: MUTED }}>{band}</p>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-[14px] mt-[8px] text-[11px]" style={{ color: MUTED }}>
+            <span className="flex items-center gap-[4px]"><span className="size-[8px]" style={{ background: "#136f63" }} /> female</span>
+            <span className="flex items-center gap-[4px]"><span className="size-[8px]" style={{ background: "#2bbfa4" }} /> male</span>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}` }}>
+          <p className="text-[13px] mb-[12px]" style={{ color: INK }}>Product selection</p>
+          <div className="flex items-center justify-center gap-[24px]">
+            <div className="relative size-[140px] rounded-full" style={{ background: "#136f63" }}>
+              <div className="absolute rounded-full bg-white flex items-center justify-center" style={{ inset: 18 }}>
+                <p className="text-[26px] font-bold" style={{ color: INK }}>{d.product.count}</p>
+              </div>
+            </div>
+            <p className="text-[12px] flex items-center gap-[6px]" style={{ color: MUTED }}>
+              <span className="size-[8px]" style={{ background: "#136f63" }} /> {d.product.label}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-[12px] mt-[12px]">
+        <NoData label="Median distance to appointment" />
+        <NoData label="Median work days to appointment" />
+        <DispatchChart data={d.dispatchChart} />
+      </div>
+    </div>
+  );
+}
+
+
 
 /*
  * The Health insights tab: the organisational health report from deck slide 15
@@ -538,8 +718,8 @@ function HealthInsights() {
 }
 
 function OrgReports({ onMedicals }: { onMedicals: () => void }) {
-  const maxBar = 4;
   const [tab, setTab] = useState<"uptake" | "insights">("uptake");
+  const [programme, setProgramme] = useState<Programme>("insights");
   return (
     <div className="min-h-screen w-full" style={{ background: PAGE, fontFamily: SYS }}>
       <TopNav onReports={() => {}} onMedicals={onMedicals} />
@@ -567,80 +747,23 @@ function OrgReports({ onMedicals }: { onMedicals: () => void }) {
           ))}
         </div>
         {tab === "insights" && <HealthInsights />}
-        {tab === "uptake" && (
-        <div>
-
-        <div className="grid grid-cols-4 gap-[12px] mt-[16px]">
-          {KPIS.slice(0, 1).map((k) => (
-            <div key={k.label} className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}` }}>
-              <p className="text-[13px]" style={{ color: INK }}>{k.label}</p>
-              <p className="text-[34px] font-bold mt-[6px]" style={{ color: INK }}>{k.value}</p>
-            </div>
-          ))}
-          <Gauge label="Total attended" pct={100} />
-          <Gauge label="Total booked" pct={100} />
-          <Gauge label="Total reports dispatched" pct={0} />
-        </div>
-
-        <div className="grid grid-cols-5 gap-[12px] mt-[12px]">
-          {KPIS.slice(1).map((k) => (
-            <div key={k.label} className="bg-white rounded-[6px] p-[14px]" style={{ border: `1px solid ${RULE}` }}>
-              <p className="text-[12px]" style={{ color: INK }}>{k.label}</p>
-              <p className="text-[22px] font-bold mt-[4px]" style={{ color: INK }}>{k.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 gap-[12px] mt-[12px]">
-          <div className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}` }}>
-            <p className="text-[13px] mb-[12px]" style={{ color: INK }}>Enrollment demographics</p>
-            <div className="flex items-end gap-[18px] h-[140px] px-[8px]">
-              {DEMOGRAPHICS.map(([band, f, m]) => (
-                <div key={band} className="flex flex-col items-center gap-[4px] flex-1">
-                  <div className="flex items-end gap-[4px] h-[120px]">
-                    <div className="w-[18px] rounded-t-[2px]" style={{ height: `${(f / maxBar) * 100}%`, background: "#136f63" }} />
-                    <div className="w-[18px] rounded-t-[2px]" style={{ height: `${(m / maxBar) * 100}%`, background: "#2bbfa4" }} />
-                  </div>
-                  <p className="text-[11px]" style={{ color: MUTED }}>{band}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-[14px] mt-[8px] text-[11px]" style={{ color: MUTED }}>
-              <span className="flex items-center gap-[4px]"><span className="size-[8px]" style={{ background: "#136f63" }} /> female</span>
-              <span className="flex items-center gap-[4px]"><span className="size-[8px]" style={{ background: "#2bbfa4" }} /> male</span>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-[6px] p-[16px]" style={{ border: `1px solid ${RULE}` }}>
-            <p className="text-[13px] mb-[12px]" style={{ color: INK }}>Product selection</p>
-            <div className="flex items-center justify-center gap-[24px]">
-              <div className="relative size-[140px] rounded-full" style={{ background: "#136f63" }}>
-                <div className="absolute rounded-full bg-white flex items-center justify-center" style={{ inset: 18 }}>
-                  <p className="text-[26px] font-bold" style={{ color: INK }}>20</p>
-                </div>
-              </div>
-              <p className="text-[12px] flex items-center gap-[6px]" style={{ color: MUTED }}>
-                <span className="size-[8px]" style={{ background: "#136f63" }} /> Pre-assessment
-              </p>
-            </div>
-          </div>
-        </div>
-        </div>
-        )}
+        {tab === "uptake" && <UptakeDashboard programme={programme} onProgramme={setProgramme} />}
       </div>
     </div>
   );
 }
 
-export function ClinicianPortal({ stage = "prescreen", onDispatched }: {
+export function ClinicianPortal({ stage = "prescreen", onDispatched, initialScreen = "queue" }: {
   /** Which report this review is of: the same screens run for both. */
   stage?: ReviewStage;
   /** Dispatch, not Approve, is what sends the results email. Janelle, 4 Sep:
       after the clinician approves, "they need to show Revert/Dispatch before
       sending the email for results" - the Patient Experience team's step. */
   onDispatched: () => void;
+  /** The employer's view opens straight on Reports at the end of the demo. */
+  initialScreen?: "queue" | "reports";
 }) {
-  const [screen, setScreen] = useState<"queue" | "detail" | "reports">("queue");
+  const [screen, setScreen] = useState<"queue" | "detail" | "reports">(initialScreen);
   const [approved, setApproved] = useState(false);
   useScrollTop(screen);
 

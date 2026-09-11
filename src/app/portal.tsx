@@ -32,6 +32,7 @@ import appTile from "../assets/portal/app-tile.png";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
 import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
 import { useScrollTop } from "./use-scroll-top.ts";
+import { GuideArrow } from "./guide-arrow.tsx";
 
 const SS = "'Source Sans 3', 'Source Sans Pro', sans-serif";
 const WS = "'Work Sans', sans-serif";
@@ -62,6 +63,17 @@ const TABS: { label: TabName; Icon: typeof House }[] = [
 ];
 
 const LIVE_TABS: TabName[] = ["Home", "Uploads"];
+
+export type PortalStage = "pending" | "prescreen" | "advanced";
+
+// The Health Assessments tile on Home, one line per stage. NO FRAME: 27052:15774
+// draws "My health assessments / Continue your health assessment journey.";
+// these say what has actually happened. PM, 10 Sep.
+const HA_TILE: Record<PortalStage, { title: string; body: string }> = {
+  pending: { title: "My health assessments", body: "Your Health Insights Assessment has been submitted. A clinician is reviewing your answers; your report will be here within 2 days." },
+  prescreen: { title: "Book your Health Assessment", body: "Your clinician has recommended a more in-depth assessment. Choose a pharmacy, date and time that suit you." },
+  advanced: { title: "My health assessments", body: "Both of your reports are ready. See them, and what happens next." },
+};
 
 // One row, because this patient has just joined for the assessment. The frame's
 // four are Janelle's own history. Janelle, 4 Sep: "change to Health Insights
@@ -122,7 +134,7 @@ function Tab({ label, Icon, active, onSelect }: {
   );
 }
 
-function ProfileCard() {
+function ProfileCard({ onBook }: { onBook: () => void }) {
   return (
     <div className="relative shrink-0 w-[200px] h-[378px] rounded-[4px]" style={{ background: NAVY, fontFamily: SS }}>
       <div className="absolute left-0 right-0 top-0 h-[189px]" style={{ borderBottom: "0.8px solid #f4f4f4" }}>
@@ -144,10 +156,18 @@ function ProfileCard() {
         </p>
       </div>
 
-      <div className="absolute left-1/2 -translate-x-1/2 top-[214.71px] w-[155.2px] h-[24px] rounded-[12px] bg-white flex items-center justify-center">
+      {/* Works, like the tile: the GP follow-up is booked from here too.
+          Janelle, 11 Sep: "have it available for the team to demo when they
+          click on the book an appointment tile on dca home". */}
+      <button
+        type="button"
+        onClick={onBook}
+        className="absolute left-1/2 -translate-x-1/2 top-[214.71px] w-[155.2px] h-[24px] rounded-[12px] bg-white flex items-center justify-center border-none cursor-pointer p-0"
+        style={{ fontFamily: SS }}
+      >
         <p className="font-bold text-[9.6px] leading-[24px]" style={{ color: NAVY }}>Book an appointment</p>
         <ChevronRight size={10} color={NAVY} strokeWidth={3} className="absolute right-[8px]" />
-      </div>
+      </button>
 
       <p
         className="absolute left-1/2 -translate-x-1/2 top-[328.14px] font-bold text-[11.2px] leading-[15.68px] text-white pb-[2px]"
@@ -261,12 +281,19 @@ function PortalShell({ active, onSelectTab, children }: {
   );
 }
 
-function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep }: {
-  showAdvanced: boolean;
+function HomeBody({ stage, onOpenAssessments, onBook, bookIsPrimary }: {
+  stage: PortalStage;
   onOpenAssessments: () => void;
-  onBookFollowUp: () => void;
-  onOpenSleep: () => void;
+  /** Book an appointment, the normal DCA journey. Janelle, 11 Sep: "enable
+      the book an appointment button, make it work". */
+  onBook: () => void;
+  /** Once a report has been read, the guide's next press is the booking,
+      not the assessments tile. */
+  bookIsPrimary: boolean;
 }) {
+  // What the tile says is what has already happened at that stage: PM, 10 Sep,
+  // show nothing the three-hour-old feed could contradict.
+  const tile = HA_TILE[stage];
   return (
     <>
       {/* 27052:15761. The strip sits flush under the tabs, so it is pulled up
@@ -292,6 +319,8 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep
             action={
               <button
                 type="button"
+                onClick={onBook}
+                data-guide-primary={bookIsPrimary || undefined}
                 className="flex items-center gap-[8px] justify-center px-[16px] py-[12px] rounded-full border-none cursor-pointer shrink-0"
                 style={{ background: BLUE, filter: "drop-shadow(0px 4px 3px rgba(15,55,190,0.05))" }}
               >
@@ -307,30 +336,11 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep
               Health Assessments
             </p>
 
-            {/* 27052:15773. Hidden at the pre-screen stage (Janelle, 4 Sep:
-                "not the stage here"), because it announces a report that does
-                not exist yet. Once the advanced report is in, it is exactly the
-                stage: deck steps 21-22, Patient Books HA Follow-Up. */}
-            {showAdvanced && (
-              <ActionCard
-                title="Health Assessment follow-up"
-                body="Your report from the Advanced Corporate Health Assessment is ready. Book an appointment with a Doctor (GP) if you’d like to discuss your results."
-                action={
-                  <button
-                    type="button"
-                    onClick={onBookFollowUp}
-                    data-guide-primary
-                    className="flex items-center gap-[8px] justify-center px-[16px] py-[12px] rounded-full cursor-pointer shrink-0 bg-transparent"
-                    style={{ border: `1px solid ${BLUE}`, filter: "drop-shadow(0px 4px 3px rgba(15,55,190,0.05))" }}
-                  >
-                    <span className="font-semibold text-[12px] leading-[16px]" style={{ color: BLUE }}>
-                      Book follow-up appointment
-                    </span>
-                    <CircleChevronRight size={16} color={BLUE} strokeWidth={1.5} />
-                  </button>
-                }
-              />
-            )}
+            {/* 27052:15773, the "Health Assessment follow-up" card with its
+                Book follow-up appointment button, is NOT drawn. PM, 10 Sep:
+                the follow-up is booked through the normal Book an appointment
+                journey, "just remove all of it". The frame keeps it; Irina
+                updates the design after the prototype. */}
 
             {/* 27052:15774. Icon only, 44 square, on the ghost button's tint. */}
             {/* 27052:15774 draws this as "My health assessments" / "Continue
@@ -341,13 +351,13 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep
                 to match the journey". So the copy names what the button does.
                 NO FRAME: this pair is mine, not marketing's. */}
             <ActionCard
-              title="Book your Health Assessment"
-              body="Your clinician has recommended a more in-depth assessment. Choose a pharmacy, date and time that suit you."
+              title={tile.title}
+              body={tile.body}
               action={
                 <button
                   type="button"
                   aria-label="Open my health assessments"
-                  data-guide-primary={!showAdvanced || undefined}
+                  data-guide-primary={!bookIsPrimary || undefined}
                   onClick={onOpenAssessments}
                   className="flex items-center justify-center size-[44px] rounded-full cursor-pointer shrink-0"
                   style={{ background: "rgba(10,10,10,0.01)", border: "1px solid rgba(10,10,10,0.05)" }}
@@ -357,56 +367,36 @@ function HomeBody({ showAdvanced, onOpenAssessments, onBookFollowUp, onOpenSleep
               }
             />
 
-            {/* NO FRAME: the deck's HealthStyle ending (slides 16 and 20), a
-                clinician-recommended lifestyle programme. The card opened the
-                team's live page directly for a day, but that URL is a HubSpot
-                preview slug behind preview auth, so anyone without it saw
-                nothing. Janelle, 4 Sep: "i still dont see the contents of the
-                sleep content at least show the url file or the one you made".
-                So it opens the built page, which keeps the live link in its
-                corner. */}
-            {showAdvanced && (
-              <ActionCard
-                title="Your 10 week sleep guide"
-                body="Recommended from your results: a clinically guided programme to better rest, one week at a time."
-                action={
-                  <button
-                    type="button"
-                    aria-label="Open your sleep guide"
-                    onClick={onOpenSleep}
-                    className="flex items-center justify-center size-[44px] rounded-full cursor-pointer shrink-0"
-                    style={{ background: "rgba(10,10,10,0.01)", border: "1px solid rgba(10,10,10,0.05)" }}
-                  >
-                    <CircleChevronRight size={16} color={CARD_BODY} strokeWidth={1.5} />
-                  </button>
-                }
-              />
-            )}
+            {/* The sleep guide card that sat here is gone. PM, 10 Sep: the
+                sleep recommendation lives in the green report's reviewer note
+                on FHM, "remove it from later in the journey". */}
           </div>
         </div>
-        <ProfileCard />
+        <ProfileCard onBook={onBook} />
       </div>
     </>
   );
 }
 
-function UploadsBody({ showAdvanced, onOpenFile }: {
-  /** True once the journey has passed the appointment: the advanced report
-      row exists, and it arrives in front of the viewer. Janelle, 4 Sep: "show
-      through motion animation that another result has been uploaded". */
-  showAdvanced: boolean;
+function UploadsBody({ stage, onOpenFile, onBook }: {
+  /** pending: nothing uploaded yet. prescreen: the Health Insights report.
+      advanced: the advanced report row exists too, and it arrives in front of
+      the viewer. Janelle, 4 Sep: "show through motion animation that another
+      result has been uploaded". */
+  stage: PortalStage;
   onOpenFile: (file: typeof FILES[number]) => void;
+  onBook: () => void;
 }) {
   // The row mounts empty and appears a beat after the page, so its arrival is
   // seen rather than already there.
   const [advancedArrived, setAdvancedArrived] = useState(false);
   useEffect(() => {
-    if (!showAdvanced) return;
+    if (stage !== "advanced") return;
     const timer = window.setTimeout(() => setAdvancedArrived(true), 900);
     return () => window.clearTimeout(timer);
-  }, [showAdvanced]);
+  }, [stage]);
 
-  const rows = showAdvanced && advancedArrived ? [ADVANCED_FILE, ...FILES] : FILES;
+  const rows = stage === "pending" ? [] : stage === "advanced" && advancedArrived ? [ADVANCED_FILE, ...FILES] : FILES;
 
   return (
     <>
@@ -441,6 +431,13 @@ function UploadsBody({ showAdvanced, onOpenFile }: {
           className="bg-white rounded-[5px] w-[562px] px-[20px] py-[14px]"
           style={{ filter: "drop-shadow(0px 0px 7.5px rgba(229,229,229,0.4))", fontFamily: SS }}
         >
+          {rows.length === 0 && (
+            // NO FRAME. The live portal shows an empty table here; this says
+            // what will fill it and when, which is the point of the visit.
+            <p className="text-[14px] leading-[22px] py-[20px]" style={{ color: BODY }}>
+              No documents yet. Your Health Insights Assessment report will appear here within 2 days, and we will email you when it does.
+            </p>
+          )}
           {rows.map((file) => (
             <div
               key={file.name}
@@ -471,7 +468,7 @@ function UploadsBody({ showAdvanced, onOpenFile }: {
             </div>
           ))}
         </div>
-        <ProfileCard />
+        <ProfileCard onBook={onBook} />
       </div>
     </>
   );
@@ -512,7 +509,7 @@ function PdfViewer({ name, pages, src, onClose }: { name: string; pages: number;
         <button
           type="button"
           onClick={onClose}
-          data-guide-primary
+          data-guide-back-target
           className="flex items-center gap-[6px] bg-transparent border-none cursor-pointer p-0"
         >
           <ChevronLeft size={14} color={NAVY} strokeWidth={2.5} />
@@ -524,21 +521,25 @@ function PdfViewer({ name, pages, src, onClose }: { name: string; pages: number;
   );
 }
 
-export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAssessments, onBookFollowUp, onOpenSleep }: {
+export function Portal({ initialTab = "Uploads", stage = "prescreen", onOpenAssessments, onBookAppointment }: {
   initialTab?: TabName;
-  /** True when entered from the advanced results email: the advanced report
-      row exists and animates in, and Home gains the follow-up and sleep
-      cards. False at the pre-screen stage, where they would promise results
-      from the future. */
-  showAdvanced?: boolean;
+  /** Where the journey is: pending (report not yet dispatched), prescreen
+      (the Health Insights report is in), advanced (both reports are in and
+      the advanced one animates in). */
+  stage?: PortalStage;
   /** Opens the My health assessments screen (5048:37958), whose Continue
       journey runs the SSO into Full Health Medical. */
   onOpenAssessments: () => void;
-  onBookFollowUp: () => void;
-  onOpenSleep: () => void;
+  /** Home's Book now: the normal appointment journey, where the GP follow-up
+      is booked. */
+  onBookAppointment: () => void;
 }) {
   const [tab, setTab] = useState<TabName>(initialTab);
   const [openFile, setOpenFile] = useState<typeof FILES[number] | undefined>(undefined);
+  // One tunnel, not a loop between Uploads and its documents. Janelle,
+  // 11 Sep: "from pdf uploads seeing the added pdf then also go to the next".
+  // Reading a report is what turns Home's Book now into the next step.
+  const [seenReport, setSeenReport] = useState(false);
   useScrollTop(tab, openFile);
 
   // Changing tab closes the document, so Uploads is never returned to with a
@@ -552,13 +553,16 @@ export function Portal({ initialTab = "Uploads", showAdvanced = false, onOpenAss
     <>
       <PortalShell active={tab} onSelectTab={selectTab}>
         {tab === "Home" ? (
-          <HomeBody showAdvanced={showAdvanced} onOpenAssessments={onOpenAssessments} onBookFollowUp={onBookFollowUp} onOpenSleep={onOpenSleep} />
+          <HomeBody stage={stage} onOpenAssessments={onOpenAssessments} onBook={onBookAppointment} bookIsPrimary={seenReport} />
         ) : openFile ? (
           <PdfViewer name={openFile.name} pages={openFile.pages} src={openFile.pdf} onClose={() => setOpenFile(undefined)} />
         ) : (
-          <UploadsBody showAdvanced={showAdvanced} onOpenFile={setOpenFile} />
+          <UploadsBody stage={stage} onOpenFile={(file) => { setOpenFile(file); setSeenReport(true); }} onBook={onBookAppointment} />
         )}
       </PortalShell>
+      {openFile && (
+        <GuideArrow onNext={() => { setOpenFile(undefined); setTab("Home"); }} nextLabel="Next: book the GP follow-up" />
+      )}
     </>
   );
 }

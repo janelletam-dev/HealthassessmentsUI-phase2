@@ -21,6 +21,7 @@
 
 import { CircleCheck } from "lucide-react";
 import { EmailShell, INK } from "./email-chrome.tsx";
+import { MockVideo } from "./mock-video.tsx";
 import { EmailClient } from "./email-client.tsx";
 import {
   EMAIL_HEADER, EMAIL_INTRO, EMAIL_NEXT_HEADING, EMAIL_STEPS,
@@ -84,6 +85,13 @@ export function InvitationEmail({ onStart }: { onStart: () => void }) {
               ))}
             </div>
           </Card>
+        </div>
+
+        {/* PM, 10 Sep: a video placeholder in the email, under Why it matters.
+            The clip is the clinical team's to make; placement is theirs to
+            move once it exists. */}
+        <div className="w-full mt-[16px]">
+          <MockVideo title="Your Health Insights Assessment, explained" duration="1 min" />
         </div>
 
         <div className="flex flex-col items-center gap-[22px] w-full pt-[30px] pb-[30px]">

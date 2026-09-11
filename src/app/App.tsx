@@ -7,7 +7,7 @@ import {
 } from "./create-account";
 import { validatePersonalDetails, isValidPostcode, DEMO_PERSONAL_DETAILS, type PersonalDetailsErrors } from "./personal-details";
 import { validateContactInfo, DEMO_CONTACT_INFO, type ContactInfoErrors } from "./contact-info";
-import { checkOtp, formatForDisplay, OTP_MESSAGES, RESEND_SECONDS, DEMO_WRONG_OTP } from "./mobile-otp";
+import { checkOtp, formatForDisplay, OTP_MESSAGES, RESEND_SECONDS, DEMO_WRONG_OTP, DEMO_OTP } from "./mobile-otp";
 import { validateGpDetails, DEMO_GP_DETAILS, GP_DECLINE_NOTE, type GpDetailsErrors, type GpChoice } from "./gp-details";
 import { practiceLabel, findPractice, practicesNear, filterPractices } from "./gp-practices";
 import { validateEmergencyContact, RELATIONSHIP_OPTIONS, DEMO_EMERGENCY_CONTACT, type EmergencyContactErrors, type EmergencyContactChoice } from "./emergency-contact";
@@ -23,14 +23,14 @@ import { InvitationEmail } from "./invitation-email";
 import { QuestionnaireScreen } from "./questionnaire-screen";
 import { ResultsEmail } from "./results-email";
 import { Portal } from "./portal.tsx";
-import { SsoHandover } from "./sso-handover.tsx";
 import { FhmBooking } from "./fhm-booking.tsx";
 import { AppointmentEmail } from "./appointment-email.tsx";
 import { AdvancedResultsEmail } from "./advanced-results-email.tsx";
 import { ClinicianPortal } from "./clinician-portal.tsx";
+import { BookAppointment } from "./book-appointment.tsx";
 import { MyHealthAssessments } from "./my-health-assessments.tsx";
-import { BookFollowUp } from "./book-followup.tsx";
 import { SleepProgramme } from "./sleep-programme.tsx";
+import { NextStepsPage } from "./next-steps.tsx";
 import { FhmResults } from "./fhm-results.tsx";
 import { GuideArrow } from "./guide-arrow.tsx";
 import { DcaLogin } from "./dca-login.tsx";
@@ -303,8 +303,10 @@ const CAROUSEL_SLIDES = [
 const LANDING_STEPS = [
   // 5066:125346
   { Icon: CircleUser, text: "Create your account and tell us a bit about you." },
-  // 5066:125350
-  { Icon: UserCheck, text: "Fill in a short lifestyle questionnaire to help us assess your current health." },
+  // 5066:125350. "Lifestyle questionnaire" is now "Health Insights Assessment"
+  // everywhere DCA speaks: PM meeting, 10 Sep. The frame still carries the old
+  // words; Irina updates the file after the prototype.
+  { Icon: UserCheck, text: "Complete a short Health Insights Assessment to help us assess your current health." },
   // 5446:12374
   { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
   // 5446:12622
@@ -3117,7 +3119,7 @@ function Step4({ onRestart, onStartProfile, onStartVerification }: { onRestart: 
             <div className="flex-1 min-w-0">
               <p className="text-[13px] font-semibold mb-[2px]" style={{ color: "#1b1b1a" }}>Add your personal details</p>
               <p className="text-[12px] leading-[17px]" style={{ color: "#414245" }}>
-                Mobile number, home address, emergency contact, and NHS GP details.
+                Mobile number, home address, emergency contact, and GP details.
               </p>
             </div>
             <ChevronRight size={15} color="#9ca3af" className="shrink-0" />
@@ -3352,6 +3354,7 @@ function DsStepButtons({ nextLabel, prevLabel, onNext, onBack, busy, busyLabel, 
       </button>
       <button
         onClick={onBack}
+        data-guide-back-target
         className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] text-[12px] font-semibold leading-[16px] px-[16px] py-[12px]"
         style={{ background: "rgba(10,10,10,0.01)", border: "1px solid rgba(10,10,10,0.05)", color: "#030712", backdropFilter: "blur(6px)" }}
       >
@@ -3487,6 +3490,13 @@ function ProfileStep_GpDetails({ onNext, onBack, theme, initialState }: {
   const [nhsNumber, setNhsNumber] = useState(demo?.input.nhsNumber ?? "");
   const [errors, setErrors] = useState<GpDetailsErrors>(demo?.errors ?? {});
   const [submitting, setSubmitting] = useState(false);
+  // Typed in by hand instead of picked from the lookup. PM, 10 Sep: "enter
+  // address manually, this is not working", and the private-GP case needs it,
+  // since the lookup only knows NHS surgeries.
+  const [manual, setManual] = useState(false);
+  const [practiceName, setPracticeName] = useState("");
+  const [practiceLine1, setPracticeLine1] = useState("");
+  const [practiceTown, setPracticeTown] = useState("");
 
   const practice = findPractice(selectedGp);
 
@@ -3504,7 +3514,7 @@ function ProfileStep_GpDetails({ onNext, onBack, theme, initialState }: {
   }
 
   function handleNext() {
-    const e = validateGpDetails({ choice, practicePostcode, lookupRun, selectedGp, nhsNumber });
+    const e = validateGpDetails({ choice, practicePostcode, lookupRun, selectedGp, nhsNumber, manual, practiceName, practiceLine1, practiceTown });
     setErrors(e);
     if (Object.keys(e).length > 0) return;
     setSubmitting(true);
@@ -3524,17 +3534,58 @@ function ProfileStep_GpDetails({ onNext, onBack, theme, initialState }: {
           GP details
         </p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-          We ask for your GP details as our clinicians may need to share information with them. Don&rsquo;t worry, you will be explicitly asked for permission.
+          We ask for your GP details as our clinicians may need to share information with them. Don&rsquo;t worry, you will be explicitly asked for permission. Your GP can be an NHS or a private practice.
         </p>
       </div>
 
       <DsRadioCard
         selected={choice === "provide"}
         onSelect={() => { setChoice("provide"); setErrors((e) => ({ ...e, choice: undefined })); }}
-        label="I want to provide my NHS GP&rsquo;s details"
+        label="I want to provide my GP details"
         error={!!errors.choice}
       >
-        {practice ? (
+        {manual ? (
+          // NO FRAME. The frames only draw the lookup. Same fields as the
+          // residence address on personal details, plus the practice name.
+          <div className="flex flex-col gap-[8px] w-full">
+            <DsField
+              label="Practice name" required
+              value={practiceName}
+              onChange={(v) => { setPracticeName(v); setErrors((e) => ({ ...e, practiceName: undefined })); }}
+              placeholder="e.g., Ridgmount Practice"
+              error={errors.practiceName}
+            />
+            <DsField
+              label="Address line 1" required
+              value={practiceLine1}
+              onChange={(v) => { setPracticeLine1(v); setErrors((e) => ({ ...e, practiceLine1: undefined })); }}
+              placeholder="e.g., 8 Ridgmount Street"
+              error={errors.practiceLine1}
+            />
+            <DsField
+              label="Town or city" required
+              value={practiceTown}
+              onChange={(v) => { setPracticeTown(v); setErrors((e) => ({ ...e, practiceTown: undefined })); }}
+              placeholder="e.g., London"
+              error={errors.practiceTown}
+            />
+            <DsField
+              label="Postcode" required
+              value={practicePostcode}
+              onChange={(v) => { setPracticePostcode(v); setErrors((e) => ({ ...e, practicePostcode: undefined })); }}
+              placeholder="e.g., W1W 8QB"
+              error={errors.practicePostcode}
+            />
+            <button
+              type="button"
+              onClick={() => { setManual(false); setErrors((e) => ({ ...e, practiceName: undefined, practiceLine1: undefined, practiceTown: undefined })); }}
+              className="text-[12px] font-semibold leading-[16px] w-fit"
+              style={{ color: "#135cff" }}
+            >
+              Find my GP by postcode instead
+            </button>
+          </div>
+        ) : practice ? (
           <div className="flex flex-col gap-[16px] w-full rounded-[16px] p-[16px]" style={{ background: "#edf6ff" }}>
             <div className="flex flex-col gap-[4px]">
               <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>{practice.name}</p>
@@ -3584,7 +3635,7 @@ function ProfileStep_GpDetails({ onNext, onBack, theme, initialState }: {
             </div>
             <button
               type="button"
-              onClick={runLookup}
+              onClick={() => { setManual(true); setLookupRun(false); setSelectedGp(""); setErrors((e) => ({ ...e, practicePostcode: undefined, gp: undefined })); }}
               className="text-[12px] font-semibold leading-[16px] w-fit"
               style={{ color: "#135cff" }}
             >
@@ -3728,17 +3779,23 @@ function LandingTaskCard({ badge, borderColor, icon, title, description, cta, on
 // THIS IS THE LAST SCREEN. Janelle, 3 Sep: "this should be the last one they
 // see after the emergency contact step" and "there wont be any verification set
 // up for them". So the two task cards that used to live here are gone. What
-// replaced them is a single card: what happens next, who Full Health Medical
-// are, and one button into the questionnaire.
+// replaced them is a single card: what happens next, what to expect and when,
+// and one button into the Health Insights Assessment.
+//
+// No mention of Full Health Medical any more. PM, 10 Sep, relaying Laura: it is
+// a bought-in service, not a collaboration, and with SSO and FHM's restyle the
+// patient cannot tell the platforms apart, so naming a second company only
+// confuses them. The "About Full Health Medical" disclosure went with it.
 //
 // 0041CC for the three step icons, which is a deeper blue than the 166534 green
 // on the landing's four. Both are from their own frame's CSS; they are not
 // meant to match.
 const COMPLETE_STEPS = [
-  // I5066:125767 next steps, Frame 1
-  { Icon: ListTodo, text: "Fill in a short lifestyle questionnaire to help us assess your current health." },
-  // Frame 5
-  { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
+  // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep.
+  { Icon: ListTodo, text: "Complete a short Health Insights Assessment to help us assess your current health." },
+  // Frame 5. The timeline is a placeholder: PM, 10 Sep, "put within 2 days
+  // and then Anushka can tell us whether that's correct".
+  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
   // Frame 4
   { Icon: MapPin, text: "If advised to book an Advanced Corporate Health Assessment, you can easily schedule your appointment at a nearby location." },
 ];
@@ -3753,7 +3810,6 @@ function ProfileComplete({ theme, onContinue }: {
   onContinue: () => void;
 }) {
   const ws = "'Work Sans', sans-serif";
-  const [aboutOpen, setAboutOpen] = useState(true);
   return (
     <div className="flex flex-col gap-[24px] items-center w-full max-w-[672px] px-[20px] pt-[24px] pb-[32px] sm:px-0 sm:pt-0 sm:pb-0" style={{ fontFamily: ws }}>
       {/* 48x48 ring, 24px check, both #133595 */}
@@ -3766,7 +3822,7 @@ function ProfileComplete({ theme, onContinue }: {
           Profile complete
         </p>
         <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
-          You&rsquo;re all set to book your first health assessment.
+          You&rsquo;re all set to start your Health Insights Assessment.
         </p>
       </div>
 
@@ -3803,29 +3859,17 @@ function ProfileComplete({ theme, onContinue }: {
               </div>
             </div>
 
+            {/* NO FRAME. Setting expectations, per PM, 10 Sep: a report comes
+                back, clinicians review it, there is a timeline, and some
+                people go on to the full assessment. Wording is a placeholder
+                until Anushka's content lands. */}
+            {/* What the advanced assessment IS comes from the journey's own
+                sources: the invitation email (blood tests and health
+                measurements, at no cost) and the FHM results page (pharmacy
+                appointment, clinician review, personalised report). */}
             <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
-              Through our collaboration with Full Health Medical, you can complete necessary questionnaires, access your test results, and receive personalised reports. If recommended, you can also schedule your Advanced Corporate Health Assessment conveniently.
+              The assessment takes a few minutes. Our clinicians review your answers and send your report within 2 days. For most people, that is the end. If clinically appropriate, you will be invited to an Advanced Corporate Health Assessment, funded by your employer: blood tests and health measurements at a pharmacy, with a clinician-reviewed report.
             </p>
-
-            {/* A disclosure, not a link. The frame draws it expanded with a
-                ChevronUp, so that is the default here. */}
-            <button
-              onClick={() => setAboutOpen((v) => !v)}
-              className="flex items-center gap-[8px] text-[14px] font-semibold leading-[20px] self-start"
-              style={{ color: "#135CFF", background: "none", border: "none", padding: 0, cursor: "pointer" }}
-              aria-expanded={aboutOpen}
-            >
-              About Full Health Medical
-              {aboutOpen
-                ? <ChevronUp size={16} color="#135CFF" strokeWidth={1.33} />
-                : <ChevronDown size={16} color="#135CFF" strokeWidth={1.33} />}
-            </button>
-
-            {aboutOpen && (
-              <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-                Full Health Medical are a trusted provider specialising in medical assessments. They securely manage your clinical evaluation through their dedicated booking platform.
-              </p>
-            )}
           </div>
 
           <div className="px-[24px]">
@@ -3835,7 +3879,7 @@ function ProfileComplete({ theme, onContinue }: {
               className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] px-[16px] py-[12px] text-[14px] font-semibold leading-[20px] cursor-pointer"
               style={{ background: "#135CFF", color: "#EDF6FF", border: "none", boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)" }}
             >
-              Continue to questionnaire
+              Start your Health Insights Assessment
             </button>
           </div>
         </div>
@@ -4198,7 +4242,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
   // that arrives by text.
   const [stage, setStage] = useState<"phone" | "code">(initialStage ? "code" : "phone");
   const [sending, setSending] = useState(false);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(initialStage === "code" ? DEMO_OTP : "");
   const [codeError, setCodeError] = useState<string | undefined>(
     initialStage === "code-error" ? OTP_MESSAGES.incomplete : undefined,
   );
@@ -4222,7 +4266,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
     window.setTimeout(() => {
       setSending(false);
       setStage("code");
-      setCode(""); setCodeError(undefined); setFailed(false);
+      setCode(DEMO_OTP); setCodeError(undefined); setFailed(false);
       setResendIn(RESEND_SECONDS);
     }, 900);
   }
@@ -4272,6 +4316,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
           <button
             type="button"
             onClick={() => { setStage("phone"); setCode(""); setCodeError(undefined); setFailed(false); }}
+            data-guide-back-target
             className="flex gap-[8px] items-center text-[12px] font-semibold leading-[16px]"
             style={{ color: "#135cff" }}
           >
@@ -4535,15 +4580,60 @@ export default function App() {
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "sso" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "bookFollowUp" | "sleep" | "fhmResults" | "dcaLogin">("email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "sleep" | "fhmResults" | "fhmResultsAmber" | "nextSteps" | "dcaLogin" | "dcaLoginPending" | "portalPending" | "bookAppointment" | "orgReport">("email");
+  // The global back arrow retraces screens. Janelle, 10 Sep: "the back arrow
+  // on each page", then "could they go back one page please and not back to
+  // the start?". A screen is the phase plus the activation step (landing,
+  // create account), recorded when it actually changes on screen, so batched
+  // or repeated setPhase calls cannot double-count it. Going back replays
+  // the last one without recording the trip.
+  type Screen = { phase: typeof phase; step: number };
+  const historyRef = useRef<Screen[]>([]);
+  const shownRef = useRef<Screen>({ phase, step });
+  const backingRef = useRef(false);
+  useEffect(() => {
+    const was = shownRef.current;
+    if (was.phase !== phase || was.step !== step) {
+      const top = historyRef.current[historyRef.current.length - 1];
+      if (backingRef.current) {
+        // The arrow already took this screen off the list.
+      } else if (top && top.phase === phase && top.step === step) {
+        // A screen's own back control (the sleep guide's Back to my account,
+        // Back to your results) retraced a step: take it off the list too,
+        // or the next press would bounce forward again. Janelle, 10 Sep:
+        // "i click back from there but i dont go back to the email".
+        historyRef.current.pop();
+      } else {
+        historyRef.current.push(was);
+      }
+      backingRef.current = false;
+      shownRef.current = { phase, step };
+    }
+    window.dispatchEvent(new CustomEvent("guide:history", { detail: historyRef.current.length > 0 }));
+  }, [phase, step]);
+  useEffect(() => {
+    const back = () => {
+      const prev = historyRef.current.pop();
+      if (!prev) return;
+      backingRef.current = true;
+      setPhase(prev.phase);
+      setStep(prev.step);
+    };
+    window.addEventListener("guide:back", back);
+    return () => window.removeEventListener("guide:back", back);
+  }, []);
 
   // Which portal phase the DCA side-screens (My health assessments, the
   // follow-up booking) return to.
-  const [portalReturn, setPortalReturn] = useState<"portal" | "portalAdvanced">("portal");
+  const [portalReturn, setPortalReturn] = useState<"portal" | "portalAdvanced" | "portalPending">("portal");
 
   // Which tab the advanced portal opens on: Uploads by default, Home when
   // arriving through the DCA login to book the follow-up.
   const [portalAdvancedTab, setPortalAdvancedTab] = useState<"Uploads" | "Home">("Uploads");
+  // The DCA visit while the first report is still being prepared. PM, 10 Sep:
+  // "if patient logs in what would they see": login, Home, My health
+  // assessments, Uploads, then back to the clinician.
+  const [portalPendingTab, setPortalPendingTab] = useState<"Uploads" | "Home">("Home");
   useScrollTop(phase);
 
   // Where the FHM booking starts: the results-page explainer goes straight to
@@ -4570,7 +4660,6 @@ export default function App() {
   // assessments it opens the booking flow. Janelle, 4 Sep: "there is a
   // pre-assessment the one we did already and then when approved, they go back
   // to book their appointment".
-  const [ssoTarget, setSsoTarget] = useState<"questionnaire" | "booking" | "fhmResults">("questionnaire");
 
   // Which report the clinician portal is reviewing: the same screens run for
   // the lifestyle questionnaire (4 Sep) and the advanced assessment (18 Sep).
@@ -4579,7 +4668,7 @@ export default function App() {
   // Which report the FHM results page shows. PM ruling, 4 Sep: patients view
   // reports on FHM, not DCA Uploads, because the advanced process only exists
   // on the FHM platform.
-  const [resultsStage, setResultsStage] = useState<"prescreen" | "advanced">("prescreen");
+  const [resultsStage, setResultsStage] = useState<"green" | "prescreen" | "advanced">("green");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4750,14 +4839,10 @@ export default function App() {
   }
 
   // FHM'S PLATFORM, NOT OURS. The questionnaire and its confirmation are handed
-  // over to Full Health Medical, which is what the Profile complete card says
-  // is about to happen, so they wear FHM's chrome and none of DCA's.
-  // Single sign-on into Full Health Medical, which the patient never sees a
-  // form for. It runs itself and moves on.
-  if (phase === "sso") {
-    return <SsoHandover onDone={() => setPhase(ssoTarget)} />;
-  }
-
+  // over to Full Health Medical, so they wear FHM's chrome and none of DCA's.
+  // The "Signing you in" handover beat that used to sit between the two is
+  // gone: PM, 10 Sep, relaying Laura, "no need", the SSO is invisible and the
+  // prototype should not invent a holding screen nobody has designed.
   if (phase === "booking") {
     // Booking made and questionnaire submitted, so the next beat is the
     // confirmation email landing. Janelle, 4 Sep: "we end up with another
@@ -4779,8 +4864,7 @@ export default function App() {
   if (phase === "advancedResultsEmail") {
     return (
       <AdvancedResultsEmail
-        onView={() => { setResultsStage("advanced"); setSsoTarget("fhmResults"); setPhase("sso"); }}
-        onBook={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
+        onView={() => { setResultsStage("advanced"); setPhase("fhmResults"); }}
       />
     );
   }
@@ -4789,15 +4873,34 @@ export default function App() {
     return <DcaLogin onLogin={() => { setPortalAdvancedTab("Home"); setPhase("portalAdvanced"); }} />;
   }
 
+  if (phase === "dcaLoginPending") {
+    return <DcaLogin onLogin={() => { setPortalPendingTab("Home"); setPhase("portalPending"); }} />;
+  }
+
+  if (phase === "portalPending") {
+    return (
+      <>
+        <Portal
+          key={portalPendingTab}
+          initialTab={portalPendingTab}
+          stage="pending"
+          onOpenAssessments={() => { setPortalReturn("portalPending"); setPhase("myAssessments"); }}
+          onBookAppointment={() => { setPortalReturn("portalPending"); setPhase("bookAppointment"); }}
+        />
+        {/* The visit goes on to My health assessments by the Home tile; that
+            page carries the story back to the clinician. */}
+      </>
+    );
+  }
+
   if (phase === "portalAdvanced") {
     return (
       <Portal
         key={portalAdvancedTab}
         initialTab={portalAdvancedTab}
-        showAdvanced
+        stage="advanced"
         onOpenAssessments={() => { setPortalReturn("portalAdvanced"); setPhase("myAssessments"); }}
-        onBookFollowUp={() => { setPortalReturn("portalAdvanced"); setPhase("bookFollowUp"); }}
-        onOpenSleep={() => { setPortalReturn("portalAdvanced"); setPhase("sleep"); }}
+        onBookAppointment={() => { setPortalReturn("portalAdvanced"); setPhase("bookAppointment"); }}
       />
     );
   }
@@ -4809,20 +4912,33 @@ export default function App() {
     return (
       <>
         <MyHealthAssessments
-          onContinue={() => { setBookingStart("about"); setSsoTarget("booking"); setPhase("sso"); }}
+          stage={portalReturn === "portalPending" ? "pending" : portalReturn === "portalAdvanced" ? "advanced" : "insights"}
+          onOpenUploads={() => {
+            if (portalReturn === "portalPending") { setPortalPendingTab("Uploads"); setPhase("portalPending"); }
+            else if (portalReturn === "portalAdvanced") { setPortalAdvancedTab("Uploads"); setPhase("portalAdvanced"); }
+            else setPhase("portal");
+          }}
+          onOpenFhm={() => { setBookingStart("about"); setPhase("booking"); }}
           onBack={() => setPhase(portalReturn)}
         />
-        <GuideArrow onBack={() => setPhase(portalReturn)} backLabel="Back to Home" />
+        {/* While the report is pending there is nothing here to press, so the
+            arrow carries the story on to the clinician, as it does from Home. */}
+        {portalReturn === "portalPending" && (
+          <GuideArrow onNext={() => { setReviewStage("prescreen"); setPhase("clinician"); }} nextLabel="Next: the clinician review" />
+        )}
       </>
     );
   }
 
-  if (phase === "bookFollowUp") {
-    return <BookFollowUp onBack={() => setPhase(portalReturn)} />;
-  }
-
+  // Reached from the green report's reviewer note only. Back is that report;
+  // next carries the story on to the amber outcome.
   if (phase === "sleep") {
-    return <SleepProgramme onBack={() => setPhase(portalReturn)} />;
+    return (
+      <>
+        <SleepProgramme onBack={() => { setResultsStage("green"); setPhase("fhmResults"); }} />
+        <GuideArrow onNext={() => setPhase("fhmResultsAmber")} nextLabel="Next: an amber result" />
+      </>
+    );
   }
 
 
@@ -4832,7 +4948,7 @@ export default function App() {
       <QuestionnaireScreen
         submitted={phase === "submitted"}
         onSubmitted={() => setPhase("submitted")}
-        onDashboard={() => { setReviewStage("prescreen"); setPhase("clinician"); }}
+        onNext={() => setPhase("dcaLoginPending")}
       />
     );
   }
@@ -4841,6 +4957,20 @@ export default function App() {
   // FHM portal to approve or reject) before DCA sends and uploads the
   // lifestyle / and advanced assessment results". Approving is what lets the
   // results email exist, so the beat runs between submission and that email.
+  // The GP follow-up, booked like any appointment from Home. Janelle, 11 Sep:
+  // "enable the book an appointment button, make it work, but show all the
+  // health concerns".
+  if (phase === "bookAppointment") {
+    return <BookAppointment onBack={() => setPhase(portalReturn)} onDone={() => setPhase("orgReport")} />;
+  }
+
+  // Where the story ends: the employer's view. Janelle, 11 Sep: "the end of
+  // the journey should show the corporate view". No real control crosses
+  // from the patient's account to it; the booked screen's arrow does.
+  if (phase === "orgReport") {
+    return <ClinicianPortal stage="advanced" initialScreen="reports" onDispatched={() => setPhase("advancedResultsEmail")} />;
+  }
+
   if (phase === "clinician") {
     return (
       <ClinicianPortal
@@ -4856,19 +4986,52 @@ export default function App() {
     // Janelle, 4 Sep: "when the user clicks on the email for the results, it
     // should show the sso to FHM portal", and the SSO shows on every FHM
     // crossing: "always show to FHM also".
-    return <ResultsEmail onView={() => { setSsoTarget("fhmResults"); setPhase("sso"); }} />;
+    // The green outcome first, then the amber one: PM, 10 Sep, the prototype
+    // shows both reviewer notes in a line, green with the sleep guide, then
+    // amber with the next steps.
+    return <ResultsEmail onView={() => { setResultsStage("green"); setPhase("fhmResults"); }} />;
   }
 
   // The results on FHM's side; the Profile pill is the way back to the DCA
   // account, where the report also sits in Uploads.
   if (phase === "fhmResults") {
     return (
+      <>
+        <FhmResults
+          stage={resultsStage}
+          // The advanced exit crosses back to DCA through its own login.
+          // Janelle, 4 Sep: "after showing the report have the user log in to
+          // their dca account to book their Advanced HA ff up with clinician".
+          onExit={() => setPhase(resultsStage === "advanced" ? "dcaLogin" : "portal")}
+          onNextSteps={() => setPhase("nextSteps")}
+          onSleep={() => setPhase("sleep")}
+        />
+        {/* From the green result the story goes to the sleep guide first, by
+            the note's own link; the guide carries it on to the amber result.
+            Janelle, 10 Sep: "when the green no concerns part is seen, then go
+            to sleep content, then after that show the results that are
+            abnormal". */}
+      </>
+    );
+  }
+
+  // The amber outcome of the same Health Insights Assessment: further
+  // assessment recommended, the note links to the next steps page.
+  if (phase === "fhmResultsAmber") {
+    return (
       <FhmResults
-        stage={resultsStage}
-        // The advanced exit crosses back to DCA through its own login.
-        // Janelle, 4 Sep: "after showing the report have the user log in to
-        // their dca account to book their Advanced HA ff up with clinician".
-        onExit={() => setPhase(resultsStage === "advanced" ? "dcaLogin" : "portal")}
+        stage="prescreen"
+        onExit={() => setPhase("portal")}
+        onNextSteps={() => setPhase("nextSteps")}
+        onSleep={() => setPhase("sleep")}
+      />
+    );
+  }
+
+  if (phase === "nextSteps") {
+    return (
+      <NextStepsPage
+        onBack={() => setPhase("fhmResultsAmber")}
         onBook={() => { setBookingStart("location"); setPhase("booking"); }}
       />
     );
@@ -4879,8 +5042,7 @@ export default function App() {
       <Portal
         initialTab="Uploads"
         onOpenAssessments={() => { setPortalReturn("portal"); setPhase("myAssessments"); }}
-        onBookFollowUp={() => { setPortalReturn("portal"); setPhase("bookFollowUp"); }}
-        onOpenSleep={() => { setPortalReturn("portal"); setPhase("sleep"); }}
+        onBookAppointment={() => { setPortalReturn("portal"); setPhase("bookAppointment"); }}
       />
     );
   }
@@ -4921,7 +5083,7 @@ export default function App() {
             {phase === "landing" ? (
               <ProfileComplete
                 theme={brandTheme}
-                onContinue={() => { setSsoTarget("questionnaire"); setPhase("sso"); }}
+                onContinue={() => setPhase("questionnaire")}
               />
             ) : (
             <>

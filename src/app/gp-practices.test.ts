@@ -33,11 +33,11 @@ for (const name of nameOf("W12 0PT")) {
   assert.ok(!practice.postcode.startsWith("CB"), `${name} is not in Cambridge`);
 }
 
-// Nothing in the area at all returns nothing rather than padding with far-away
-// surgeries. EH is Edinburgh; the fixture has none.
+// Nothing in the area still returns a list, flagged approximate, so any valid
+// postcode can be demoed. EH is Edinburgh; the fixture has none. PM, 10 Sep.
 const nowhere = practicesNear("EH1 1AA");
-assert.deepEqual(nowhere.practices, [], "no practice in the area returns an empty list");
-assert.ok(!nowhere.approximate, "an empty list is not an approximate one");
+assert.ok(nowhere.practices.length > 0, "a postcode outside the fixture still gets a list");
+assert.ok(nowhere.approximate, "and it is flagged as near, not at");
 
 // Type-ahead matches name, street and postcode, and ignores postcode spacing.
 const all = GP_PRACTICES;

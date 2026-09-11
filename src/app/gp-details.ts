@@ -15,6 +15,9 @@ export type GpDetailsErrors = {
   practicePostcode?: string;
   gp?: string;
   nhsNumber?: string;
+  practiceName?: string;
+  practiceLine1?: string;
+  practiceTown?: string;
 };
 
 export type GpDetailsInput = {
@@ -25,6 +28,15 @@ export type GpDetailsInput = {
   /** The practice picked from the lookup, as a one-line label. */
   selectedGp: string;
   nhsNumber: string;
+  /**
+   * The practice typed in by hand instead of picked from the lookup. PM,
+   * 10 Sep: GP details can be NHS or private, and the lookup only knows NHS
+   * surgeries, so the manual route has to work.
+   */
+  manual?: boolean;
+  practiceName?: string;
+  practiceLine1?: string;
+  practiceTown?: string;
 };
 
 /** NHS numbers are 10 digits, usually written 000 000 0000. */
@@ -45,9 +57,17 @@ export function validateGpDetails(input: GpDetailsInput): GpDetailsErrors {
   }
   if (input.choice === "decline") return e;
 
-  // Once a practice is picked the lookup fields are off screen, so only the
-  // optional NHS number is still worth checking.
-  if (!input.selectedGp) {
+  if (input.manual) {
+    // NO FRAME. The frames only draw the lookup; these follow the house
+    // pattern of the residence address on personal details.
+    if (!input.practiceName?.trim()) e.practiceName = "Please provide your GP practice name.";
+    if (!input.practiceLine1?.trim()) e.practiceLine1 = "Please provide the first line of the address.";
+    if (!input.practiceTown?.trim()) e.practiceTown = "Please provide the town or city.";
+    if (!input.practicePostcode.trim()) e.practicePostcode = "Please provide your GP practice postcode.";
+    else if (!isValidPostcode(input.practicePostcode)) e.practicePostcode = "Postcode is not valid.";
+  } else if (!input.selectedGp) {
+    // Once a practice is picked the lookup fields are off screen, so only the
+    // optional NHS number is still worth checking.
     if (!input.practicePostcode.trim()) e.practicePostcode = "Please provide your GP practice postcode.";
     else if (!isValidPostcode(input.practicePostcode)) e.practicePostcode = "Postcode is not valid.";
     else if (input.lookupRun) e.gp = "Please select a GP.";
@@ -74,6 +94,7 @@ const DEMO_INPUTS: Record<string, GpDetailsInput> = {
   gpNotPicked: { ...BLANK, choice: "provide", practicePostcode: "WC1E 7AA", lookupRun: true },
   gpSelected: { ...BLANK, choice: "provide", practicePostcode: "WC1E 7AA", lookupRun: true, selectedGp: SELECTED },
   nhsNumberTooShort: { ...BLANK, choice: "provide", practicePostcode: "WC1E 7AA", lookupRun: true, selectedGp: SELECTED, nhsNumber: "485 777 345" },
+  manualIncomplete: { ...BLANK, choice: "provide", manual: true, practiceName: "The Portland Practice", practicePostcode: "W1W 8QB" },
   declined: { ...BLANK, choice: "decline" },
 };
 

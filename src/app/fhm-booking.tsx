@@ -113,6 +113,7 @@ function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
+      data-guide-back-target
       className="flex items-center gap-[8px] bg-transparent border-none cursor-pointer p-0 text-[16px] leading-[24px]"
       style={{ color: INK, fontFamily: WS }}
     >
@@ -172,6 +173,7 @@ function ChoiceRow({ label, selected, onSelect }: { label: string; selected: boo
     <button
       type="button"
       onClick={onSelect}
+      aria-pressed={selected}
       className="flex items-center gap-[12px] w-full text-left px-[16px] py-[10px] rounded-[4px] cursor-pointer"
       style={{
         border: `1px solid ${selected ? BLUE : BORDER}`,
@@ -193,6 +195,8 @@ function TickRow({ label, checked, onToggle }: { label: string; checked: boolean
     <button
       type="button"
       onClick={onToggle}
+      role="checkbox"
+      aria-checked={checked}
       className="flex items-center gap-[12px] w-full text-left px-[16px] py-[10px] rounded-[4px] cursor-pointer"
       style={{
         border: `1px solid ${checked ? BLUE : BORDER}`,
@@ -254,7 +258,7 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
       {/* Full width, edge to edge, not inside the column. */}
       <div className="w-full px-[16px] py-[14px]" style={{ background: "#dcf5f2" }} role="status">
         <p className="text-[16px] leading-[24px]" style={{ color: "#111827" }}>
-          Your health questionnaire has been successfully submitted.
+          Your Advanced Health Assessment has been successfully submitted.
         </p>
       </div>
 
@@ -312,7 +316,7 @@ function PreAppointmentQuestionnaire({ onBack, onExit, location, day, slot }: {
 
   return (
     <FhmShell
-      title="Questionnaire - Jane Smith"
+      title="Jane Smith - Advanced Health Assessment"
       footer={
         <StickyBar>
           <BackLink label="Appointments" onClick={onBack} />
@@ -674,7 +678,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
       footer={
         <StickyBar>
           <BackLink label="Back to my account" onClick={onExit} />
-          <PrimaryButton label="Complete questionnaire" onClick={() => setStep("questionnaire")} />
+          <PrimaryButton label="Complete Advanced Health Assessment" onClick={() => setStep("questionnaire")} />
         </StickyBar>
       }
     >
@@ -682,9 +686,9 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
         <div className="m-[24px] p-[16px] flex gap-[12px] items-start" style={{ background: "#fdfce9", borderLeft: "4px solid #facc14" }}>
           <ClipboardList size={18} color="#a16207" strokeWidth={2} className="shrink-0 mt-[2px]" />
           <div className="flex flex-col gap-[8px] flex-1">
-            <p className="font-bold text-[15px] leading-[22px]" style={{ color: "#713f12" }}>Complete your questionnaire</p>
+            <p className="font-bold text-[15px] leading-[22px]" style={{ color: "#713f12" }}>Complete your Advanced Health Assessment</p>
             <p className="text-[15px] leading-[22px]" style={{ color: "#713f12" }}>
-              It&apos;s important that you complete the questionnaire before your appointment to ensure we can process your results.
+              It&apos;s important that you complete the Advanced Health Assessment before your appointment to ensure we can process your results.
             </p>
             <button
               type="button"
@@ -693,7 +697,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
               className="w-full rounded-[2px] py-[8px] text-[15px] leading-[22px] border-none mt-[4px] cursor-pointer"
               style={{ background: "#facc14", color: "#713f12" }}
             >
-              Complete questionnaire now
+              Complete Advanced Health Assessment now
             </button>
           </div>
         </div>

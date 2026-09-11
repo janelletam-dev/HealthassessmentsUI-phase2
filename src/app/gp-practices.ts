@@ -122,19 +122,25 @@ export type PracticeLookup = {
 };
 
 /**
- * Practices at or near a postcode, nearest first. Anything outside the postcode
- * area is dropped rather than padded: offering a London surgery to someone in
- * Cambridge is worse than offering nothing.
+ * Practices at or near a postcode, nearest first. Every valid postcode gets a
+ * list: when nothing sits in the same area the whole fixture comes back,
+ * flagged approximate, rather than an empty box. PM, 10 Sep: "put my postcode,
+ * it didn't take mine". The fixture only covers London and Cambridge, so for
+ * anyone else the list is a stand-in for the live NHS directory lookup, and
+ * the "these are the closest" note above the list says as much.
  */
 export function practicesNear(postcode: string, limit = 8): PracticeLookup {
   const ranked = GP_PRACTICES
     .map((practice) => ({ practice, rank: proximity(practice, postcode) }))
-    .filter((entry) => entry.rank < 5)
     .sort((a, b) => a.rank - b.rank || a.practice.name.localeCompare(b.practice.name));
+  // Stay inside the postcode area while it has anything: a Cambridge search
+  // must not pad out with London. Only an empty area falls through to everything.
+  const inArea = ranked.filter((entry) => entry.rank < 5);
+  const shown = inArea.length > 0 ? inArea : ranked;
 
   return {
-    practices: ranked.slice(0, limit).map((entry) => entry.practice),
-    approximate: ranked.length > 0 && ranked[0].rank > 0,
+    practices: shown.slice(0, limit).map((entry) => entry.practice),
+    approximate: shown.length > 0 && shown[0].rank > 0,
   };
 }
 

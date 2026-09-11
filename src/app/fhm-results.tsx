@@ -22,7 +22,7 @@
 import { useState } from "react";
 import {
   House, CircleUserRound, ClipboardList, PenSquare, ChevronRight, Info, Download,
-  FlaskConical, ListChecks, Stethoscope, FileHeart, CircleCheck, Eye, X,
+  FlaskConical, ListChecks, Stethoscope, FileHeart, CircleCheck, Eye, X, CircleAlert, TriangleAlert,
 } from "lucide-react";
 import { FhmNav, WS, PAGE, RULE, BLUE, INK } from "./fhm-chrome.tsx";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
@@ -43,52 +43,106 @@ const INFO_INK = "#1d4ed8";
  * note follows the advanced results email and deck steps 21-22, and its
  * explainer is gone because that step is done.
  */
+/*
+ * Three outcomes, PM, 10 Sep, from FHM's live reviewer-note templates:
+ *   green      "your results are reassuring and no further assessment is
+ *              needed", every section clear, and the note carries the link to
+ *              the sleep guide (the DCA Home tile that used to carry it is gone)
+ *   prescreen  the amber outcome: further assessment recommended, and the
+ *              note carries the link to the Next steps page, which is where
+ *              the explainer and Book Appointment now live
+ *   advanced   the Advanced report, section names and tones as FHM's Heart
+ *              Health medical: four red, three amber
+ * The green note's first two paragraphs are FHM's own wording with
+ * "questionnaire" swapped for the product name; the sleep sentence is new.
+ */
+type Tone = "alert" | "attention" | "info" | "clear";
+type Stage = {
+  reportName: string;
+  date: string;
+  pdf: "prescreen" | "advanced";
+  noteTone: Tone;
+  note: string[];
+  /** A sentence that ends in a link, rendered after the note. */
+  link?: { lead: string; label: string; target: "sleep" | "nextSteps" };
+  sections: { label: string; tone: Tone }[];
+};
 const STAGES = {
-  prescreen: {
-    reportName: "Lifestyle Questionnaire",
+  green: {
+    reportName: "Health Insights Assessment",
     date: "Sep 4 2026",
     pdf: "prescreen" as const,
+    noteTone: "clear" as const,
     note: [
-      "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
-      "Based on your answers, we believe you would benefit from progressing to the next stage of the programme: the Advanced Corporate Health Assessment. You can book this below. In the meantime, you can also book an appointment for further discussion with a DCA GP (via the \u2018health check follow up\u2019 health concern).",
+      "Thank you for completing your Health Insights Assessment, which looks at factors affecting your long-term cardiovascular and metabolic health.",
+      "Based on your answers, your results are reassuring and no further assessment is needed at this time.",
     ],
+    // NO FRAME. PM, 10 Sep: "add link here that has the sleep recommendations,
+    // come up with copy".
+    link: { lead: "Good sleep protects the results you have. Our clinicians recommend a 10 week guide, one week at a time.", label: "Open your sleep guide", target: "sleep" as const },
     sections: [
-      { label: "Summary", tone: "attention" },
-      { label: "Family History", tone: "attention" },
-      { label: "Demographics", tone: "info" },
-      { label: "Known Medical Conditions", tone: "info" },
-      { label: "Lifestyle Factors", tone: "info" },
-      { label: "Body Metrics", tone: "info" },
+      { label: "Summary", tone: "clear" as const },
+      { label: "Family History", tone: "clear" as const },
+      { label: "Demographics", tone: "clear" as const },
+      { label: "Known Medical Conditions", tone: "clear" as const },
+      { label: "Lifestyle Factors", tone: "clear" as const },
+      { label: "Body Metrics", tone: "clear" as const },
+    ],
+  },
+  prescreen: {
+    reportName: "Health Insights Assessment",
+    date: "Sep 4 2026",
+    pdf: "prescreen" as const,
+    noteTone: "attention" as const,
+    note: [
+      "Thank you for completing your Health Insights Assessment, which looks at factors affecting your long-term cardiovascular and metabolic health.",
+      "Based on your answers, we believe you would benefit from progressing to the next stage of the programme: the Advanced Corporate Health Assessment. In the meantime, you can also book an appointment for further discussion with a DCA GP (via the \u2018health check follow up\u2019 health concern).",
+    ],
+    // NO FRAME. PM, 10 Sep: the reviewer note links to the next steps page.
+    link: { lead: "You have been recommended for a further health assessment.", label: "Read your next steps and book", target: "nextSteps" as const },
+    sections: [
+      { label: "Summary", tone: "attention" as const },
+      { label: "Family History", tone: "attention" as const },
+      { label: "Demographics", tone: "info" as const },
+      { label: "Known Medical Conditions", tone: "info" as const },
+      { label: "Lifestyle Factors", tone: "info" as const },
+      { label: "Body Metrics", tone: "info" as const },
     ],
   },
   advanced: {
     reportName: "Advanced Corporate Health Assessment",
     date: "Sep 18 2026",
     pdf: "advanced" as const,
+    noteTone: "alert" as const,
     note: [
       "Your Advanced Corporate Health Assessment is complete and your clinician-reviewed report is ready to view, with clear, personalised insights on where you stand and what to do next.",
       "You have a free Video GP appointment included. Book a time to discuss your results and next steps with a doctor, via the \u2018health check follow up\u2019 health concern on your Doctor Care Anywhere account.",
     ],
     sections: [
-      { label: "Blood Pressure", tone: "attention" },
-      { label: "Body Mass Index", tone: "attention" },
-      { label: "QRiSK 3", tone: "info" },
-      { label: "Lipid Profile", tone: "info" },
-      { label: "Heart Rate", tone: "info" },
-      { label: "Full Blood Count", tone: "info" },
+      { label: "QRiSK3", tone: "alert" as const },
+      { label: "Blood Pressure", tone: "alert" as const },
+      { label: "Body Mass Index", tone: "alert" as const },
+      { label: "HbA1c", tone: "alert" as const },
+      { label: "Lipid Profile", tone: "attention" as const },
+      { label: "Heart Rate", tone: "attention" as const },
+      { label: "Liver", tone: "attention" as const },
     ],
   },
-} satisfies Record<string, { reportName: string; date: string; pdf: "prescreen" | "advanced"; note: string[]; sections: { label: string; tone: "attention" | "info" }[] }>;
+} satisfies Record<string, Stage>;
 
-function Chip({ tone }: { tone: "attention" | "info" }) {
-  const attention = tone === "attention";
+const CHIP: Record<Tone, { bg: string; ink: string; label: string; Icon: typeof Info }> = {
+  alert: { bg: "#fde2e1", ink: "#a33030", label: "Attention", Icon: TriangleAlert },
+  attention: { bg: AMBER_BG, ink: AMBER_INK, label: "Attention", Icon: CircleAlert },
+  info: { bg: INFO_BG, ink: INFO_INK, label: "Information", Icon: Info },
+  clear: { bg: "#d9f2e3", ink: "#1e7a4f", label: "No concerns", Icon: CircleCheck },
+};
+
+function Chip({ tone }: { tone: Tone }) {
+  const { bg, ink, label, Icon } = CHIP[tone];
   return (
-    <span
-      className="flex items-center gap-[6px] rounded-[6px] px-[12px] py-[4px] text-[13px]"
-      style={{ background: attention ? AMBER_BG : INFO_BG, color: attention ? AMBER_INK : INFO_INK }}
-    >
-      {attention ? "Attention" : "Information"}
-      <Info size={13} strokeWidth={2} />
+    <span className="flex items-center gap-[6px] rounded-[6px] px-[12px] py-[4px] text-[13px]" style={{ background: bg, color: ink }}>
+      {label}
+      <Icon size={13} strokeWidth={2} />
     </span>
   );
 }
@@ -108,15 +162,15 @@ function Chip({ tone }: { tone: "attention" | "info" }) {
  */
 const FEATURES = [
   { Icon: FlaskConical, title: "Comprehensive Testing", body: "Blood tests and health measurements." },
-  { Icon: ListChecks, title: "In-Depth Questionnaire", body: "Detailed health and lifestyle questions." },
+  { Icon: ListChecks, title: "Advanced Health Assessment", body: "Detailed health and lifestyle questions." },
   { Icon: Stethoscope, title: "Clinician Review", body: "A clinician reviews all of your results." },
   { Icon: FileHeart, title: "Personalised Health Report", body: "Clear results and recommended next steps." },
 ];
 
 const HOW_IT_WORKS = [
   { title: "Attend a pharmacy appointment", body: "Choose a pharmacy, date and time that suit you." },
-  { title: "Complete an Advanced Health Questionnaire", body: "Before your appointment, so your results can be processed." },
-  { title: "Clinician review", body: "A qualified clinician reviews your test results and questionnaire answers." },
+  { title: "Complete your Advanced Health Assessment", body: "Before your appointment, so your results can be processed." },
+  { title: "Clinician review", body: "A qualified clinician reviews your test results and assessment answers." },
   { title: "Receive your personalised report", body: "Detailed insights and recommended next steps." },
 ];
 
@@ -226,16 +280,16 @@ export function NextStepExplainer({ onBook }: { onBook: () => void }) {
   );
 }
 
-export function FhmResults({ stage = "prescreen", onExit, onBook }: {
+export function FhmResults({ stage = "prescreen", onExit, onNextSteps, onSleep }: {
   stage?: keyof typeof STAGES;
   onExit: () => void;
-  /** Janelle, 4 Sep: after the results, "show the view also for booking their
-      appointment on the clinical site for their bloodworks". The patient is
-      already on FHM, so no SSO: straight into the booking flow. The DCA
-      account's My health assessments route stays as the other way in. */
-  onBook: () => void;
+  /** The amber note's link: the explainer and Book Appointment moved to
+      their own page. PM, 10 Sep. */
+  onNextSteps: () => void;
+  /** The green note's link: the sleep guide. */
+  onSleep: () => void;
 }) {
-  const data = STAGES[stage];
+  const data: Stage = STAGES[stage];
   const pdf = data.pdf === "advanced" ? advancedReportPdf : reportPdf;
   // The popup viewer is invention, and says so. FHM serves the PDF in its
   // own tab, which Download report still does; Janelle, 4 Sep: "have the pdfs
@@ -285,13 +339,27 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
                 <p className="flex items-center gap-[10px] text-[17px]" style={{ color: "#111827" }}>
                   <PenSquare size={17} color={BLUE} strokeWidth={2} /> Reviewer&rsquo;s note
                 </p>
-                <Chip tone="attention" />
+                <Chip tone={data.noteTone} />
               </div>
               {data.note.map((para) => (
                 <p key={para.slice(0, 24)} className="text-[15px] leading-[24px] mt-[14px]" style={{ color: "#374151" }}>
                   {para}
                 </p>
               ))}
+              {data.link && (
+                <p className="text-[15px] leading-[24px] mt-[14px]" style={{ color: "#374151" }}>
+                  {data.link.lead}{" "}
+                  <button
+                    type="button"
+                    onClick={data.link.target === "sleep" ? onSleep : onNextSteps}
+                    data-guide-primary
+                    className="underline bg-transparent border-none p-0 cursor-pointer text-[15px] font-semibold"
+                    style={{ color: BLUE, fontFamily: WS }}
+                  >
+                    {data.link.label}
+                  </button>
+                </p>
+              )}
             </div>
 
             {data.sections.map((section) => (
@@ -335,7 +403,8 @@ export function FhmResults({ stage = "prescreen", onExit, onBook }: {
 
           </div>
 
-          {stage === "prescreen" && <NextStepExplainer onBook={onBook} />}
+          {/* The next-step explainer used to sit here for the amber result. It
+              is its own page now (next-steps.tsx), reached from the note. */}
 
           <div className="bg-white rounded-[6px] flex items-center justify-between px-[28px] py-[18px]" style={{ border: `1px solid ${RULE}` }}>
             <p className="flex items-center gap-[10px] text-[16px]" style={{ color: "#111827" }}>

@@ -170,42 +170,43 @@ export function missingAnswers(answers: Answers): string[] {
  * Cite a node once one exists. Until then this is the only record of the
  * wording, which is why it lives here rather than inline in the component.
  */
+/*
+ * Reworked 10 Sep from the PM's feedback round (Laura, Anushka): the product
+ * is the Health Insights Assessment, not a questionnaire; say that a report
+ * comes back and who reviews it; set a timeline; make clear the journey can
+ * end with the report or go on to the full assessment. The "come back later"
+ * row and the Back to Dashboard button are gone, "it's not going to work".
+ * The 2-day timeline is a placeholder until Anushka confirms it.
+ */
 export const SUBMITTED = {
-  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-  banner: "Your Health Questionnaire has been submitted",
+  // NO FRAME. PM, 10 Sep.
+  banner: "Your Health Insights Assessment has been submitted",
   // NO FRAME. Transcribed from Janelle's image, 3 Sep.
   title: "Thank you!",
-  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-  lead: "Your Health Questionnaire has been submitted successfully.",
+  // NO FRAME. PM, 10 Sep.
+  lead: "Your Health Insights Assessment has been submitted successfully.",
   // NO FRAME. Transcribed from Janelle's image, 3 Sep.
   nextHeading: "What happens next?",
   next: [
     {
       // NO FRAME. Transcribed from Janelle's image, 3 Sep.
       title: "Clinician review",
-      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-      body: "A qualified Clinician will review your responses and identify any opportunities to improve your health and wellbeing.",
+      // NO FRAME. PM, 10 Sep: say that clinicians review it and a report follows.
+      body: "A qualified clinician reviews your answers and prepares your report.",
     },
     {
-      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-      title: "Personalised recommendations",
-      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-      body: "You'll receive practical health and lifestyle recommendations tailored to you.",
+      // NO FRAME. PM, 10 Sep: reference the report and give a timeline.
+      title: "Your report, within 2 days",
+      // NO FRAME. PM, 10 Sep. "Within 2 days" is the placeholder to confirm.
+      body: "You will receive your Health Insights Assessment report, with practical health and lifestyle recommendations tailored to you.",
     },
     {
-      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-      title: "Advanced Health Assessment (if recommended)",
-      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-      body: "If clinically appropriate, you may be invited to book a free Advanced Corporate Health Assessment, fully funded by your employer.",
+      // NO FRAME. PM, 10 Sep: make clear it is one report, or on to a full assessment.
+      title: "One report, or a full health assessment",
+      // NO FRAME. PM, 10 Sep. Same wording as the Profile complete card.
+      body: "For most people, that is the end. If clinically appropriate, you will be invited to an Advanced Corporate Health Assessment, funded by your employer: blood tests and health measurements at a pharmacy, with a clinician-reviewed report.",
     },
   ],
-  resume: {
-    // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-    title: "Need to come back and finish later?",
-    // NO FRAME. Transcribed from Janelle's image, 3 Sep.
-    body: "Simply log back in to your account at any time. You'll continue from where you left off.",
-  },
   // NO FRAME. Transcribed from Janelle's image, 3 Sep.
   privacy: "Your information is confidential and will only be used by our healthcare team to support your health.",
-  cta: "Back to Dashboard",
 };

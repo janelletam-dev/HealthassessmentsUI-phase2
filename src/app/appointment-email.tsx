@@ -11,6 +11,7 @@
 
 import { CircleCheck } from "lucide-react";
 import { EmailShell, INK } from "./email-chrome.tsx";
+import { MockVideo } from "./mock-video.tsx";
 import { EmailClient } from "./email-client.tsx";
 import { APPOINTMENT_EMAIL as E, MAILBOX, EMAIL_FOOTER } from "./email-copy.ts";
 
@@ -70,6 +71,10 @@ export function AppointmentEmail({ onNext }: {
                 the frame's, and the tick-list line above keeps its own
                 conditional "if you haven't yet done so". */}
             <TickList items={E.prepare} />
+            {/* PM, 10 Sep: a video placeholder in the pharmacy booking
+                confirmation, "what to expect when you go to the pharmacy".
+                The clip is the clinical team's to make. */}
+            <MockVideo title="What to expect at your pharmacy appointment" duration="1 min" />
           </div>
         </div>
 

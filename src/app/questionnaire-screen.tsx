@@ -14,7 +14,7 @@
 // banner, a #f9fafb page, a 744 column of white cards, and a white sticky bar.
 
 import { useState } from "react";
-import { CircleCheck, Stethoscope, Heart, Activity, History, Lock } from "lucide-react";
+import { CircleCheck, Stethoscope, Heart, Activity, Lock } from "lucide-react";
 import { SECTIONS, SUBMITTED, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
 import { FhmShell, WS, PAGE, RULE, NAV_RULE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
 import { GuideArrow } from "./guide-arrow.tsx";
@@ -23,8 +23,10 @@ const SELECTED_BG = "#eff6ff";
 const ERROR = "#991b1b";
 
 // The capture reads "Questionnaire - Janelle tamayo". Generic here, for the
-// same reason the email greets Jane rather than showing a merge tag.
-const TITLE = "Questionnaire - Jane Smith";
+// same reason the email greets Jane rather than showing a merge tag. Name
+// first, then the product name, per PM, 10 Sep: "Jane Smith - Health Insights
+// Assessment". FHM's screen, so this is what we ask FHM to change to.
+const TITLE = "Jane Smith - Health Insights Assessment";
 
 function ChoiceRow({ label, selected, invalid, onSelect }: {
   label: string; selected: boolean; invalid: boolean; onSelect: () => void;
@@ -113,9 +115,14 @@ function QuestionBlock({ question, value, invalid, onChange }: {
 // the image only suggests.
 const NEXT_ICONS = [Stethoscope, Heart, Activity];
 
-function Submitted({ onDashboard }: { onDashboard: () => void }) {
+function Submitted({ onNext }: { onNext: () => void }) {
   return (
     <FhmShell title={SUBMITTED.banner}>
+      {/* The page has no button any more (PM, 10 Sep: "Back to Dashboard is
+          not going to work"), so the guide arrow is the only way on, to the
+          patient's DCA account while the report is prepared. Back is the
+          global arrow's. */}
+      <GuideArrow onNext={onNext} nextLabel="Next: the DCA account" />
       <div
         className="w-full rounded-[8px] px-[24px] py-[32px] flex flex-col items-center gap-[24px]"
         style={{ background: "#ffffff", border: `1px solid ${RULE}` }}
@@ -152,47 +159,21 @@ function Submitted({ onDashboard }: { onDashboard: () => void }) {
           })}
         </div>
 
-        {/* The one row on a tint in her image, because it is the only one that
-            asks the patient to do something rather than telling them what we
-            will do. */}
-        <div className="flex gap-[16px] items-start w-full rounded-[8px] p-[16px]" style={{ background: SELECTED_BG }}>
-          <div className="flex items-center justify-center shrink-0 w-[40px] h-[40px] rounded-[8px]" style={{ background: "#ffffff" }}>
-            <History size={20} color={BLUE} strokeWidth={2} />
-          </div>
-          <div className="flex flex-col gap-[2px] flex-1">
-            <p className="text-[15px] font-bold leading-[22px]" style={{ color: "#111827" }}>{SUBMITTED.resume.title}</p>
-            <p className="text-[14px] leading-[20px]" style={{ color: MUTED }}>{SUBMITTED.resume.body}</p>
-          </div>
-        </div>
-
         <div className="flex gap-[8px] items-start w-full">
           <Lock size={16} color={MUTED} strokeWidth={2} className="shrink-0 mt-[2px]" />
           <p className="text-[13px] leading-[18px] flex-1" style={{ color: MUTED }}>{SUBMITTED.privacy}</p>
         </div>
-
-        {/* There is no dashboard in this prototype. This carries the story on
-            instead, to the email that arrives once the clinical team has
-            reviewed the answers, which is the next thing that happens to the
-            patient. Flagged to Janelle: if a dashboard is ever built, this goes
-            back to pointing at it. */}
-        <button
-          onClick={onDashboard}
-          data-guide-primary
-          className="w-full rounded-[4px] px-[24px] py-[12px] text-[16px] font-medium leading-[24px] cursor-pointer"
-          style={{ background: BLUE, color: "#ffffff", border: "none" }}
-        >
-          {SUBMITTED.cta}
-        </button>
       </div>
     </FhmShell>
   );
 }
 
-export function QuestionnaireScreen({ onSubmitted, submitted, onDashboard }: {
+export function QuestionnaireScreen({ onSubmitted, submitted, onNext }: {
   onSubmitted: () => void;
   /** Renders the confirmation instead of the form. */
   submitted: boolean;
-  onDashboard: () => void;
+  /** From the confirmation to whatever happens next in the story. */
+  onNext: () => void;
 }) {
   const [answers, setAnswers] = useState<Answers>({});
   // Nothing is flagged until Submit is pressed. Marking 24 questions red before
@@ -213,7 +194,7 @@ export function QuestionnaireScreen({ onSubmitted, submitted, onDashboard }: {
   }
 
   if (submitted) {
-    return <Submitted onDashboard={onDashboard} />;
+    return <Submitted onNext={onNext} />;
   }
 
   return (

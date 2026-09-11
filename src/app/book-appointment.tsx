@@ -1,13 +1,13 @@
-// Booking the GP follow-up on the DCA portal: the appointment to talk the
-// advanced results through, not the pharmacy visit that produced them.
-// Janelle, 4 Sep: "it's different from the booking demoed - that is with the
-// clinic to have the blood works done. this one is after the clinician has
-// seen the results of the blood works and would like to have more talk or
-// followup."
+// Booking a GP appointment on the DCA portal, the way any appointment is
+// booked. In this story it is the free video GP follow-up after the Advanced
+// Health Assessment, via the Health Check Follow-Up category. Janelle, 11 Sep:
+// "on home screen just at DCA, enable the book an appointment button, make it
+// work, but show all the health concerns as given before".
 //
 // SOURCES, one per step:
 //   Not for emergencies    Figma 5048:40490 (DCA-branded)
-//   Select a health category   board 27084:16913 capture 27084:16133
+//   Select a health category   board 27084:16913 capture 27084:16133, all
+//                              twelve tiles, verbatim
 //   Select a health concern    capture 27084:16134 (the Blood Test Review tile)
 //   Attach File (Optional)     capture 27084:16135
 //   Select date and time       27084:16914 and 27084:17143 (the redesigned
@@ -16,10 +16,8 @@
 // stays the DCA purple of 5048:40490 throughout, which is also what the
 // redesigned picker frames draw.
 //
-// Janelle, 4 Sep: "just show the health follow up tile for the health concern
-// and then follow". The category grid is the capture's, all thirteen tiles
-// verbatim, and Health Check Follow-Up is the one that navigates; the concern
-// step then offers the capture's single Blood Test Review tile.
+// Only Health Check Follow-Up navigates; the other eleven are shown, as the
+// capture shows them, but are another product's front door.
 //
 // DATES AND TIMES ARE DEMO-COHERENT, NOT THE CAPTURE'S. The staging rota
 // offers 4:00am GP slots on Mon 1 Jan, which is test data. Here today is
@@ -35,7 +33,9 @@ import { useState } from "react";
 import {
   ArrowLeft, Info, ChevronRight, ChevronLeft, Check, CircleCheck, Upload,
   ClipboardCheck, FileText, Sunrise, Sun, Sunset,
+  Hand, Bone, Eye, Venus, Brain, Thermometer, Salad, Zap, Wind, UserRound, HeartPulse,
 } from "lucide-react";
+import { GuideArrow } from "./guide-arrow.tsx";
 import { Logo } from "./dca-logo.tsx";
 import appTile from "../assets/portal/app-tile.png";
 import { useScrollTop } from "./use-scroll-top.ts";
@@ -50,15 +50,20 @@ const BLUE = "#135cff";
 const TILE_BG = "#aebcf7";
 const BORDER = "#d2d2d2";
 
-/*
- * 27084:16133 draws thirteen category tiles. ONE IS KEPT. Janelle, 4 Sep:
- * "just show the health follow up tile for the health concern", repeated as
- * "just show the health follow up tile nothing else". This patient arrived
- * from their assessment results, and a grid of skin, gut and mental-health
- * tiles is another product's front door. The full list lives in the capture
- * for when a general booking entry is built.
- */
+// 27084:16133, the twelve category tiles in the capture's order, two columns.
+// The icons are lucide's nearest to the capture's glyphs.
 const CATEGORIES: { name: string; sub?: string; Icon: typeof ClipboardCheck }[] = [
+  { name: "Skin Hair & Nails", sub: "Acne, Eczema, Rash, Moles", Icon: Hand },
+  { name: "Joints and Muscles", sub: "Ankle, Back, Elbow, Foot, Hand, Knee, Neck Pain", Icon: Bone },
+  { name: "Eyes-Ears-Nose-Throat", sub: "Eye Discomfort, Hearing issues, Sinus Pain, Snoring", Icon: Eye },
+  { name: "Women's Health", sub: "Breast Symptoms, Abdominal Bloating, Delayed Period", Icon: Venus },
+  { name: "Mental Health & Wellbeing", sub: "Anxiety, Depression, Stress, Sleeping Difficulty", Icon: Brain },
+  { name: "Minor Illness", sub: "Cold Sores, Flu, Cough, Fever, Allergies", Icon: Thermometer },
+  { name: "Gut Health", sub: "Bloating, Abdominal Pain, Constipation, Diarrhoea", Icon: Salad },
+  { name: "Headaches & Dizziness", sub: "Migraines, Light-headedness, Other Head Concerns", Icon: Zap },
+  { name: "Respiratory Health", sub: "Cough, Cold, Covid-19", Icon: Wind },
+  { name: "Men's Health", sub: "Breast & Genital Symptoms, Urinary Issues, Erectile Dysfunction", Icon: UserRound },
+  { name: "Heart Health", sub: "Palpitations, Other Heart Symptoms", Icon: HeartPulse },
   { name: "Health Check Follow-Up", Icon: ClipboardCheck },
 ];
 
@@ -92,6 +97,7 @@ function Chrome({ children, onBackStep }: { children: React.ReactNode; onBackSte
         <button
           type="button"
           onClick={onBackStep}
+          data-guide-back-target
           className="flex items-center gap-[8px] bg-transparent border-none cursor-pointer p-0 text-white font-semibold text-[13px]"
           style={{ fontFamily: WS }}
         >
@@ -149,7 +155,7 @@ function Chrome({ children, onBackStep }: { children: React.ReactNode; onBackSte
   );
 }
 
-export function BookFollowUp({ onBack }: { onBack: () => void }) {
+export function BookAppointment({ onBack, onDone }: { onBack: () => void; onDone: () => void }) {
   const [step, setStep] = useState<Step>("notice");
   const [slot, setSlot] = useState<string | undefined>(undefined);
   useScrollTop(step);
@@ -191,9 +197,9 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
       )}
 
       {step === "category" && (
-        <div className="bg-white rounded-[8px] w-[720px] p-[36px] h-fit">
+        <div className="bg-white rounded-[8px] w-[800px] p-[36px] h-fit">
           <p className="text-[20px] font-bold" style={{ color: INK }}>Select a health category</p>
-          <div className="grid grid-cols-1 gap-[14px] mt-[22px]">
+          <div className="grid grid-cols-2 gap-[14px] mt-[22px]">
             {CATEGORIES.map(({ name, sub, Icon }) => (
               <button
                 key={name}
@@ -362,12 +368,15 @@ export function BookFollowUp({ onBack }: { onBack: () => void }) {
           <button
             type="button"
             onClick={onBack}
-            data-guide-primary
+            data-guide-back-target
             className="rounded-full px-[32px] py-[12px] mt-[8px] text-[15px] font-semibold text-white border-none cursor-pointer"
             style={{ background: BLUE, fontFamily: WS }}
           >
             Back to my account
           </button>
+          {/* The patient's story ends here; the guide carries on to the
+              employer's view, which no real control does. */}
+          <GuideArrow onNext={onDone} nextLabel="Next: the employer's view" />
         </div>
       )}
     </Chrome>

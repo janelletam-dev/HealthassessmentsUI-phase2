@@ -1,15 +1,18 @@
-// My health assessments, on the DCA side, before the FHM handover.
+// My health assessments, on the DCA side. New version, PM, 10 Sep, from the
+// brief given to Irina (she designs it next week; this is the AI first pass
+// she asked for): no tabs, a short blurb on how the programme works, one
+// section per assessment showing only what has already happened, each with a
+// link to the report in Uploads, and one button to Full Health Medical for
+// anything live. The cancellation card is gone.
 //
-// Figma 5048:37958. Janelle, 4 Sep: "here is the tile for advanced corporate
-// ... that would then allow them to book their appointment on the fhm portal".
-// So the portal Home tile lands here, and Continue journey, with its external
-// link mark, is what actually runs the SSO into Full Health Medical: the
-// handover made visible instead of implied.
+// WHAT IS SHOWN IS ONLY WHAT CANNOT CHANGE. PM: FHM's feed is up to three
+// hours old and stops at 5pm, so "booked" or "next up" could be wrong by the
+// time the patient reads it. "Submitted" and "report dispatched" cannot be.
 //
-// Everything else on the frame is drawn and inert: Exit, the FAQ links, and
-// the cancellation card's Patient Experience links go nowhere yet.
+// Figma 5048:37958 for the chrome (header, strip, title band); the body is
+// NO FRAME until Irina's designs land.
 
-import { ArrowLeft, X, Info, Headphones, ExternalLink } from "lucide-react";
+import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, FileText, ClipboardList, Stethoscope, FlaskConical, Headphones } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
 
 const WS = "'Work Sans', sans-serif";
@@ -18,8 +21,81 @@ const STRIP = "#2f22f1";
 const PAGE = "#f4f4f4";
 const INK = "#0b1f4b";
 const BLUE = "#135cff";
+const MUTED = "#4b5563";
+// The desktop frame Janelle pasted on 10 Sep ("for the health assessments
+// screen add these bits"): heading #0E1E3E, card title #133595, the card's
+// border, radius and shadow, the support box's border and link blue. Its
+// Source Sans Pro is not loaded here, so the bars stay in Work Sans.
+const HEADING = "#0e1e3e";
+const CARD_TITLE = "#133595";
+const LINK = "#337aff";
+const CARD_SHADOW = "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)";
 
-export function MyHealthAssessments({ onContinue, onBack }: { onContinue: () => void; onBack: () => void }) {
+export type AssessmentsStage = "pending" | "insights" | "advanced";
+
+const HOW_IT_WORKS = [
+  { Icon: ClipboardList, title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
+  { Icon: Stethoscope, title: "Clinician review", body: "A clinician reviews your answers and sends your report within 2 days." },
+  { Icon: FlaskConical, title: "Advanced Corporate Health Assessment", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
+];
+
+// One line per thing that has happened, as the D2C view draws them: a green
+// tick for what is done, an info mark for what is still to come. Janelle,
+// 10 Sep: "you can copy from here (d2c view) for the statuses".
+type Status = { done: boolean; label: string };
+
+function StatusRow({ done, label }: Status) {
+  const colour = done ? "#166534" : "#030712";
+  const Icon = done ? CircleCheckBig : Info;
+  return (
+    <div className="flex items-center gap-[8px]">
+      <Icon size={16} color={colour} strokeWidth={1.33} />
+      <span className="text-[12px] font-semibold leading-[16px]" style={{ color: colour }}>{label}</span>
+    </div>
+  );
+}
+
+function AssessmentCard({ title, when, statuses, linkLabel, onLink }: {
+  title: string; when: string; statuses: Status[]; linkLabel?: string; onLink?: () => void;
+}) {
+  return (
+    <div
+      className="flex items-center gap-[16px] rounded-[16px] p-[24px]"
+      style={{ border: "1px solid #d7e9ff", background: "#ffffff", boxShadow: CARD_SHADOW }}
+    >
+      <div className="flex flex-col gap-[16px] flex-1 min-w-0">
+        <div className="flex flex-col gap-[4px]">
+          <p className="text-[18px] font-semibold leading-[28px]" style={{ color: CARD_TITLE }}>{title}</p>
+          <p className="text-[12px] leading-[16px]" style={{ color: "#030712" }}>{when}</p>
+        </div>
+        <div className="flex flex-col gap-[8px]">
+          {statuses.map((status) => <StatusRow key={status.label} {...status} />)}
+        </div>
+      </div>
+      {linkLabel && onLink && (
+        <button
+          type="button"
+          onClick={onLink}
+          data-guide-primary
+          className="flex items-center justify-center gap-[8px] shrink-0 rounded-[9999px] px-[16px] py-[12px] cursor-pointer border-none"
+          style={{ background: BLUE, boxShadow: "0px 4px 6px -1px rgba(15,55,190,0.05), 0px 2px 4px -2px rgba(15,55,190,0.05)", fontFamily: WS }}
+        >
+          <span className="text-[12px] font-semibold leading-[16px]" style={{ color: "#edf6ff" }}>{linkLabel}</span>
+          <FileText size={16} color="#edf6ff" strokeWidth={1.33} />
+        </button>
+      )}
+    </div>
+  );
+}
+
+export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }: {
+  stage: AssessmentsStage;
+  /** The report links: DCA's own Uploads, not FHM. PM, 10 Sep, relaying Laura. */
+  onOpenUploads: () => void;
+  /** The one button out to Full Health Medical, for anything still live there. */
+  onOpenFhm: () => void;
+  onBack: () => void;
+}) {
   return (
     <div className="min-h-screen w-full flex flex-col" style={{ background: PAGE, fontFamily: WS }}>
       <div className="flex items-center justify-between px-[24px] h-[70px]" style={{ background: HEADER }}>
@@ -45,46 +121,105 @@ export function MyHealthAssessments({ onContinue, onBack }: { onContinue: () => 
       </div>
 
       <div className="bg-white px-[130px] py-[28px]">
-        <p className="text-[40px] font-bold leading-[48px]" style={{ color: INK }}>My health assessments</p>
+        <p className="text-[42px] font-bold leading-[42px]" style={{ color: HEADING }}>My health assessments</p>
       </div>
 
-      <div className="flex flex-col items-center gap-[24px] pt-[52px] pb-[80px] flex-1">
+      <div className="flex flex-col items-center gap-[24px] pt-[40px] pb-[80px] flex-1">
+        {/* The blurb the PM asked for: what the programme is, in the words of
+            the landing page's own steps. */}
         <div className="bg-white rounded-[8px] w-[700px] p-[26px]">
-          <p className="text-[20px] font-bold leading-[28px]" style={{ color: "#111827" }}>My health assessments</p>
-          <div
-            className="flex items-center justify-between rounded-[12px] px-[24px] py-[20px] mt-[18px]"
-            style={{ border: "1px solid #d7e9ff" }}
-          >
-            <p className="text-[18px] font-semibold leading-[26px]" style={{ color: INK }}>
-              Advanced Corporate Health Assessment
-            </p>
-            <button
-              type="button"
-              onClick={onContinue}
-              data-guide-primary
-              className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none"
-              style={{ background: BLUE }}
-            >
-              <span className="text-[13px] font-semibold text-white">Continue journey</span>
-              <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
-            </button>
+          <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>How your health assessment works</p>
+          <div className="flex flex-col gap-[12px] mt-[14px]">
+            {HOW_IT_WORKS.map(({ Icon, title, body }) => (
+              <div key={title} className="flex gap-[12px] items-start">
+                <div className="flex items-center justify-center shrink-0 w-[32px] h-[32px] rounded-[8px]" style={{ background: "#edf6ff" }}>
+                  <Icon size={16} color={BLUE} strokeWidth={2} />
+                </div>
+                <div>
+                  <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
+                  <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-[8px] w-[700px] p-[26px] flex items-start justify-between gap-[24px]">
-          <div className="flex flex-col gap-[10px]">
-            <p className="flex items-center gap-[8px] text-[16px] font-bold" style={{ color: "#111827" }}>
-              <Info size={16} color={BLUE} strokeWidth={2} /> Cancelling a health assessment
-            </p>
-            <p className="text-[14px] leading-[20px]" style={{ color: "#374151" }}>
-              Contact our patient experience team to cancel or request a refund.
-            </p>
+        <div className="bg-white rounded-[8px] w-[700px] p-[26px] flex flex-col gap-[16px]">
+          <p className="text-[20px] font-bold leading-[28px]" style={{ color: HEADING }}>My health assessments</p>
+
+          {/* Nothing to open yet, so no link. Janelle, 10 Sep: "there should
+              be no go to uploads as it should be the health Insights
+              assessment submitted". */}
+          {stage === "pending" ? (
+            <AssessmentCard
+              title="Health Insights Assessment"
+              when="Submitted 4 September 2026. We will email you when your report is ready."
+              // Review and report arrive as one event. Janelle, 11 Sep:
+              // "review and results come together".
+              statuses={[
+                { done: true, label: "Health Insights Assessment submitted" },
+                { done: false, label: "Awaiting clinician review and your report, within 2 days" },
+              ]}
+            />
+          ) : (
+            <AssessmentCard
+              title="Health Insights Assessment"
+              when="Report dispatched 4 September 2026. It is in your Uploads."
+              statuses={[
+                { done: true, label: "Health Insights Assessment submitted" },
+                { done: true, label: "Reviewed by a clinician, your report is ready" },
+              ]}
+              linkLabel="See your Health Insights report"
+              onLink={onOpenUploads}
+            />
+          )}
+
+          {stage === "advanced" && (
+            <AssessmentCard
+              title="Advanced Corporate Health Assessment"
+              when="Report dispatched 18 September 2026. It is in your Uploads, and a free video GP appointment is included to talk it through."
+              statuses={[
+                { done: true, label: "Appointment completed" },
+                { done: true, label: "Reviewed by a clinician, your results and report are ready" },
+              ]}
+              linkLabel="See your Advanced Health Assessment report"
+              onLink={onOpenUploads}
+            />
+          )}
+
+          {/* The way to anything still live (appointments, the next
+              assessment). Not named after where it goes: Janelle, 10 Sep,
+              "we dont mention FHM already so a different cta", then "manage
+              my health assessments". */}
+          <button
+            type="button"
+            onClick={onOpenFhm}
+            className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
+            style={{ background: BLUE }}
+          >
+            <span className="text-[13px] font-semibold text-white">Manage my health assessments</span>
+            <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
+          </button>
+        </div>
+
+        <div
+          className="flex items-start justify-between gap-[24px] bg-white rounded-[5px] w-[700px] px-[16px] py-[24px]"
+          style={{ border: "1px solid #d2d2d2" }}
+        >
+          <div className="flex gap-[8px] items-start flex-1">
+            <Info size={20} color="#00008f" strokeWidth={2} className="shrink-0 mt-[3px]" />
+            <div className="flex flex-col gap-[8px]">
+              <p className="text-[16px] font-bold leading-[19px]" style={{ color: HEADING }}>Questions about your health assessment?</p>
+              <p className="text-[14px] leading-[19px]" style={{ color: "#414141" }}>
+                Our Patient Experience team can help with anything about your assessment or your report.
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col items-start gap-[12px] shrink-0">
-            <p className="flex items-center gap-[8px] text-[15px] font-bold underline" style={{ color: BLUE }}>
-              <Headphones size={16} strokeWidth={2} /> Contact Patient Experience
-            </p>
-            <p className="text-[14px] font-semibold underline" style={{ color: BLUE }}>Health assessment FAQs</p>
+          <div className="flex flex-col items-center gap-[14px] shrink-0">
+            <span className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline" style={{ color: LINK }}>
+              <Headphones size={22} strokeWidth={2} /> Contact Patient Experience
+            </span>
+            <span className="text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>Health assessment FAQs</span>
           </div>
         </div>
       </div>

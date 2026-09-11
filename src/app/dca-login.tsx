@@ -30,7 +30,9 @@ export function DcaLogin({ onLogin }: { onLogin: () => void }) {
         <img src={photo} alt="" aria-hidden className="w-full h-full object-cover block" style={{ minHeight: "100vh" }} />
       </div>
 
-      <div className="flex-1 flex items-start justify-center pt-[80px] pb-[80px] px-[24px]" style={{ background: "#e2e5f8" }}>
+      {/* Card centred in the panel. Janelle, 10 Sep: "can you move and ensure
+          this is centered?" */}
+      <div className="flex-1 flex items-center justify-center py-[40px] px-[24px]" style={{ background: "#e2e5f8" }}>
         <div className="bg-white rounded-[8px] w-full max-w-[440px] px-[48px] pt-[20px] pb-[40px] relative" style={{ boxShadow: "0 10px 30px rgba(17,24,39,0.06)" }}>
           <p className="flex items-center gap-[6px] justify-end text-[13px] font-bold" style={{ color: "#3d3ee0" }}>
             <Headphones size={15} strokeWidth={2.2} /> Need help?

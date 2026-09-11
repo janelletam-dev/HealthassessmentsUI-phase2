@@ -40,7 +40,7 @@ export const EMAIL_HEADER = {
 // centred block, so they are one string here rather than two. The double space
 // after "assessment." is the frame's.
 export const EMAIL_INTRO =
-  "Hi Jane,\n\nAs part of your employer's Health Assessment Programme, you're invited to take a short health insights assessment.  It takes just a few minutes and is completely free.";
+  "Hi Jane,\n\nAs part of your employer's Health Assessment Programme, you're invited to take a short Health Insights Assessment.  It takes just a few minutes and is completely free.";
 
 // 449:528, the first card.
 export const EMAIL_NEXT_HEADING = "Here’s what happens next";
@@ -151,7 +151,8 @@ export const EMAIL_FOOTER = {
 // through the MCP and this frame is not on it, so there is no node to cite.
 // Every string below is from the render and the CSS she sent.
 export const RESULTS_EMAIL = {
-  title: "Your lifestyle questionnaire results are ready",
+  // "Lifestyle questionnaire" became "Health Insights Assessment": PM, 10 Sep.
+  title: "Your Health Insights Assessment results are ready",
   // Greeting and paragraph are one centred block, as in marketing's invitation.
   body: "Hi Jane,\n\nYour clinician-reviewed results are ready to view. Your report explains what we found and your recommended next steps — in clear language, not just raw data.",
   // The arrow is inside the label in the frame, not a separate icon.
@@ -188,12 +189,12 @@ export const APPOINTMENT_EMAIL = {
     "Make sure to drink plenty of water before your visit. Being well hydrated can make sample collection easier and supports accurate readings.",
     "Wear clothing that allows easy access to your arm.",
     "Arrive a few minutes early to check in (have your booking reference handy, you may be asked for it).",
-    "Please complete your Advanced Health Assessment questionnaire (about [X minutes]), if you haven't yet done so.",
+    "Please complete your Advanced Health Assessment (about [X minutes]), if you haven't yet done so.",
   ],
   // 449:1576. The bracketed [X minutes] above is the frame's own placeholder,
   // left in because marketing has not filled it and inventing a duration would
   // put a number on screen that nobody has agreed.
-  cta: "Complete your questionnaire →",
+  cta: "Complete your Advanced Health Assessment →",
   // 449:1576
   importantHeading: "Important health information",
   important: "Please let the clinician know if you are taking blood-thinning medication, have a history of fainting, needle phobia, or any relevant medical conditions.",
@@ -287,7 +288,7 @@ export const MAILBOX = {
     //
     // No first name and no sentence case, unlike the invitation's subject. That
     // is hers, not a slip.
-    subject: "Lifestyle Questionnaire Report Ready",
+    subject: "Health Insights Assessment Report Ready",
     date: "16:02",
   },
 };

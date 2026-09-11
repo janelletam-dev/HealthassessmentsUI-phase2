@@ -19,6 +19,8 @@ function Arrow({ side, label, onClick }: { side: "left" | "right"; label: string
       type="button"
       onClick={onClick}
       aria-label={label}
+      data-guide-back={side === "left" ? "" : undefined}
+      data-guide-next={side === "right" ? "" : undefined}
       className="fixed top-1/2 -translate-y-1/2 z-[500] flex items-center justify-center cursor-pointer border-none rounded-full size-[46px]"
       style={{
         [side]: 18,
@@ -93,8 +95,24 @@ async function completeScreen() {
     (d) => d.querySelector(":scope > p") && d.querySelector(":scope > div > button") && visible(d),
   );
   for (const group of groups) {
-    group.querySelector<HTMLElement>(":scope > div > button")?.click();
+    // A group is a choice: two or more option buttons, which is what the
+    // questionnaires' rows are (aria-pressed). Anything else that shares the
+    // shape (helper <p>, wrapper div > button) is left alone: the password
+    // field's eye, which turned the input into plain text and lost the
+    // password (Janelle, 10 Sep: "you do not need the unhappy / error path"),
+    // and the code screen, where Change number sat first and every press
+    // sent the code again.
+    const options = [...group.querySelectorAll<HTMLElement>(":scope > div > button[aria-pressed]")].filter((b) => b.innerText.trim());
+    if (options.length < 2) continue;
+    options[0].click();
     await sleep(30);
+  }
+  // Required tick-box questions (the advanced questionnaire's Diagnosed
+  // Conditions, say): one tick each, or Submit refuses the form.
+  for (const group of groups) {
+    if (!group.querySelector(":scope > p")?.textContent?.trim().endsWith("*")) continue;
+    const box = group.querySelector<HTMLElement>(':scope > div > [role="checkbox"][aria-checked="false"]');
+    if (box) { box.click(); await sleep(30); }
   }
 
   // Empty fields, valued by placeholder or aria; numbers get plausible vitals.
@@ -109,7 +127,7 @@ async function completeScreen() {
       input.type === "number" ? numbers[numberSeq++ % numbers.length]
       : aria.includes("Verification code") ? "123456"
       : ph.includes("Email Address") || ph.includes("jane.doe") ? "jane.smith@mail.com"
-      : input.type === "password" ? "Harbour-Sunrise-42"
+      : input.type === "password" ? "Demo123!"
       : ph.includes("e.g., Jane") ? "Jane"
       : ph.includes("e.g., Smith") ? "Smith"
       : ph.includes("W1W 8QB") ? "W1W 8QB"
@@ -155,29 +173,74 @@ async function completeScreen() {
   }
 }
 
+/*
+ * The global back arrow. Janelle, 10 Sep: "the back arrow on each page", then
+ * "could they go back one page please and not back to the start?". So it
+ * presses the screen's own back control first, marked data-guide-back-target
+ * (Previous in the profile steps, Change number, the booking links), the way
+ * the right arrow presses data-guide-primary. Only when the screen has none
+ * does it ask App, over "guide:back", for the phase before this one; App
+ * keeps that list and says over "guide:history" whether there is one.
+ */
+function backTarget() {
+  return [...document.querySelectorAll<HTMLElement>("[data-guide-back-target]")]
+    .find((el) => el.offsetParent !== null && !(el as HTMLButtonElement).disabled);
+}
+
 export function GlobalGuideArrow() {
   const [present, setPresent] = useState(false);
+  const [canBack, setCanBack] = useState(false);
+  const [ownBack, setOwnBack] = useState(false);
+  const [ownNext, setOwnNext] = useState(false);
+  const [target, setTarget] = useState(false);
   useEffect(() => {
     const tick = window.setInterval(() => {
       const marked = [...document.querySelectorAll<HTMLElement>("[data-guide-primary]")]
         .filter((el) => el.offsetParent !== null && !(el as HTMLButtonElement).disabled);
       setPresent(marked.length > 0);
+      // A screen with its own left arrow (the clinician's queue and detail)
+      // keeps it; two arrows in the same spot would be one too many.
+      setOwnBack([...document.querySelectorAll("[data-guide-back]")].some((el) => !el.closest("[data-guide-global]")));
+      // Likewise a screen's own right arrow: the sleep guide's, say, which
+      // carries the story to the amber result. Janelle, 10 Sep: "i am looping".
+      setOwnNext([...document.querySelectorAll("[data-guide-next]")].some((el) => !el.closest("[data-guide-global]")));
+      setTarget(backTarget() !== undefined);
     }, 350);
-    return () => window.clearInterval(tick);
+    const onHistory = (e: Event) => setCanBack(Boolean((e as CustomEvent<boolean>).detail));
+    window.addEventListener("guide:history", onHistory);
+    return () => { window.clearInterval(tick); window.removeEventListener("guide:history", onHistory); };
   }, []);
-  if (!present) return null;
   return (
-    <Arrow
-      side="right"
-      label="Next"
-      onClick={async () => {
-        await completeScreen();
-        const el = [...document.querySelectorAll<HTMLElement>("[data-guide-primary]")]
-          .find((candidate) => candidate.offsetParent !== null && !(candidate as HTMLButtonElement).disabled);
-        if (!el) return;
-        el.scrollIntoView({ block: "center", behavior: "smooth" });
-        el.click();
-      }}
-    />
+    <>
+      {(canBack || target) && !ownBack && (
+        <span data-guide-global>
+          <Arrow
+            side="left"
+            label="Back"
+            onClick={() => {
+              const own = backTarget();
+              if (own) { own.scrollIntoView({ block: "center", behavior: "smooth" }); own.click(); return; }
+              window.dispatchEvent(new CustomEvent("guide:back"));
+            }}
+          />
+        </span>
+      )}
+      {present && !ownNext && (
+        <span data-guide-global>
+        <Arrow
+          side="right"
+          label="Next"
+          onClick={async () => {
+            await completeScreen();
+            const el = [...document.querySelectorAll<HTMLElement>("[data-guide-primary]")]
+              .find((candidate) => candidate.offsetParent !== null && !(candidate as HTMLButtonElement).disabled);
+            if (!el) return;
+            el.scrollIntoView({ block: "center", behavior: "smooth" });
+            el.click();
+          }}
+        />
+        </span>
+      )}
+    </>
   );
 }
