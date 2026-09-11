@@ -31,7 +31,6 @@ const CARD_TITLE = "#133595";
 const LINK = "#337aff";
 const CARD_SHADOW = "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)";
 const FAQS_URL = "https://doctorcareanywhere.com/faqs";
-const HOW_URL = "https://doctorcareanywhere.com/health-assessment";
 
 export type AssessmentsStage = "pending" | "insights" | "advanced";
 
@@ -118,12 +117,10 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
         >
           <ArrowLeft size={14} strokeWidth={2.5} /> Back a step
         </button>
-        {/* Real pages. Irina, Figma comment #159: "right links and right
-            content". */}
-        <div className="flex items-center gap-[32px] text-white font-semibold text-[13px]">
-          <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-white underline underline-offset-2">Health assessment FAQs</a>
-          <a href={HOW_URL} target="_blank" rel="noreferrer" className="text-white underline underline-offset-2">How health assessments work</a>
-        </div>
+        {/* One link, the real FAQs page. Irina, Figma comment #159: "right
+            links and right content"; Janelle, 11 Sep: "just place one". The
+            page itself now says how the assessment works. */}
+        <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-white font-semibold text-[13px] underline underline-offset-2">Health assessment FAQs</a>
       </div>
 
       <div className="bg-white px-[130px] py-[28px]">
