@@ -121,8 +121,8 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
         {/* Real pages. Irina, Figma comment #159: "right links and right
             content". */}
         <div className="flex items-center gap-[32px] text-white font-semibold text-[13px]">
-          <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-white no-underline">Health assessment FAQs</a>
-          <a href={HOW_URL} target="_blank" rel="noreferrer" className="text-white no-underline">How health assessments work</a>
+          <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-white underline underline-offset-2">Health assessment FAQs</a>
+          <a href={HOW_URL} target="_blank" rel="noreferrer" className="text-white underline underline-offset-2">How health assessments work</a>
         </div>
       </div>
 
