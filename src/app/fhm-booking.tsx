@@ -449,8 +449,11 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
     // page carries the same explainer, whose Book Appointment enters at
     // Choose a location directly.
     return (
-      <FhmShell title="About this product">
-        <NextStepExplainer onBook={() => setStep("location")} />
+      <FhmShell
+        title="Introduction"
+        footer={<StickyBar><BackLink label="Back" onClick={onExit} /><PrimaryButton label="Next" onClick={() => setStep("location")} /></StickyBar>}
+      >
+        <NextStepExplainer />
       </FhmShell>
     );
   }
@@ -459,7 +462,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
     return (
       <FhmShell
         title="Choose a location"
-        footer={<StickyBar><BackLink label="About this product" onClick={() => setStep("about")} /><span /></StickyBar>}
+        footer={<StickyBar><BackLink label="Introduction" onClick={() => setStep("about")} /><span /></StickyBar>}
       >
         <Card>
           <div className="px-[24px] py-[20px] flex flex-col gap-[12px]">

@@ -188,94 +188,101 @@ const WHY_TAKE_PART = [
   "Take proactive steps for a healthier future",
 ];
 
-export function NextStepExplainer({ onBook }: { onBook: () => void }) {
+// The Introduction page of the Advanced Corporate Health Assessment, as the
+// clinical partner draws it: left-aligned sections in two columns, rules
+// between them, the closing line in plain text. Janelle, 11 Sep: "change the
+// advanced health assessments screen (FHM side) to the 1st image". With
+// onBook it ends in a Book Appointment button (the next steps page); without,
+// the page's own footer carries Next.
+function Section({ title, children, last }: { title: string; children: React.ReactNode; last?: boolean }) {
   return (
-    <div className="bg-white rounded-[6px] overflow-hidden" style={{ border: `1px solid ${RULE}` }}>
-      <div className="px-[28px] pt-[26px] pb-[22px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
-        <p className="font-bold text-[14px] tracking-[0.03em]" style={{ color: BLUE }}>YOUR NEXT STEP</p>
-        <p className="font-bold text-[26px] leading-[34px] mt-[6px]" style={{ color: "#0b1f4b" }}>
-          Advanced Corporate Health Assessment
-        </p>
-        <p className="text-[15px] leading-[24px] mt-[10px] max-w-[620px] mx-auto" style={{ color: "#374151" }}>
+    <div className="px-[24px] py-[22px]" style={{ borderBottom: last ? "none" : `1px solid ${RULE}` }}>
+      <p className="text-[17px] font-medium leading-[24px] mb-[16px]" style={{ color: "#111827" }}>{title}</p>
+      {children}
+    </div>
+  );
+}
+
+export function NextStepExplainer({ onBook }: { onBook?: () => void }) {
+  return (
+    <div className="bg-white rounded-[6px] overflow-hidden" style={{ border: `1px solid ${RULE}`, fontFamily: WS }}>
+      <div className="px-[24px] pt-[26px] pb-[22px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
+        <p className="font-semibold text-[24px] leading-[32px]" style={{ color: "#111827" }}>Advanced Corporate Health Assessment</p>
+        <p className="text-[15px] leading-[22px] mt-[10px] max-w-[600px] mx-auto" style={{ color: "#374151" }}>
           Based on your Pre-Screen results, we recommend a more in-depth assessment to build a clearer picture of your health. The assessment is fully funded by your employer.
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-[14px] px-[28px] py-[22px]" style={{ borderBottom: `1px solid ${RULE}` }}>
-        {FEATURES.map(({ Icon, title, body }) => (
-          <div key={title} className="rounded-[8px] px-[14px] py-[16px] text-center" style={{ background: "#f0f6ff" }}>
-            <Icon size={22} color={BLUE} strokeWidth={1.8} className="mx-auto" />
-            <p className="font-bold text-[13px] leading-[18px] mt-[8px]" style={{ color: "#0b1f4b" }}>{title}</p>
-            <p className="text-[12px] leading-[17px] mt-[4px]" style={{ color: "#4b5563" }}>{body}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="px-[28px] py-[22px]" style={{ borderBottom: `1px solid ${RULE}` }}>
-        <p className="font-bold text-[16px] text-center" style={{ color: "#0b1f4b" }}>How it works</p>
-        <div className="grid grid-cols-4 gap-[14px] mt-[16px]">
-          {HOW_IT_WORKS.map((step, i) => (
-            <div key={step.title} className="text-center">
-              <span
-                className="mx-auto flex items-center justify-center size-[26px] rounded-full text-[13px] font-bold text-white"
-                style={{ background: BLUE }}
-              >
-                {i + 1}
+      <Section title="What’s included">
+        <div className="grid grid-cols-2 gap-x-[24px] gap-y-[18px]">
+          {FEATURES.map(({ Icon, title, body }) => (
+            <div key={title} className="flex gap-[12px] items-start">
+              <span className="flex items-center justify-center shrink-0 size-[32px] rounded-[8px]" style={{ background: "#e8f0fe" }}>
+                <Icon size={16} color={BLUE} strokeWidth={1.8} />
               </span>
-              <p className="font-bold text-[13px] leading-[18px] mt-[8px]" style={{ color: "#0b1f4b" }}>{step.title}</p>
-              <p className="text-[12px] leading-[17px] mt-[4px]" style={{ color: "#4b5563" }}>{step.body}</p>
+              <div>
+                <p className="text-[15px] font-medium leading-[22px]" style={{ color: "#111827" }}>{title}</p>
+                <p className="text-[14px] leading-[21px]" style={{ color: "#4b5563" }}>{body}</p>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+      </Section>
 
-      <div className="px-[28px] py-[20px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
-        <p className="font-bold text-[14px]" style={{ color: "#0b1f4b" }}>You may receive recommendations for:</p>
-        <div className="flex flex-wrap justify-center gap-[8px] mt-[12px]">
-          {RECOMMENDATION_CHIPS.map((chip) => (
-            <span key={chip} className="rounded-full px-[14px] py-[6px] text-[13px]" style={{ background: "#e9f8ef", color: "#166534" }}>
-              {chip}
-            </span>
+      <Section title="How it works">
+        <div className="grid grid-cols-2 gap-x-[24px] gap-y-[18px]">
+          {HOW_IT_WORKS.map((step, i) => (
+            <div key={step.title} className="flex gap-[12px] items-start">
+              <span className="flex items-center justify-center shrink-0 size-[22px] rounded-full text-[12px] font-semibold text-white mt-[1px]" style={{ background: BLUE }}>{i + 1}</span>
+              <div>
+                <p className="text-[15px] font-medium leading-[22px]" style={{ color: "#111827" }}>{step.title}</p>
+                <p className="text-[14px] leading-[21px]" style={{ color: "#4b5563" }}>{step.body}</p>
+              </div>
+            </div>
           ))}
         </div>
-      </div>
+      </Section>
 
-      <div className="px-[28px] py-[20px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
-        <p className="font-bold text-[15px]" style={{ color: "#0b1f4b" }}>Want to discuss your results?</p>
-        <p className="text-[14px] leading-[22px] mt-[6px] max-w-[560px] mx-auto" style={{ color: "#374151" }}>
+      <Section title="You may receive recommendations for">
+        <ul className="list-disc pl-[20px] flex flex-col gap-[4px]">
+          {RECOMMENDATION_CHIPS.map((item) => (
+            <li key={item} className="text-[15px] leading-[22px]" style={{ color: "#374151" }}>{item}</li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section title="Want to discuss your results?">
+        <p className="text-[15px] leading-[22px] mt-[-6px]" style={{ color: "#374151" }}>
           You have a free Video GP appointment included, so you can talk your results and next steps through with a doctor once your report is ready.
         </p>
-      </div>
+      </Section>
 
-      <div className="px-[28px] py-[20px]" style={{ borderBottom: `1px solid ${RULE}` }}>
-        <p className="font-bold text-[15px] text-center" style={{ color: "#0b1f4b" }}>Why take part?</p>
-        <div className="grid grid-cols-4 gap-[12px] mt-[14px]">
+      <Section title="Why take part?" last>
+        <div className="grid grid-cols-2 gap-x-[24px] gap-y-[16px]">
           {WHY_TAKE_PART.map((reason) => (
-            <div key={reason} className="flex flex-col items-center gap-[6px] text-center">
-              <CircleCheck size={18} color="#166534" strokeWidth={2} />
-              <p className="text-[12px] leading-[17px]" style={{ color: "#374151" }}>{reason}</p>
+            <div key={reason} className="flex gap-[12px] items-center">
+              <span className="flex items-center justify-center shrink-0 size-[32px] rounded-full" style={{ background: "#e8f0fe" }}>
+                <CircleCheck size={16} color={BLUE} strokeWidth={1.8} />
+              </span>
+              <p className="text-[15px] leading-[22px]" style={{ color: "#111827" }}>{reason}</p>
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="flex items-center justify-between px-[28px] py-[20px]" style={{ background: BLUE }}>
-        <div>
-          <p className="font-bold text-[16px] text-white">Ready to get started?</p>
-          <p className="text-[13px] mt-[2px]" style={{ color: "#dbeafe" }}>
-            Book your Advanced Corporate Health Assessment at a pharmacy near you.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onBook}
-          data-guide-primary
-          className="rounded-full px-[26px] py-[11px] text-[15px] font-bold border-none cursor-pointer shrink-0"
-          style={{ background: "#ffffff", color: BLUE, fontFamily: WS }}
-        >
-          Book Appointment
-        </button>
-      </div>
+        <p className="text-[15px] leading-[22px] mt-[22px]" style={{ color: "#374151" }}>
+          Ready to get started? Book your Advanced Corporate Health Assessment at a pharmacy near you.
+        </p>
+        {onBook && (
+          <button
+            type="button"
+            onClick={onBook}
+            data-guide-primary
+            className="rounded-[4px] px-[24px] py-[9px] mt-[18px] text-[15px] font-medium border-none cursor-pointer"
+            style={{ background: BLUE, color: "#ffffff", fontFamily: WS }}
+          >
+            Book Appointment
+          </button>
+        )}
+      </Section>
     </div>
   );
 }

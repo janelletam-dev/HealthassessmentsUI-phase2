@@ -89,14 +89,12 @@ function AssessmentCard({ title, when, statuses, linkLabel, onLink }: {
   );
 }
 
-export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp, onBack }: {
+export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }: {
   stage: AssessmentsStage;
   /** The report links: DCA's own Uploads, not FHM. PM, 10 Sep, relaying Laura. */
   onOpenUploads: () => void;
   /** The one button out to Full Health Medical, for anything still live there. */
   onOpenFhm: () => void;
-  /** The free GP follow-up, booked like any appointment, once both reports are in. */
-  onBookGp: () => void;
   onBack: () => void;
 }) {
   return (
@@ -176,13 +174,11 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
             />
           )}
 
-          {/* One next step, only when there is one: the Advanced Health
-              Assessment once the first report is in, the free GP follow-up
-              once the second is. Nothing while a report is still being
-              prepared. Janelle, 11 Sep: "make it a better UX", then, on
-              Irina's "View next steps", "go back to the previous CTA for the
-              general one". */}
-          {stage === "insights" && (
+          {/* The general CTA, once a report is in; nothing while one is
+              still being prepared. The GP follow-up is booked from Home.
+              Janelle, 11 Sep: "the general CTA should not be book a follow
+              up appt". */}
+          {stage !== "pending" && (
             <button
               type="button"
               onClick={onOpenFhm}
@@ -190,17 +186,6 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
               style={{ background: BLUE }}
             >
               <span className="text-[13px] font-semibold text-white">Manage my health assessments</span>
-              <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
-            </button>
-          )}
-          {stage === "advanced" && (
-            <button
-              type="button"
-              onClick={onBookGp}
-              className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
-              style={{ background: BLUE }}
-            >
-              <span className="text-[13px] font-semibold text-white">Book your free GP follow-up</span>
               <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
             </button>
           )}

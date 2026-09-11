@@ -190,7 +190,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "zoom", text: "The other outcome: amber and red flags, and the clinician recommends the Advanced Health Assessment" },
   { kind: "pause", ms: 1200 },
   { kind: "click", label: "Read your next steps and book" },
-  { kind: "waitFor", text: "YOUR NEXT STEP" },
+  { kind: "waitFor", text: "You may receive recommendations for" },
   { kind: "scrollThrough", ms: 3000 },
   { kind: "zoom", text: "Next steps on their own page: what the Advanced Health Assessment involves, and the button to book it" },
   { kind: "click", label: "Book Appointment" },
