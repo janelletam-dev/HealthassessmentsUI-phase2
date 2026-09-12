@@ -32,9 +32,9 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 | 17 | Appointment email | The confirmation email | The confirmation email: where to go, what to bring, and a short video on what to expect | The video is a placeholder; the clinical team are producing the clips. |
 | 18 | Clinician review, advanced | Blood results and measurements, flagged | After the pharmacy visit, the blood results and measurements get the same clinician review | QRISK3, blood pressure, BMI, HbA1c, lipids, liver, heart rate. |
 | 19 | Advanced results email | The second results email | The second results email, with a free video GP appointment included to talk it through | |
-| 20 | Advanced results | The advanced results page, every section flagged | The Advanced Health Assessment results: clinician-reviewed, with every flag explained | The report PDF was opened once already, at scene 13; it is not reopened here. |
+| 20 | Advanced results | The advanced results page, every section flagged | The Advanced Health Assessment results: clinician-reviewed, with every flag explained | The report PDF itself is opened at scene 22, in Uploads. |
 | 21 | Back to the account | Doctor Care Anywhere sign in | Back on Doctor Care Anywhere, where both reports now live | |
-| 22 | Reports in the account | Home, My health assessments, Uploads | Uploads: both reports filed as PDFs in the patient's own account | Each card's View report in Uploads opens the same list. The patient keeps the reports for good. The free GP follow-up is booked from Home's Book an appointment; show it by hand if asked, it is not a scene. |
+| 22 | Reports in the account | Home, My health assessments, Uploads, the Advanced report | Uploads: both reports filed as PDFs in the patient's own account | The Advanced report opens here, once, after the amber and red results. The free GP follow-up is booked from Home's Book an appointment; show it by hand if asked, it is not a scene. |
 | 23 | Employer's view | The employer's dashboard, both programmes | The employer's dashboard: 119 took the Health Insights Assessment, 110 reports dispatched | Uptake by age, dispatch times, and the anonymised health picture. Never an individual. |
 
 ## Things not to say

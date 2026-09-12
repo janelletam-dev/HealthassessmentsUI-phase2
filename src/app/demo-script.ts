@@ -290,7 +290,17 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Advanced Health Assessment Report", timeoutMs: 8000 },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "Uploads: both reports filed as PDFs in the patient's own account" },
-  { kind: "pause", ms: 1400 },
+  { kind: "pause", ms: 800 },
+  // The advanced report is opened here, once, after the amber and red results
+  // have been seen. Janelle, 12 Sep: "the advanced corporate should be shown
+  // after we show the amber/red results ... when we show that the uploads
+  // have been added then open there, once done, we show the corporate".
+  { kind: "click", label: "Advanced Health Assessment Report" },
+  { kind: "pause", ms: 900 },
+  { kind: "pdfPage", page: 2 },
+  { kind: "pause", ms: 3200 },
+  { kind: "zoom", text: "The Advanced Health Assessment report, filed in the account the day it was dispatched" },
+  { kind: "pause", ms: 1200 },
 
   // The GP follow-up is booked from Home's Book an appointment, by hand in a
   // demo, not as a scene. Janelle, 11 Sep: "it should be removed already
