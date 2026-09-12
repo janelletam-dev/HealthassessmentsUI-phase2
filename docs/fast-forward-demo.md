@@ -5,7 +5,7 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 ## Running it
 
 - Open the prototype with `?demo=fastforward` on the end of the address (or the `/demo-fastforward` path). It starts on the invitation email.
-- The badge at the bottom left shows the scene number and name. It has a pause button and a stop button. Refresh the page to start again from the top.
+- The badge at the bottom left shows the scene number and name, with worded controls: Pause and Stop while it plays; Resume, Back and Next step while it is paused. Back goes one screen back, Next step runs the script's next step. Refresh the page to start again from the top.
 - To walk the journey by hand instead, open the prototype without the flag. The right arrow fills each screen with demo data and presses its main button. The left arrow goes back one screen.
 - Everything typed is demo data: Jane Smith, jane.smith@mail.com, the password `Demo123!`, the text-message code `123456`.
 

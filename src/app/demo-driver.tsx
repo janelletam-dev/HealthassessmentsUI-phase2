@@ -15,7 +15,7 @@
 // the progress badge, the typing caret effect and the zoom card.
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronRight, Pause, Play, Square } from "lucide-react";
+import { ChevronRight, ChevronLeft, Pause, Play, Square } from "lucide-react";
 import { DEMO_SCRIPT } from "./demo-script.ts";
 
 /** Janelle, 4 Sep: "/demo-fastforward so all info are prefilled". The path is
@@ -125,6 +125,22 @@ function spotlight(el: HTMLElement, on: boolean) {
   el.style.transition = "box-shadow 300ms ease, transform 300ms ease";
   el.style.boxShadow = on ? "0 0 0 3px #ffb306, 0 0 24px rgba(255,179,6,0.55)" : "";
   el.style.transform = on ? "scale(1.02)" : "";
+}
+
+function HudButton({ label, icon, trailing, onClick }: { label: string; icon: React.ReactNode; trailing?: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="flex items-center gap-[6px] h-[26px] rounded-full px-[10px] cursor-pointer border-none text-[12px] font-semibold text-white"
+      style={{ background: "rgba(255,255,255,0.16)", fontFamily: "'Work Sans', sans-serif" }}
+    >
+      {!trailing && icon}
+      {label}
+      {trailing && icon}
+    </button>
+  );
 }
 
 export function DemoDriver() {
@@ -419,35 +435,36 @@ export function DemoDriver() {
         </p>
         {!failed && !isStopped && scene !== "Demo complete" && (
           <>
-            <button
-              type="button"
-              aria-label={isPaused ? "Resume the demo" : "Pause the demo"}
+            {/* Worded controls. Janelle, 12 Sep: "the user always does not
+                know what to press, pause or stop, show a small text", and
+                "add the left right tabs here". Back and Next step appear
+                while paused: Back is the guide's own back, a screen at a
+                time; Next step runs the script's next step. */}
+            <HudButton
+              label={isPaused ? "Resume" : "Pause"}
+              icon={isPaused ? <Play size={12} color="#ffffff" strokeWidth={2.5} /> : <Pause size={12} color="#ffffff" strokeWidth={2.5} />}
               onClick={() => { control.paused = !control.paused; setIsPaused(control.paused); }}
-              className="flex items-center justify-center size-[26px] rounded-full cursor-pointer border-none"
-              style={{ background: "rgba(255,255,255,0.16)" }}
-            >
-              {isPaused ? <Play size={13} color="#ffffff" strokeWidth={2.5} /> : <Pause size={13} color="#ffffff" strokeWidth={2.5} />}
-            </button>
+            />
             {isPaused && (
-              <button
-                type="button"
-                aria-label="Advance one step"
-                onClick={() => { control.step = true; }}
-                className="flex items-center justify-center size-[26px] rounded-full cursor-pointer border-none"
-                style={{ background: "rgba(255,255,255,0.16)" }}
-              >
-                <ChevronRight size={14} color="#ffffff" strokeWidth={2.5} />
-              </button>
+              <>
+                <HudButton
+                  label="Back"
+                  icon={<ChevronLeft size={13} color="#ffffff" strokeWidth={2.5} />}
+                  onClick={() => window.dispatchEvent(new CustomEvent("guide:back"))}
+                />
+                <HudButton
+                  label="Next step"
+                  icon={<ChevronRight size={13} color="#ffffff" strokeWidth={2.5} />}
+                  trailing
+                  onClick={() => { control.step = true; }}
+                />
+              </>
             )}
-            <button
-              type="button"
-              aria-label="Stop the demo"
+            <HudButton
+              label="Stop"
+              icon={<Square size={10} color="#ffffff" strokeWidth={2.5} />}
               onClick={() => { control.stopped = true; control.paused = false; }}
-              className="flex items-center justify-center size-[26px] rounded-full cursor-pointer border-none"
-              style={{ background: "rgba(255,255,255,0.16)" }}
-            >
-              <Square size={11} color="#ffffff" strokeWidth={2.5} />
-            </button>
+            />
           </>
         )}
       </div>
