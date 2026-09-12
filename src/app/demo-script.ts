@@ -14,6 +14,8 @@
 // believes it is on: if a step breaks, the run stops there and the badge says
 // where, which is the debugging story.
 
+import { APPOINTMENT } from "./demo-dates.ts";
+
 export type DemoStep =
   | { kind: "scene"; label: string }
   | { kind: "waitFor"; text: string; timeoutMs?: number }
@@ -202,7 +204,8 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 600 },
   { kind: "click", label: "Choose" },
   { kind: "waitFor", text: "Select date and time" },
-  { kind: "click", label: "16" },
+  // The appointment day moves with the calendar (demo-dates.ts).
+  { kind: "click", label: String(APPOINTMENT.getDate()) },
   { kind: "pause", ms: 500 },
   { kind: "click", label: "10:15 AM" },
   { kind: "click", label: "Review booking" },

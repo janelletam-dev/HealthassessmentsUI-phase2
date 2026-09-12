@@ -33,6 +33,7 @@ import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
 import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { GuideArrow } from "./guide-arrow.tsx";
+import { SUBMITTED, ADVANCED_REPORT, shortComma } from "./demo-dates.ts";
 
 const SS = "'Source Sans 3', 'Source Sans Pro', sans-serif";
 const WS = "'Work Sans', sans-serif";
@@ -93,7 +94,7 @@ const ADVANCED_FILE = {
   pages: 32,
   // The results-ready email arrives at 08:26, so the file lands then too. The
   // appointment was Wed 16 Sep; two days for the samples and review.
-  when: "Fri, 18 Sep 2026, 8:26am",
+  when: `${shortComma(ADVANCED_REPORT)}, 8:26am`,
   addedBy: "Added by Patient Experience Team",
   uploadedFor: "Uploaded for Jane Smith",
   pdf: advancedReportPdf,
@@ -104,7 +105,7 @@ const FILES = [
     name: "Health Insights Pre-screen test results",
     pages: 14,
     // The results email is timestamped 16:02, so the report lands at 16:02.
-    when: "Fri, 4 Sep 2026, 4:02pm",
+    when: `${shortComma(SUBMITTED)}, 4:02pm`,
     addedBy: "Added by Patient Experience Team",
     uploadedFor: "Uploaded for Jane Smith",
     pdf: reportPdf,

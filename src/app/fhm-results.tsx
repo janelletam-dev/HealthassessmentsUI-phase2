@@ -25,6 +25,7 @@ import {
   FlaskConical, ListChecks, Stethoscope, FileHeart, CircleCheck, Eye, X, CircleAlert, TriangleAlert,
 } from "lucide-react";
 import { FhmNav, WS, PAGE, RULE, BLUE, INK } from "./fhm-chrome.tsx";
+import { SUBMITTED, ADVANCED_REPORT, usShort } from "./demo-dates.ts";
 import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
 import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
 
@@ -70,7 +71,7 @@ type Stage = {
 const STAGES = {
   green: {
     reportName: "Health Insights Assessment",
-    date: "Sep 4 2026",
+    date: usShort(SUBMITTED),
     pdf: "prescreen" as const,
     noteTone: "clear" as const,
     note: [
@@ -91,7 +92,7 @@ const STAGES = {
   },
   prescreen: {
     reportName: "Health Insights Assessment",
-    date: "Sep 4 2026",
+    date: usShort(SUBMITTED),
     pdf: "prescreen" as const,
     noteTone: "attention" as const,
     note: [
@@ -111,7 +112,7 @@ const STAGES = {
   },
   advanced: {
     reportName: "Advanced Corporate Health Assessment",
-    date: "Sep 18 2026",
+    date: usShort(ADVANCED_REPORT),
     pdf: "advanced" as const,
     noteTone: "alert" as const,
     note: [

@@ -27,6 +27,7 @@ import { useState } from "react";
 import { ArrowLeft, Calendar, MapPin, CircleCheck, ClipboardList, ChevronRight, Check, House, CircleUserRound, Info } from "lucide-react";
 import { FhmShell, FhmNav, WS, PAGE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
 import { NextStepExplainer } from "./fhm-results.tsx";
+import { APPOINTMENT, TODAY, monthName, monthShort } from "./demo-dates.ts";
 import { SECTIONS as PRE_APPOINTMENT, missingAnswers, type Answers } from "./pre-appointment-questionnaire.ts";
 import { useScrollTop } from "./use-scroll-top.ts";
 
@@ -57,12 +58,18 @@ const LOCATIONS = [
   { name: "PELL STREET PHARMACY", display: "Pell Street Pharmacy", address: "2.04 Cannon Wharf Pell Street, London, SE8 5EN, United Kingdom" },
 ];
 
-// 27048:15321. September 2026 starts on a Tuesday, and the capture dots these
-// days as having slots.
-const MONTH = "September 2026";
-const FIRST_WEEKDAY = 1; // Monday = 0, so the 1st sits under Tuesday.
-const DAYS_IN_MONTH = 30;
-const AVAILABLE = [10, 11, 16, 17, 18, 23, 24, 25, 30];
+// 27048:15321 draws September 2026 with dotted days. The month is now the
+// appointment's, and the dots are the weekdays from today on, so the demo
+// stays fresh whenever it is given (demo-dates.ts).
+const MONTH = `${monthName(APPOINTMENT)} ${APPOINTMENT.getFullYear()}`;
+const MONTH_SHORT = monthShort(APPOINTMENT);
+const YEAR = APPOINTMENT.getFullYear();
+const FIRST_WEEKDAY = (new Date(YEAR, APPOINTMENT.getMonth(), 1).getDay() + 6) % 7; // Monday = 0
+const DAYS_IN_MONTH = new Date(YEAR, APPOINTMENT.getMonth() + 1, 0).getDate();
+const AVAILABLE = Array.from({ length: DAYS_IN_MONTH }, (_, i) => i + 1).filter((d) => {
+  const date = new Date(YEAR, APPOINTMENT.getMonth(), d);
+  return date >= TODAY && date.getDay() !== 0 && date.getDay() !== 6;
+});
 const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 const DAY_NAMES = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
 
@@ -287,7 +294,7 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
               <div className="flex items-start justify-between">
                 <p className="text-[16px] leading-[24px]" style={{ color: "#111827" }}>Date</p>
                 <p className="text-[16px] leading-[24px] flex items-center gap-[6px]" style={{ color: INK }}>
-                  {day} Sep 2026 {slot?.replace(" AM", "").replace(" PM", "")}
+                  {day} {MONTH_SHORT} {YEAR} {slot?.replace(" AM", "").replace(" PM", "")}
                   <Calendar size={14} color="#111827" strokeWidth={2} />
                 </p>
               </div>
@@ -452,7 +459,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
 
   const weekdayOf = (d: number) => DAY_NAMES[(FIRST_WEEKDAY + d - 1) % 7];
   const shortDay = (d: number) => weekdayOf(d).charAt(0) + weekdayOf(d).slice(1, 3).toLowerCase();
-  const dateLabel = day ? `${shortDay(day)} ${day} Sep 2026` : "";
+  const dateLabel = day ? `${shortDay(day)} ${day} ${MONTH_SHORT} ${YEAR}` : "";
 
   if (step === "about") {
     // The sparse capture card is replaced by the full explainer. Janelle,
@@ -723,7 +730,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
           <div className="flex items-start justify-between">
             <p className="text-[15px] leading-[22px]" style={{ color: INK }}>Date</p>
             <p className="text-[15px] leading-[22px] flex items-center gap-[6px]" style={{ color: INK }}>
-              {day} Sep 2026 {slot?.replace(" AM", "").replace(" PM", "")}
+              {day} {MONTH_SHORT} {YEAR} {slot?.replace(" AM", "").replace(" PM", "")}
               <Calendar size={14} color="#111827" strokeWidth={2} />
             </p>
           </div>

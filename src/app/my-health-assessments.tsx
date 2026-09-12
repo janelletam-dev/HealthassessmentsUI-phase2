@@ -14,6 +14,7 @@
 
 import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, FileText, ClipboardList, Stethoscope, FlaskConical, Headphones } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
+import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, long, dayMonth } from "./demo-dates.ts";
 
 const WS = "'Work Sans', sans-serif";
 const HEADER = "#334bf6";
@@ -140,7 +141,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "pending" ? (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="Submitted 4 September 2026"
+              when={`Submitted ${long(SUBMITTED)}`}
               // Review and report arrive as one event. Janelle, 11 Sep:
               // "review and results come together".
               statuses={[
@@ -151,7 +152,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           ) : (
             <AssessmentCard
               title="Health Insights Assessment"
-              when="Submitted 4 September 2026"
+              when={`Submitted ${long(SUBMITTED)}`}
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
                 { done: true, label: "Reviewed by a clinician, your report is ready" },
@@ -164,9 +165,9 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "advanced" && (
             <AssessmentCard
               title="Advanced Corporate Health Assessment"
-              when="Appointment 16 September 2026"
+              when={`Appointment ${long(APPOINTMENT)}`}
               statuses={[
-                { done: true, label: "Appointment completed on 16 September, 10:15am" },
+                { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}, ${APPOINTMENT_TIME.replace(" AM", "am")}` },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },
               ]}
               linkLabel="View report in Uploads"

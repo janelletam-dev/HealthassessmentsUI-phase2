@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { GuideArrow } from "./guide-arrow.tsx";
+import { SUBMITTED, ADVANCED_REPORT, addDays, dmy, queue } from "./demo-dates.ts";
 
 const SYS = "system-ui, -apple-system, 'Segoe UI', sans-serif";
 const NAV_BG = "#1b2a38";
@@ -69,11 +70,11 @@ const REVIEW_STAGES = {
   prescreen: {
     meta: "01 Jan 1981  (45yo)  Female  -  Ref: DCAPRE7Y2Q4JS8XK  -",
     product: "Pre-assessment",
-    date: "04/09/2026",
+    date: dmy(SUBMITTED),
     reference: "DCAPRE7Y2Q4JS8XK",
-    queueDate: "04 Sep 2026",
+    queueDate: queue(SUBMITTED),
     queueFlag: "DCA-PRE-ASSESSMENT",
-    fileDate: "04 Sep 2026 16:02",
+    fileDate: `${queue(SUBMITTED)} 16:02`,
     tags: ["paid", "online"],
     rows: [
       { label: "DCA - Summary", tone: "red" },
@@ -87,11 +88,11 @@ const REVIEW_STAGES = {
   advanced: {
     meta: "01 Jan 1981  (45yo)  Female  -  Ref: UAT1ADV3NFUPZPU9E  -",
     product: "Heart Health",
-    date: "18/09/2026",
+    date: dmy(ADVANCED_REPORT),
     reference: "UAT1ADV3NFUPZPU9E",
-    queueDate: "18 Sep 2026",
+    queueDate: queue(ADVANCED_REPORT),
     queueFlag: "DCA-ADVANCED",
-    fileDate: "18 Sep 2026 08:00",
+    fileDate: `${queue(ADVANCED_REPORT)} 08:00`,
     tags: ["paid", "phone_call_required", "online"],
     rows: [
       { label: "QRiSK3", tone: "red" },
@@ -121,11 +122,11 @@ const PATIENT = {
 // Jane first, staged; the rest dress the queue.
 const QUEUE = [
   { flag: "", tone: "amber", date: "", ref: "", client: "Jane Smith", dob: "01 Jan 1981 (45)", sex: "F", location: "South Kensington", isJane: true },
-  { flag: "DCA-PRE-ASSESSMENT", tone: "amber", date: "04 Sep 2026", ref: "DCAPREXVM4UFU98F", client: "George Tyson", dob: "29 Jun 2002 (24)", sex: "M", location: "South Kensington" },
-  { flag: "DCA-PRE-ASSESSMENT", tone: "red", date: "03 Sep 2026", ref: "DCAPRELQ4VGCZ44", client: "Branden Nguyen", dob: "29 Jun 1987 (39)", sex: "F", location: "South Kensington" },
-  { flag: "Clear", tone: "green", date: "03 Sep 2026", ref: "DCAPRENBGAE9LQZD", client: "Scarlett Carney", dob: "01 Jul 1978 (48)", sex: "F", location: "South Kensington" },
-  { flag: "DCA-PRE-ASSESSMENT", tone: "red", date: "02 Sep 2026", ref: "DCAPREMBTCHG2S6Z", client: "Dorian Sandoval", dob: "09 Jun 1992 (34)", sex: "M", location: "South Kensington" },
-  { flag: "Clear", tone: "green", date: "02 Sep 2026", ref: "DCAPREHWAGL9TB9E", client: "Alice Green", dob: "30 Jun 1993 (33)", sex: "F", location: "South Kensington" },
+  { flag: "DCA-PRE-ASSESSMENT", tone: "amber", date: queue(SUBMITTED), ref: "DCAPREXVM4UFU98F", client: "George Tyson", dob: "29 Jun 2002 (24)", sex: "M", location: "South Kensington" },
+  { flag: "DCA-PRE-ASSESSMENT", tone: "red", date: queue(addDays(SUBMITTED, -1)), ref: "DCAPRELQ4VGCZ44", client: "Branden Nguyen", dob: "29 Jun 1987 (39)", sex: "F", location: "South Kensington" },
+  { flag: "Clear", tone: "green", date: queue(addDays(SUBMITTED, -1)), ref: "DCAPRENBGAE9LQZD", client: "Scarlett Carney", dob: "01 Jul 1978 (48)", sex: "F", location: "South Kensington" },
+  { flag: "DCA-PRE-ASSESSMENT", tone: "red", date: queue(addDays(SUBMITTED, -2)), ref: "DCAPREMBTCHG2S6Z", client: "Dorian Sandoval", dob: "09 Jun 1992 (34)", sex: "M", location: "South Kensington" },
+  { flag: "Clear", tone: "green", date: queue(addDays(SUBMITTED, -2)), ref: "DCAPREHWAGL9TB9E", client: "Alice Green", dob: "30 Jun 1993 (33)", sex: "F", location: "South Kensington" },
 ];
 
 // Sections as the pre-screen report groups them, statuses from Jane's PDF.

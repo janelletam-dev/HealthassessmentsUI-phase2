@@ -39,6 +39,7 @@ import { GuideArrow } from "./guide-arrow.tsx";
 import { Logo } from "./dca-logo.tsx";
 import appTile from "../assets/portal/app-tile.png";
 import { useScrollTop } from "./use-scroll-top.ts";
+import { ADVANCED_REPORT, addDays, pill } from "./demo-dates.ts";
 
 const WS = "'Work Sans', sans-serif";
 const PURPLE = "#494de3";
@@ -67,7 +68,7 @@ const CATEGORIES: { name: string; sub?: string; Icon: typeof ClipboardCheck }[] 
   { name: "Health Check Follow-Up", Icon: ClipboardCheck },
 ];
 
-const DAYS = ["Today • Fri, 18 Sep", "Sat, 19 Sep", "Sun, 20 Sep", "Mon, 21 Sep"];
+const DAYS = [`Today • ${pill(ADVANCED_REPORT)}`, pill(addDays(ADVANCED_REPORT, 1)), pill(addDays(ADVANCED_REPORT, 2)), pill(addDays(ADVANCED_REPORT, 3))];
 const DAY_PARTS = [
   { label: "Morning (12am – 12pm)", count: 18, Icon: Sunrise },
   { label: "Afternoon (12pm – 5pm)", count: 24, Icon: Sun },
