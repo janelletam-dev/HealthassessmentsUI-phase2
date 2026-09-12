@@ -174,11 +174,10 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             />
           )}
 
-          {/* The general CTA, once a report is in; nothing while one is
-              still being prepared. The GP follow-up is booked from Home.
-              Janelle, 11 Sep: "the general CTA should not be book a follow
-              up appt". */}
-          {stage !== "pending" && (
+          {/* The general CTA, on every state. The GP follow-up is booked
+              from Home. Janelle, 11 Sep: "the general CTA should not be book
+              a follow up appt"; 12 Sep: "still be there as a general one". */}
+          {(
             <button
               type="button"
               onClick={onOpenFhm}
