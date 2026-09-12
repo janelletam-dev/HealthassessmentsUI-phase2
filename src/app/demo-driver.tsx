@@ -251,8 +251,12 @@ export function DemoDriver() {
             // A fragment-only change does not reload the embedded viewer, so
             // the hash alone left the PDF on page one. The query makes each
             // turn a genuinely new URL, which does.
+            // The reports are object URLs now (dated-report.ts), which take
+            // no query, so the reload is forced by way of about:blank instead.
             const base = frame.src.split("#")[0].split("?")[0];
-            frame.src = `${base}?turn=${step.page}#page=${step.page}`;
+            frame.src = "about:blank";
+            await sleep(80);
+            frame.src = `${base}#page=${step.page}`;
             await sleep(900);
             break;
           }

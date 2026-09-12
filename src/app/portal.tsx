@@ -29,8 +29,7 @@ import {
 } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
 import appTile from "../assets/portal/app-tile.png";
-import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
-import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
+import { useDatedReport, type ReportKind } from "./dated-report.ts";
 import { useScrollTop } from "./use-scroll-top.ts";
 import { GuideArrow } from "./guide-arrow.tsx";
 import { SUBMITTED, ADVANCED_REPORT, shortComma } from "./demo-dates.ts";
@@ -97,7 +96,7 @@ const ADVANCED_FILE = {
   when: `${shortComma(ADVANCED_REPORT)}, 8:26am`,
   addedBy: "Added by Patient Experience Team",
   uploadedFor: "Uploaded for Jane Smith",
-  pdf: advancedReportPdf,
+  pdf: "advanced" as ReportKind,
 };
 
 const FILES = [
@@ -108,7 +107,7 @@ const FILES = [
     when: `${shortComma(SUBMITTED)}, 4:02pm`,
     addedBy: "Added by Patient Experience Team",
     uploadedFor: "Uploaded for Jane Smith",
-    pdf: reportPdf,
+    pdf: "prescreen" as ReportKind,
   },
 ];
 
@@ -488,7 +487,9 @@ function UploadsBody({ stage, onOpenFile, onBook }: {
  * drawing a fake toolbar over a document nobody can page through would be worse
  * than showing the real one.
  */
-function PdfViewer({ name, pages, src, onClose }: { name: string; pages: number; src: string; onClose: () => void }) {
+function PdfViewer({ name, pages, kind, onClose }: { name: string; pages: number; kind: ReportKind; onClose: () => void }) {
+  // Dated for today before it is shown (dated-report-core.ts).
+  const src = useDatedReport(kind) ?? "about:blank";
   return (
     // Wider than the portal's 782 column, by (1120 - 782) / 2 either side. The
     // viewer keeps its own thumbnail rail, which Chrome will not close for us
@@ -553,7 +554,7 @@ export function Portal({ initialTab = "Uploads", stage = "prescreen", onOpenAsse
         {tab === "Home" ? (
           <HomeBody stage={stage} onOpenAssessments={onOpenAssessments} onBook={onBookAppointment} />
         ) : openFile ? (
-          <PdfViewer name={openFile.name} pages={openFile.pages} src={openFile.pdf} onClose={() => setOpenFile(undefined)} />
+          <PdfViewer name={openFile.name} pages={openFile.pages} kind={openFile.pdf} onClose={() => setOpenFile(undefined)} />
         ) : (
           <UploadsBody stage={stage} onOpenFile={setOpenFile} onBook={onBookAppointment} />
         )}

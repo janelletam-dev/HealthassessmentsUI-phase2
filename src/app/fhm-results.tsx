@@ -26,8 +26,7 @@ import {
 } from "lucide-react";
 import { FhmNav, WS, PAGE, RULE, BLUE, INK } from "./fhm-chrome.tsx";
 import { SUBMITTED, ADVANCED_REPORT, usShort } from "./demo-dates.ts";
-import reportPdf from "../assets/portal/health-insights-pre-screen-report.pdf";
-import advancedReportPdf from "../assets/portal/advanced-health-assessment-report.pdf";
+import { useDatedReport } from "./dated-report.ts";
 
 const AMBER_BG = "#fdf3d8";
 const AMBER_INK = "#8a6d1a";
@@ -298,7 +297,8 @@ export function FhmResults({ stage = "prescreen", onExit, onNextSteps, onSleep }
   onSleep: () => void;
 }) {
   const data: Stage = STAGES[stage];
-  const pdf = data.pdf === "advanced" ? advancedReportPdf : reportPdf;
+  // Dated for today before it is shown (dated-report-core.ts).
+  const pdf = useDatedReport(data.pdf) ?? "about:blank";
   // The popup viewer is invention, and says so. FHM serves the PDF in its
   // own tab, which Download report still does; Janelle, 4 Sep: "have the pdfs
   // when view report as pdf popup just to show (although not how it is but we
