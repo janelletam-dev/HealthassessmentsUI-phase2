@@ -15,7 +15,8 @@ export const addDays = (d: Date, n: number) => atMidnight(new Date(d.getTime() +
 const weekday = (d: Date) => (d.getDay() === 6 ? addDays(d, 2) : d.getDay() === 0 ? addDays(d, 1) : d);
 
 export const TODAY = atMidnight(new Date());
-export const SUBMITTED = weekday(TODAY);
+/** Submitted today, whatever day that is: a questionnaire needs no weekday. */
+export const SUBMITTED = TODAY;
 export const APPOINTMENT = weekday(addDays(TODAY, 12));
 export const ADVANCED_REPORT = weekday(addDays(APPOINTMENT, 2));
 export const APPOINTMENT_TIME = "10:15 AM";
