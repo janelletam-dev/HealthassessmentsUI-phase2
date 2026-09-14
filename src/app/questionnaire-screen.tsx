@@ -14,19 +14,18 @@
 // banner, a #f9fafb page, a 744 column of white cards, and a white sticky bar.
 
 import { useState } from "react";
-import { CircleCheck, Stethoscope, Heart, Activity, Lock } from "lucide-react";
+import { Check, Stethoscope, Heart, Activity } from "lucide-react";
 import { SECTIONS, SUBMITTED, missingAnswers, type Answers, type Question } from "./questionnaire.ts";
 import { FhmShell, WS, PAGE, RULE, NAV_RULE, BLUE, INK, MUTED } from "./fhm-chrome.tsx";
-import { GuideArrow } from "./guide-arrow.tsx";
 
 const SELECTED_BG = "#eff6ff";
 const ERROR = "#991b1b";
 
 // The capture reads "Questionnaire - Janelle tamayo". Generic here, for the
-// same reason the email greets Jane rather than showing a merge tag. Name
-// first, then the product name, per PM, 10 Sep: "Jane Smith - Health Insights
-// Assessment". FHM's screen, so this is what we ask FHM to change to.
-const TITLE = "Jane Smith - Health Insights Assessment";
+// same reason the email greets Jane rather than showing a merge tag. The PM
+// asked FHM for name first, then the product name; Jack, 14 Sep: platform
+// text, not configurable, so it stays "Questionnaire - <name>" on every product.
+const TITLE = "Questionnaire - Jane Smith";
 
 function ChoiceRow({ label, selected, invalid, onSelect }: {
   label: string; selected: boolean; invalid: boolean; onSelect: () => void;
@@ -117,18 +116,36 @@ const NEXT_ICONS = [Stethoscope, Heart, Activity];
 
 function Submitted({ onNext }: { onNext: () => void }) {
   return (
-    <FhmShell title={SUBMITTED.banner}>
-      {/* The page has no button any more (PM, 10 Sep: "Back to Dashboard is
-          not going to work"), so the guide arrow is the only way on, to the
-          patient's DCA account while the report is prepared. Back is the
-          global arrow's. */}
-      <GuideArrow onNext={onNext} nextLabel="Next: the DCA account" />
+    <FhmShell
+      title={SUBMITTED.banner}
+      footer={
+        // FHM's build ends in a Continue button (screenshot via Jack, 14 Sep),
+        // which takes the story on to the patient's DCA account.
+        <div
+          className="fixed left-0 right-0 bottom-0 z-[100] flex justify-center px-[24px]"
+          style={{ height: 73, background: "#ffffff", borderTop: `1px solid ${NAV_RULE}` }}
+        >
+          <div className="w-full max-w-[744px] flex items-center justify-end">
+            <button
+              onClick={onNext}
+              data-guide-primary
+              className="rounded-[4px] px-[24px] py-[8px] text-[16px] font-medium leading-[24px] cursor-pointer"
+              style={{ background: BLUE, color: "#ffffff", border: "none" }}
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      }
+    >
       <div
         className="w-full rounded-[8px] px-[24px] py-[32px] flex flex-col items-center gap-[24px]"
         style={{ background: "#ffffff", border: `1px solid ${RULE}` }}
         role="status"
       >
-        <CircleCheck size={72} color="#16a34a" strokeWidth={1.5} />
+        <div className="flex items-center justify-center w-[76px] h-[76px] rounded-full" style={{ background: "#dcfce7" }}>
+          <Check size={36} color="#16a34a" strokeWidth={2} />
+        </div>
 
         <div className="flex flex-col items-center gap-[8px] text-center">
           <p className="text-[28px] font-bold leading-[36px]" style={{ color: "#111827" }}>{SUBMITTED.title}</p>
@@ -159,10 +176,7 @@ function Submitted({ onNext }: { onNext: () => void }) {
           })}
         </div>
 
-        <div className="flex gap-[8px] items-start w-full">
-          <Lock size={16} color={MUTED} strokeWidth={2} className="shrink-0 mt-[2px]" />
-          <p className="text-[13px] leading-[18px] flex-1" style={{ color: MUTED }}>{SUBMITTED.privacy}</p>
-        </div>
+        <p className="text-[14px] leading-[20px] w-full" style={{ color: INK }}>{SUBMITTED.privacy}</p>
       </div>
     </FhmShell>
   );

@@ -178,33 +178,39 @@ export function missingAnswers(answers: Answers): string[] {
  * row and the Back to Dashboard button are gone, "it's not going to work".
  * The 2-day timeline is a placeholder until Anushka confirms it.
  */
+/*
+ * Reworked again 14 Sep. This page is FHM's to build, and Jack sent a
+ * screenshot of theirs; the content is Anushka's from the review. Janelle,
+ * 14 Sep: "keep the summary page screen as close to this", without the
+ * "Need to come back and finish later?" row, which is gone.
+ */
 export const SUBMITTED = {
-  // NO FRAME. PM, 10 Sep.
-  banner: "Your Health Insights Assessment has been submitted",
-  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  // NO FRAME. FHM screenshot via Jack, 14 Sep.
+  banner: "Your questionnaire has been submitted",
+  // NO FRAME. FHM screenshot via Jack, 14 Sep.
   title: "Thank you!",
-  // NO FRAME. PM, 10 Sep.
-  lead: "Your Health Insights Assessment has been submitted successfully.",
-  // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+  // NO FRAME. FHM screenshot via Jack, 14 Sep.
+  lead: "Your Health Questionnaire has been submitted successfully.",
+  // NO FRAME. FHM screenshot via Jack, 14 Sep.
   nextHeading: "What happens next?",
   next: [
     {
-      // NO FRAME. Transcribed from Janelle's image, 3 Sep.
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
       title: "Clinician review",
-      // NO FRAME. PM, 10 Sep: say that clinicians review it and a report follows.
-      body: "A qualified clinician reviews your answers and prepares your report.",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
+      body: "A qualified Clinician will review your responses and identify any opportunities to improve your health and wellbeing.",
     },
     {
-      // NO FRAME. PM, 10 Sep: reference the report and give a timeline.
-      title: "Your report, within 2 days",
-      // NO FRAME. PM, 10 Sep. "Within 2 days" is the placeholder to confirm.
-      body: "You will receive your Health Insights Assessment report, with practical health and lifestyle recommendations tailored to you.",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
+      title: "Personalised recommendations",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
+      body: "You'll receive practical health and lifestyle recommendations tailored to you.",
     },
     {
-      // NO FRAME. PM, 10 Sep: make clear it is one report, or on to a full assessment.
-      title: "One report, or a full health assessment",
-      // NO FRAME. PM, 10 Sep. Same wording as the Profile complete card.
-      body: "For most people, that is the end. If clinically appropriate, you will be invited to an Advanced Corporate Health Assessment, funded by your employer: blood tests and health measurements at a pharmacy, with a clinician-reviewed report.",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
+      title: "Advanced Health Assessment (if recommended)",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
+      body: "If clinically appropriate, you may be invited to book a free Advanced Corporate Health Assessment, fully funded by your employer.",
     },
   ],
   // NO FRAME. Transcribed from Janelle's image, 3 Sep.

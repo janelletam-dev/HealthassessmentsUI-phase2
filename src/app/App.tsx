@@ -310,7 +310,10 @@ const LANDING_STEPS = [
   // 5446:12374
   { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
   // 5446:12622
-  { Icon: MapPin, text: "If advised to book an Advanced Corporate Health Assessment, you can easily schedule your appointment at a nearby location." },
+  // "health screen", lowercase, generic on purpose so the page is not tied to
+  // one product. Anushka asked for the landing to pick up the programme; it
+  // cannot for now, so Deepali, 14 Sep: "We will change it to health screen".
+  { Icon: MapPin, text: "If advised to book a health screen, you can easily schedule your appointment at a nearby location." },
 ];
 
 // Slide duration must match lhsBarFill animation duration in fonts.css
@@ -3797,7 +3800,10 @@ const COMPLETE_STEPS = [
   // and then Anushka can tell us whether that's correct".
   { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
   // Frame 4
-  { Icon: MapPin, text: "If advised to book an Advanced Corporate Health Assessment, you can easily schedule your appointment at a nearby location." },
+  // "health screen", lowercase, generic on purpose so the page is not tied to
+  // one product. Anushka asked for the landing to pick up the programme; it
+  // cannot for now, so Deepali, 14 Sep: "We will change it to health screen".
+  { Icon: MapPin, text: "If advised to book a health screen, you can easily schedule your appointment at a nearby location." },
 ];
 
 function ProfileComplete({ theme, onContinue }: {
@@ -3866,9 +3872,12 @@ function ProfileComplete({ theme, onContinue }: {
             {/* What the advanced assessment IS comes from the journey's own
                 sources: the invitation email (blood tests and health
                 measurements, at no cost) and the FHM results page (pharmacy
-                appointment, clinician review, personalised report). */}
+                appointment, clinician review, personalised report).
+                "health screen" and "physical measurements" are Anushka's
+                words from the content review; Janelle, 14 Sep: "change to
+                Health screen here also". */}
             <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
-              The assessment takes a few minutes. Our clinicians review your answers and send your report within 2 days. For most people, that is the end. If clinically appropriate, you will be invited to an Advanced Corporate Health Assessment, funded by your employer: blood tests and health measurements at a pharmacy, with a clinician-reviewed report.
+              The assessment takes a few minutes. Our clinicians review your answers and send your report within 2 days. For most people, that is the end. If clinically appropriate, you will be invited to a health screen, funded by your employer: blood tests and physical measurements at a pharmacy, with a clinician-reviewed report.
             </p>
           </div>
 
@@ -4449,6 +4458,11 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
 // The bare form is also what the invitation email's footer draws, so the app
 // and the email agree, which they did not in between.
 const HA_PX_PHONE = "0330 088 4980";
+// The line cannot go 24/7: PX would need more people on the dashboard, which
+// raises the risk of human error (Holly via Frank, 14 Sep). So the hours stay
+// and the team leader escalations inbox, which is watched round the clock,
+// sits behind an "email us" link. Janelle, 14 Sep: "put that behind a mailto".
+const HA_PX_EMAIL = "Teamleaderescalations@doctorcareanywhere.com";
 
 function ProfileNeedHelpCard() {
   const ws = "'Work Sans', sans-serif";
@@ -4466,7 +4480,9 @@ function ProfileNeedHelpCard() {
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
           {"If you need any support, our team is here to help. Please contact our dedicated Health Assessments PX team on "}
           <span className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</span>
-          {". Lines are open 09:00 – 17:30, Monday to Friday."}
+          {". Lines are open 09:00 – 17:30, Monday to Friday, or you can "}
+          <a href={`mailto:${HA_PX_EMAIL}`} className="font-semibold underline" style={{ color: "#135CFF" }}>email us</a>
+          {" at any time."}
         </p>
       </div>
     </div>

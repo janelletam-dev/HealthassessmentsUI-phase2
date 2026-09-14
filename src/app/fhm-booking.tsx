@@ -335,7 +335,8 @@ function PreAppointmentQuestionnaire({ onBack, onExit, location, day, slot }: {
 
   return (
     <FhmShell
-      title="Jane Smith - Advanced Health Assessment"
+      // FHM platform text, the same on every product. Jack, 14 Sep.
+      title="Questionnaire - Jane Smith"
       footer={
         <StickyBar>
           <BackLink label="Appointments" onClick={onBack} />

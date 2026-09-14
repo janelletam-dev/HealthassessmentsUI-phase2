@@ -52,12 +52,15 @@ export const EMAIL_NEXT_HEADING = "Here’s what happens next";
  * numbered badge beside it, so the numbers live in the copy. Step 3 carries no
  * body in the frame.
  */
-export const EMAIL_STEPS: { title: string; body?: string }[] = [
+export const EMAIL_STEPS: { title: string; body?: string; link?: { text: string; href: string } }[] = [
   {
     // 449:528
     title: "1. Complete your Health Insights Assessment",
     // 449:528
-    body: "You'll need your height, weight and, if possible, your waist measurement. Guidance on measuring your waist can be found here: NHS – How to measure your waist.",
+    body: "You'll need your height, weight and, if possible, your waist measurement. Guidance on measuring your waist can be found here: ",
+    // Anushka, 11 Sep: "is this a hyperlink?". It is now. The target is the
+    // one Deepali gave; Janelle, 14 Sep: "for now use this".
+    link: { text: "NHS – how to measure your waist", href: "https://www.nhs.uk/health-assessment-tools/calculate-your-waist-to-height-ratio" },
   },
   {
     // 449:528
@@ -80,11 +83,12 @@ export const EMAIL_STEPS: { title: string; body?: string }[] = [
 // 449:528, the second card.
 export const EMAIL_WHY_HEADING = "Why it matters";
 
-// 449:528, the four table rows. Unchanged from the earlier draft.
+// 449:528, the four table rows. Lines two and three as Anushka rewrote them
+// in the content review; Janelle, 14 Sep: "change to the following".
 export const EMAIL_WHY = [
   "Identify potential health risks early",
-  "Get personalised advice",
-  "Improve your energy, fitness and wellbeing",
+  "Get personalised advice and treatment",
+  "Improve your health and wellbeing",
   "Take proactive steps for a healthier future",
 ];
 

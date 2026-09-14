@@ -183,8 +183,8 @@ const RECOMMENDATION_CHIPS = [
 
 const WHY_TAKE_PART = [
   "Identify potential health risks early",
-  "Get personalised advice",
-  "Improve your energy, fitness and wellbeing",
+  "Get personalised advice and treatment",
+  "Improve your health and wellbeing",
   "Take proactive steps for a healthier future",
 ];
 

@@ -62,7 +62,14 @@ export function InvitationEmail({ onStart }: { onStart: () => void }) {
                 <div key={step.title} className="flex flex-col gap-[2px] w-full">
                   <p className="font-medium" style={{ fontSize: 22, lineHeight: 1.5, color: INK }}>{step.title}</p>
                   {step.body && (
-                    <p style={{ fontSize: 16, lineHeight: 1.5, color: INK }}>{step.body}</p>
+                    <p style={{ fontSize: 16, lineHeight: 1.5, color: INK }}>
+                      {step.body}
+                      {step.link && (
+                        <>
+                          <a href={step.link.href} target="_blank" rel="noreferrer" className="underline" style={{ color: INK }}>{step.link.text}</a>.
+                        </>
+                      )}
+                    </p>
                   )}
                 </div>
               ))}
