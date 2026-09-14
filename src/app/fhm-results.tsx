@@ -259,7 +259,7 @@ export function NextStepExplainer({ onBook }: { onBook?: () => void }) {
 
       <Section title="Want to discuss your results?">
         <p className="text-[15px] leading-[22px] mt-[-6px]" style={{ color: "#374151" }}>
-          You have a free Video GP appointment included, so you can talk your results and next steps through with a doctor once your report is ready.
+          You have a free Video GP appointment included, so you can talk through your results and next steps with a doctor, including any recommended treatment plans.
         </p>
       </Section>
 
