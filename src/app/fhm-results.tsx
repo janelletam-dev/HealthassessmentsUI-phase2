@@ -6,12 +6,12 @@
 // email for the results, it should show the sso to FHM portal here is the
 // screenshot".
 //
-// THE REVIEWER'S NOTE IS ADAPTED, NOT VERBATIM. The screenshot's second
-// paragraph is the internal pilot's ("further testing is not currently
-// included"), which would contradict the journey this prototype demos, where
-// the patient is recommended and books the Advanced assessment. The first
-// paragraph is the screenshot's; the second follows the recommendation wording
-// of Jane's own report PDF. Swap back when the pilot copy is the story.
+// THE AMBER REVIEWER'S NOTE IS ANUSHKA'S DRAFT for a real corporate (content
+// review, 11 Sep, relayed by Janelle 14 Sep). The screenshot's own second
+// paragraph was the internal pilot's ("further testing is not currently
+// included"), which contradicts the journey this prototype demos, where the
+// patient is recommended and books the next stage. The green note keeps the
+// screenshot's first paragraph with the product name.
 //
 // The section chips follow the screenshot: Summary and Family History carry
 // Attention, the rest Information. Download report opens the report PDF in its
@@ -94,12 +94,16 @@ const STAGES = {
     date: usShort(SUBMITTED),
     pdf: "prescreen" as const,
     noteTone: "attention" as const,
+    // NO FRAME. Anushka's drafted note, PowerPoint comment 11 Sep; Janelle,
+    // 14 Sep: "change to this 2nd paragraph".
     note: [
-      "Thank you for completing your Health Insights Assessment, which looks at factors affecting your long-term cardiovascular and metabolic health.",
-      "Based on your answers, we believe you would benefit from progressing to the next stage of the programme: the Advanced Corporate Health Assessment. In the meantime, you can also book an appointment for further discussion with a DCA GP (via the \u2018health check follow up\u2019 health concern).",
+      "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
+      "Based on your answers, we'd like to take a closer look at some areas together - this is a normal next step for many people and doesn't mean there's a problem.",
+      "Please use the link below to arrange your next stage of testing. This will include some further questionnaires as well as blood tests and physical measurements.",
     ],
     // NO FRAME. PM, 10 Sep: the reviewer note links to the next steps page.
-    link: { lead: "You have been recommended for a further health assessment.", label: "Read your next steps and book", target: "nextSteps" as const },
+    // The note's last paragraph already introduces the link, so no lead.
+    link: { lead: "", label: "Arrange your next stage of testing", target: "nextSteps" as const },
     sections: [
       { label: "Summary", tone: "attention" as const },
       { label: "Family History", tone: "attention" as const },
