@@ -12,7 +12,7 @@
 // Figma 5048:37958 for the chrome (header, strip, title band); the body is
 // NO FRAME until Irina's designs land.
 
-import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, ClipboardList, Stethoscope, FlaskConical, Headphones } from "lucide-react";
+import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, Headphones } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
 import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, monthYear, dayMonth } from "./demo-dates.ts";
 
@@ -35,10 +35,12 @@ const FAQS_URL = "https://doctorcareanywhere.com/faqs";
 
 export type AssessmentsStage = "pending" | "insights" | "advanced";
 
+// No icons: the Figma blurb (27160:34048) is title and line only. Janelle,
+// 14 Sep: "figma has no icons on the left, can you align?".
 const HOW_IT_WORKS = [
-  { Icon: ClipboardList, title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
-  { Icon: Stethoscope, title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 working days." },
-  { Icon: FlaskConical, title: "Advanced Corporate Health Assessment", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
+  { title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
+  { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 working days." },
+  { title: "Advanced Corporate Health Assessment", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
 ];
 
 // One line per thing that has happened, as the D2C view draws them: a green
@@ -204,15 +206,10 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
         <div className="bg-white rounded-[8px] w-[700px] p-[26px]">
           <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>How your health assessment works</p>
           <div className="flex flex-col gap-[12px] mt-[14px]">
-            {HOW_IT_WORKS.map(({ Icon, title, body }) => (
-              <div key={title} className="flex gap-[12px] items-start">
-                <div className="flex items-center justify-center shrink-0 w-[32px] h-[32px] rounded-[8px]" style={{ background: "#edf6ff" }}>
-                  <Icon size={16} color={BLUE} strokeWidth={2} />
-                </div>
-                <div>
-                  <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
-                  <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
-                </div>
+            {HOW_IT_WORKS.map(({ title, body }) => (
+              <div key={title}>
+                <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
+                <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
               </div>
             ))}
           </div>
