@@ -1786,8 +1786,9 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
           <p className="[word-break:break-word] font-normal leading-[24px] text-[16px] w-full" style={{ color: "#030712" }}>
             {/* Not "book your health assessment": this is DCA's door for every
                 returning state, questionnaire pending, results in, or a
-                booking to make. Janelle, 14 Sep: "a proper general term". */}
-            Sign in to pick up where you left off.
+                booking to make. Janelle, 14 Sep: "a proper general term",
+                then "change to this: Sign in to continue your journey". */}
+            Sign in to continue your journey.
           </p>
         </div>
 
