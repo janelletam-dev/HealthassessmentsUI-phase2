@@ -183,6 +183,8 @@ const HOW_IT_WORKS = [
 const RECOMMENDATION_CHIPS = [
   "Lifestyle changes",
   "Nutrition and exercise",
+  // Janelle, 14 Sep: "add a bullet for weight management".
+  "Weight management",
   "Medication or treatment options",
   "Further investigations or specialist referrals",
 ];
