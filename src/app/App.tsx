@@ -1783,7 +1783,10 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
             Already have an account?
           </p>
           <p className="[word-break:break-word] font-normal leading-[24px] text-[16px] w-full" style={{ color: "#030712" }}>
-            Sign in to quickly book your health assessment.
+            {/* Not "book your health assessment": this is DCA's door for every
+                returning state, questionnaire pending, results in, or a
+                booking to make. Janelle, 14 Sep: "a proper general term". */}
+            Sign in to pick up where you left off.
           </p>
         </div>
 
@@ -4462,7 +4465,10 @@ const HA_PX_PHONE = "0330 088 4980";
 // raises the risk of human error (Holly via Frank, 14 Sep). So the hours stay
 // and the team leader escalations inbox, which is watched round the clock,
 // sits behind an "email us" link. Janelle, 14 Sep: "put that behind a mailto".
-const HA_PX_EMAIL = "Teamleaderescalations@doctorcareanywhere.com";
+// Shown in full, not behind "email us", so it can be copied. Janelle, 14 Sep:
+// "so they can copy or it shows it?". Lowercase: addresses are not case
+// sensitive and it reads as one word less.
+const HA_PX_EMAIL = "teamleaderescalations@doctorcareanywhere.com";
 
 function ProfileNeedHelpCard() {
   const ws = "'Work Sans', sans-serif";
@@ -4480,8 +4486,8 @@ function ProfileNeedHelpCard() {
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
           {"If you need any support, our team is here to help. Please contact our dedicated Health Assessments PX team on "}
           <span className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</span>
-          {". Lines are open 09:00 – 17:30, Monday to Friday, or you can "}
-          <a href={`mailto:${HA_PX_EMAIL}`} className="font-semibold underline" style={{ color: "#135CFF" }}>email us</a>
+          {". Lines are open 09:00 – 17:30, Monday to Friday, or email "}
+          <a href={`mailto:${HA_PX_EMAIL}`} className="font-semibold underline break-all" style={{ color: "#135CFF" }}>{HA_PX_EMAIL}</a>
           {" at any time."}
         </p>
       </div>
