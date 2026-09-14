@@ -96,9 +96,12 @@ export function InvitationEmail({ onStart }: { onStart: () => void }) {
 
         {/* PM, 10 Sep: a video placeholder in the email, under Why it matters.
             The clip is the clinical team's to make; placement is theirs to
-            move once it exists. */}
+            move once it exists. Frank, 14 Sep: the clip is the Chief Medical
+            Officer explaining the programme, and the first part of it is the
+            Health Insights Assessment and why it asks what it asks; Janelle:
+            "Hear from our CMO about our health insights assessment". */}
         <div className="w-full mt-[16px]">
-          <MockVideo title="Your Health Insights Assessment, explained" duration="1 min" />
+          <MockVideo title="Hear from our Chief Medical Officer about our Health Insights Assessment" duration="1 min" />
         </div>
 
         <div className="flex flex-col items-center gap-[22px] w-full pt-[30px] pb-[30px]">
