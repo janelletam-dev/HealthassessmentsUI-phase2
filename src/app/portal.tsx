@@ -328,10 +328,9 @@ function HomeBody({ stage, onOpenAssessments, onBook }: {
           />
 
           <div className="flex flex-col gap-[16px] w-full">
-            {/* 27052:15772 */}
-            <p className="font-semibold text-[20px] leading-[28px] text-black" style={{ fontFamily: WS }}>
-              Health Assessments
-            </p>
+            {/* 27052:15772, the "Health Assessments" section heading, is not
+                drawn: the Figma Home (27170:38999) goes straight to the tile.
+                Janelle, 14 Sep: "could be removed already". */}
 
             {/* 27052:15773, the "Health Assessment follow-up" card with its
                 Book follow-up appointment button, is NOT drawn. PM, 10 Sep:
