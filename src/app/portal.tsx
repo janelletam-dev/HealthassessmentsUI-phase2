@@ -66,13 +66,15 @@ const LIVE_TABS: TabName[] = ["Home", "Uploads"];
 
 export type PortalStage = "pending" | "prescreen" | "advanced";
 
-// The Health Assessments tile on Home, one line per stage. NO FRAME: 27052:15774
-// draws "My health assessments / Continue your health assessment journey.";
-// these say what has actually happened. PM, 10 Sep.
+// The Health Assessments tile on Home. One title and one line at every
+// stage, as the Figma Home tile (27170:39068) draws it. Janelle, 14 Sep:
+// "make the sub text the same all throughout". The per-stage lines the PM
+// asked for on 10 Sep are gone; the page behind the tile carries the status.
+const HA_TILE_COPY = { title: "My health assessments", body: "Check your assessment status and see your reports." };
 const HA_TILE: Record<PortalStage, { title: string; body: string }> = {
-  pending: { title: "My health assessments", body: "Your Health Insights Assessment has been submitted. A clinician is reviewing your answers; your report will be here within 5 working days." },
-  prescreen: { title: "Book your Health Assessment", body: "Your clinician has recommended a more in-depth assessment. Choose a pharmacy, date and time that suit you." },
-  advanced: { title: "My health assessments", body: "Both of your reports are ready. See them, and what happens next." },
+  pending: HA_TILE_COPY,
+  prescreen: HA_TILE_COPY,
+  advanced: HA_TILE_COPY,
 };
 
 // One row, because this patient has just joined for the assessment. The frame's
