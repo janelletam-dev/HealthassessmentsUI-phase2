@@ -70,7 +70,7 @@ export type PortalStage = "pending" | "prescreen" | "advanced";
 // draws "My health assessments / Continue your health assessment journey.";
 // these say what has actually happened. PM, 10 Sep.
 const HA_TILE: Record<PortalStage, { title: string; body: string }> = {
-  pending: { title: "My health assessments", body: "Your Health Insights Assessment has been submitted. A clinician is reviewing your answers; your report will be here within 2 days." },
+  pending: { title: "My health assessments", body: "Your Health Insights Assessment has been submitted. A clinician is reviewing your answers; your report will be here within 5 working days." },
   prescreen: { title: "Book your Health Assessment", body: "Your clinician has recommended a more in-depth assessment. Choose a pharmacy, date and time that suit you." },
   advanced: { title: "My health assessments", body: "Both of your reports are ready. See them, and what happens next." },
 };
@@ -431,7 +431,7 @@ function UploadsBody({ stage, onOpenFile, onBook }: {
             // NO FRAME. The live portal shows an empty table here; this says
             // what will fill it and when, which is the point of the visit.
             <p className="text-[14px] leading-[22px] py-[20px]" style={{ color: BODY }}>
-              No documents yet. Your Health Insights Assessment report will appear here within 2 days, and we will email you when it does.
+              No documents yet. Your Health Insights Assessment report will appear here within 5 working days, and we will email you when it does.
             </p>
           )}
           {rows.map((file) => (

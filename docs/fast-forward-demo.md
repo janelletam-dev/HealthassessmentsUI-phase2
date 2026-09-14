@@ -40,7 +40,7 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 ## Things not to say
 
 - The clinical partner is not named to patients anywhere in the journey, and the captions follow suit. Say "our clinical team".
-- "Within 2 days" for the report is a placeholder awaiting the product team's confirmed timeline.
+- The report timeline is "within 5 working days", confirmed by the product team's content review on 11 September.
 - "Advanced Corporate Health Assessment" is the working name; the final name is still with the product team.
 - The employer dashboard numbers are sample data.
 - Cancelling an assessment is not shown; the help box on My health assessments points to the Patient Experience team.

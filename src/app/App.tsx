@@ -3796,9 +3796,9 @@ function LandingTaskCard({ badge, borderColor, icon, title, description, cta, on
 const COMPLETE_STEPS = [
   // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep.
   { Icon: ListTodo, text: "Complete a short Health Insights Assessment to help us assess your current health." },
-  // Frame 5. The timeline is a placeholder: PM, 10 Sep, "put within 2 days
-  // and then Anushka can tell us whether that's correct".
-  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
+  // Frame 5. "Within 2 days" was the placeholder (PM, 10 Sep, "then Anushka
+  // can tell us whether that's correct"); Anushka, 11 Sep: 5 working days.
+  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 5 working days you receive your report, with your results and recommended next steps." },
   // Frame 4
   // "health screen", lowercase, generic on purpose so the page is not tied to
   // one product. Anushka asked for the landing to pick up the programme; it
@@ -3877,7 +3877,7 @@ function ProfileComplete({ theme, onContinue }: {
                 words from the content review; Janelle, 14 Sep: "change to
                 Health screen here also". */}
             <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
-              The assessment takes a few minutes. Our clinicians review your answers and send your report within 2 days. For most people, that is the end. If clinically appropriate, you will be invited to a health screen, funded by your employer: blood tests and physical measurements at a pharmacy, with a clinician-reviewed report.
+              The assessment takes a few minutes. Our clinicians review your answers and send your report within 5 working days. For most people, that is the end. If clinically appropriate, you will be invited to a health screen, funded by your employer: blood tests and physical measurements at a pharmacy, with a clinician-reviewed report.
             </p>
           </div>
 

@@ -37,7 +37,7 @@ export type AssessmentsStage = "pending" | "insights" | "advanced";
 
 const HOW_IT_WORKS = [
   { Icon: ClipboardList, title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
-  { Icon: Stethoscope, title: "Clinician review", body: "A clinician reviews your answers and sends your report within 2 days." },
+  { Icon: Stethoscope, title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 working days." },
   { Icon: FlaskConical, title: "Advanced Corporate Health Assessment", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
 ];
 
@@ -168,7 +168,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
               // "review and results come together".
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
-                { done: false, label: "Awaiting clinician review and your report, within 2 days" },
+                { done: false, label: "Awaiting clinician review and your report, within 5 working days" },
               ]}
             />
           ) : (
