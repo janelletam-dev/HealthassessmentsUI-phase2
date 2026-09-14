@@ -37,10 +37,14 @@ export const EMAIL_HEADER = {
 };
 
 // 449:528. Marketing merged the greeting and the opening paragraph into one
-// centred block, so they are one string here rather than two. The double space
-// after "assessment." is the frame's.
+// centred block, so they are one string here rather than two.
+//
+// Marketing's own wording, 14 Sep: the programme is named DCA Protect, and the
+// assessment is lower case in this sentence. Their copy reads "your employers",
+// kept as "your employer's": it is a possessive, and the rest of the email uses
+// the apostrophe.
 export const EMAIL_INTRO =
-  "Hi Jane,\n\nAs part of your employer's Health Assessment Programme, you're invited to take a short Health Insights Assessment.  It takes just a few minutes and is completely free.";
+  "Hi Jane,\n\nAs part of your employer's DCA Protect programme, you're invited to take a short health insights assessment. It takes just a few minutes and is completely free.";
 
 // 449:528, the first card.
 export const EMAIL_NEXT_HEADING = "Here’s what happens next";
