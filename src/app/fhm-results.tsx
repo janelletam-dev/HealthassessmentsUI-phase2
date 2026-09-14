@@ -10,8 +10,8 @@
 // review, 11 Sep, relayed by Janelle 14 Sep). The screenshot's own second
 // paragraph was the internal pilot's ("further testing is not currently
 // included"), which contradicts the journey this prototype demos, where the
-// patient is recommended and books the next stage. The green note keeps the
-// screenshot's first paragraph with the product name.
+// patient is recommended and books the next stage. The green note opens with
+// the same sentence.
 //
 // The section chips follow the screenshot: Summary and Family History carry
 // Attention, the rest Information. Download report opens the report PDF in its
@@ -73,8 +73,10 @@ const STAGES = {
     date: usShort(SUBMITTED),
     pdf: "prescreen" as const,
     noteTone: "clear" as const,
+    // Same opening as Anushka's amber note; Janelle, 14 Sep: "use it on the
+    // green results page too".
     note: [
-      "Thank you for completing your Health Insights Assessment, which looks at factors affecting your long-term cardiovascular and metabolic health.",
+      "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
       "Based on your answers, your results are reassuring and no further assessment is needed at this time.",
     ],
     // NO FRAME. PM, 10 Sep: "add link here that has the sleep recommendations,
