@@ -217,7 +217,7 @@ export function NextStepExplainer({ onBook }: { onBook?: () => void }) {
       <div className="px-[24px] pt-[26px] pb-[22px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
         <p className="font-semibold text-[24px] leading-[32px]" style={{ color: "#111827" }}>Advanced Corporate Health Assessment</p>
         <p className="text-[15px] leading-[22px] mt-[10px] max-w-[600px] mx-auto" style={{ color: "#374151" }}>
-          Based on your Pre-Screen results, we recommend a more in-depth assessment to build a clearer picture of your health. The assessment is fully funded by your employer.
+          Based on your Health Insights Assessment, we recommend an in-depth health screen to build a clearer picture of your health. The assessment is fully funded by your employer.
         </p>
       </div>
 
