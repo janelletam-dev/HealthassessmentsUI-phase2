@@ -20,6 +20,7 @@ import { CountrySelect, FieldLabel } from "./components/country-select";
 import { journeyForCode, JOURNEYS, type JourneyId } from "./journeys";
 import { CORRECTION_COPY } from "./axa-correction-copy";
 import { InvitationEmail } from "./invitation-email";
+import { ContactLink } from "./contact-link.tsx";
 import { QuestionnaireScreen } from "./questionnaire-screen";
 import { ResultsEmail } from "./results-email";
 import { Portal } from "./portal.tsx";
@@ -4487,9 +4488,9 @@ function ProfileNeedHelpCard() {
         <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>Need help?</p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
           {"If you need any support, our team is here to help. Please contact our dedicated Health Assessments PX team on "}
-          <span className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</span>
+          <ContactLink href={`tel:${HA_PX_PHONE.replace(/\s/g, "")}`} hint="Calls the Patient Experience team" className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</ContactLink>
           {". Lines are open 09:00 – 17:30, Monday to Friday, or email "}
-          <a href={`mailto:${HA_PX_EMAIL}`} className="font-semibold underline break-all" style={{ color: "#135CFF" }}>{HA_PX_EMAIL}</a>
+          <ContactLink href={`mailto:${HA_PX_EMAIL}`} hint={`Opens your email app · ${HA_PX_EMAIL}`} className="font-semibold underline break-all" style={{ color: "#135CFF" }}>{HA_PX_EMAIL}</ContactLink>
           {" at any time."}
         </p>
       </div>

@@ -14,6 +14,7 @@
 
 import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, Headphones } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
+import { ContactLink } from "./contact-link.tsx";
 import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, monthYear, dayMonth } from "./demo-dates.ts";
 
 const WS = "'Work Sans', sans-serif";
@@ -32,6 +33,9 @@ const CARD_TITLE = "#133595";
 const LINK = "#337aff";
 const CARD_SHADOW = "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)";
 const FAQS_URL = "https://doctorcareanywhere.com/faqs";
+// The same inbox the Need help card carries. Hovering the link says where it
+// goes, because the label does not. Janelle, 14 Sep.
+const PX_EMAIL = "teamleaderescalations@doctorcareanywhere.com";
 
 export type AssessmentsStage = "pending" | "insights" | "advanced";
 
@@ -229,9 +233,14 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             </div>
           </div>
           <div className="flex flex-col items-center gap-[14px] shrink-0">
-            <span className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline" style={{ color: LINK }}>
+            <ContactLink
+              href={`mailto:${PX_EMAIL}`}
+              hint={`Opens your email app · ${PX_EMAIL}`}
+              className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline"
+              style={{ color: LINK }}
+            >
               <Headphones size={22} strokeWidth={2} /> Contact Patient Experience
-            </span>
+            </ContactLink>
             <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>Health assessment FAQs</a>
           </div>
         </div>
