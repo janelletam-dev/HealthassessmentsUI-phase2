@@ -12,7 +12,13 @@ import poster from "../assets/slide-3-woman.jpg";
 
 const WS = "'Work Sans', sans-serif";
 
-export function MockVideo({ title, duration }: { title: string; duration: string }) {
+export function MockVideo({ title, duration, poster: posterSrc = poster, posterPosition = "50% 18%" }: {
+  title: string; duration: string;
+  /** The still behind the play button; the journey's photo unless a clip has its own presenter. */
+  poster?: string;
+  /** Where the 16:9 crop sits on a portrait poster, so the face stays in frame. */
+  posterPosition?: string;
+}) {
   return (
     <div
       role="img"
@@ -23,7 +29,7 @@ export function MockVideo({ title, duration }: { title: string; duration: string
       <div className="relative w-full" style={{ aspectRatio: "16 / 9", background: "#0b1f4b" }}>
         {/* The photo is portrait; a 16:9 crop from the centre lands below the
             eyes, so anchor it near the top where the face is. */}
-        <img src={poster} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.55, objectPosition: "50% 18%" }} />
+        <img src={posterSrc} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.55, objectPosition: posterPosition }} />
         <span
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full"
           style={{ width: 64, height: 64, background: "#ffffff", boxShadow: "0 8px 24px rgba(3,7,18,0.3)" }}

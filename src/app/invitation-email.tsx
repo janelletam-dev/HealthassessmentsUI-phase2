@@ -22,6 +22,11 @@
 import { CircleCheck } from "lucide-react";
 import { EmailShell, INK } from "./email-chrome.tsx";
 import { MockVideo } from "./mock-video.tsx";
+// The Chief Medical Officer's headshot, the clip's presenter. Janelle, 14 Sep:
+// "placeholder image should be of our CMO", "keep the gradient shader like our
+// dca bit too", so it takes the tile's navy tint like the other posters. The
+// file is named for the role, not the person.
+import cmoPoster from "../assets/cmo-poster.jpg";
 import { EmailClient } from "./email-client.tsx";
 import {
   EMAIL_HEADER, EMAIL_INTRO, EMAIL_NEXT_HEADING, EMAIL_STEPS,
@@ -101,7 +106,7 @@ export function InvitationEmail({ onStart }: { onStart: () => void }) {
             Health Insights Assessment and why it asks what it asks; Janelle:
             "Hear from our CMO about our health insights assessment". */}
         <div className="w-full mt-[16px]">
-          <MockVideo title="Hear from our Chief Medical Officer about our Health Insights Assessment" duration="1 min" />
+          <MockVideo title="Hear from our Chief Medical Officer about our Health Insights Assessment" duration="1 min" poster={cmoPoster} posterPosition="50% 32%" />
         </div>
 
         <div className="flex flex-col items-center gap-[22px] w-full pt-[30px] pb-[30px]">

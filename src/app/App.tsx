@@ -1978,6 +1978,8 @@ function InfoTooltip({ label, body }: { label: string; body: string }) {
 }
 
 // Progress bar/Linear, per Figma I2052:113054. "Step N of M" over a 6px track.
+// The fill is the frame's gradient, #133595 to #135CFF left to right, not flat
+// blue. Janelle, 14 Sep: "it's not flat, there's a gradient".
 function DsLinearProgress({ step, total, percent, done }: { step: number; total: number; percent: number; done?: boolean }) {
   const ws = "'Work Sans', sans-serif";
   const pct = done ? 100 : Math.max(0, Math.min(100, percent));
@@ -1987,7 +1989,7 @@ function DsLinearProgress({ step, total, percent, done }: { step: number; total:
         Step {step} of {total}
       </p>
       <div className="h-[6px] w-full rounded-[6px] overflow-hidden" style={{ background: "rgba(10,10,10,0.1)" }}>
-        <div className="h-full rounded-[6px]" style={{ width: `${pct}%`, background: done ? "#036235" : "#135cff" }} />
+        <div className="h-full rounded-[6px]" style={{ width: `${pct}%`, background: done ? "#036235" : "linear-gradient(90deg, #133595 0%, #135CFF 100%)" }} />
       </div>
     </div>
   );
