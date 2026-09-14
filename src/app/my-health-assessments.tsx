@@ -12,9 +12,9 @@
 // Figma 5048:37958 for the chrome (header, strip, title band); the body is
 // NO FRAME until Irina's designs land.
 
-import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, FileText, ClipboardList, Stethoscope, FlaskConical, Headphones } from "lucide-react";
+import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, ClipboardList, Stethoscope, FlaskConical, Headphones } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
-import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, long, dayMonth } from "./demo-dates.ts";
+import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, monthYear, dayMonth } from "./demo-dates.ts";
 
 const WS = "'Work Sans', sans-serif";
 const HEADER = "#334bf6";
@@ -74,16 +74,19 @@ function AssessmentCard({ title, when, statuses, linkLabel, onLink }: {
           {statuses.map((status) => <StatusRow key={status.label} {...status} />)}
         </div>
       </div>
+      {/* Secondary, as Figma 27160:33988: the card's button is outlined and
+          only Manage is filled. Janelle, 14 Sep: "the secondary button
+          colors see node". */}
       {linkLabel && onLink && (
         <button
           type="button"
           onClick={onLink}
           data-guide-primary
-          className="flex items-center justify-center gap-[8px] shrink-0 rounded-[9999px] px-[16px] py-[12px] cursor-pointer border-none"
-          style={{ background: BLUE, boxShadow: "0px 4px 6px -1px rgba(15,55,190,0.05), 0px 2px 4px -2px rgba(15,55,190,0.05)", fontFamily: WS }}
+          className="flex items-center justify-center gap-[8px] shrink-0 rounded-[9999px] px-[16px] py-[12px] cursor-pointer bg-transparent"
+          style={{ border: `1px solid ${BLUE}`, fontFamily: WS }}
         >
-          <span className="text-[12px] font-semibold leading-[16px]" style={{ color: "#edf6ff" }}>{linkLabel}</span>
-          <FileText size={16} color="#edf6ff" strokeWidth={1.33} />
+          <span className="text-[12px] font-semibold leading-[16px]" style={{ color: BLUE }}>{linkLabel}</span>
+          <ExternalLink size={16} color={BLUE} strokeWidth={1.33} />
         </button>
       )}
     </div>
@@ -123,12 +126,31 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
       </div>
 
       <div className="bg-white px-[130px] py-[28px]">
-        <p className="text-[42px] font-bold leading-[42px]" style={{ color: HEADING }}>My health assessments</p>
+        {/* 27160:34024. The tile below carries "My health assessments", so
+            the page title does not repeat it. Janelle, 14 Sep: "we have
+            duplicated the main title and sub heading". */}
+        <p className="text-[42px] font-bold leading-[42px]" style={{ color: HEADING }}>Health assessments</p>
       </div>
 
       <div className="flex flex-col items-center gap-[24px] pt-[40px] pb-[80px] flex-1">
         <div className="bg-white rounded-[8px] w-[700px] p-[26px] flex flex-col gap-[16px]">
-          <p className="text-[20px] font-bold leading-[28px]" style={{ color: HEADING }}>My health assessments</p>
+          {/* The heading and the general CTA share one row. The GP follow-up
+              is booked from Home. Janelle, 11 Sep: "the general CTA should not
+              be book a follow up appt"; 12 Sep: "still be there as a general
+              one"; 14 Sep: "in the same line as the My health assessments
+              tile on its right", "not at the bottom". */}
+          <div className="flex items-center justify-between gap-[16px]">
+            <p className="text-[20px] font-bold leading-[28px]" style={{ color: HEADING }}>My health assessments</p>
+            <button
+              type="button"
+              onClick={onOpenFhm}
+              className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none shrink-0"
+              style={{ background: BLUE }}
+            >
+              <span className="text-[13px] font-semibold text-white">Manage my health assessments</span>
+              <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
+            </button>
+          </div>
           {/* The feed behind the statuses is hours old at worst. Irina, Figma
               comment #157: "info icon about out of real time". */}
           <p className="flex items-center gap-[6px] text-[13px] leading-[18px] mt-[-8px]" style={{ color: MUTED }}>
@@ -141,7 +163,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "pending" ? (
             <AssessmentCard
               title="Health Insights Assessment"
-              when={`Submitted ${long(SUBMITTED)}`}
+              when={monthYear(SUBMITTED)}
               // Review and report arrive as one event. Janelle, 11 Sep:
               // "review and results come together".
               statuses={[
@@ -152,7 +174,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           ) : (
             <AssessmentCard
               title="Health Insights Assessment"
-              when={`Submitted ${long(SUBMITTED)}`}
+              when={monthYear(SUBMITTED)}
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
                 { done: true, label: "Reviewed by a clinician, your report is ready" },
@@ -165,7 +187,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           {stage === "advanced" && (
             <AssessmentCard
               title="Advanced Corporate Health Assessment"
-              when={`Appointment ${long(APPOINTMENT)}`}
+              when={monthYear(APPOINTMENT)}
               statuses={[
                 { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}, ${APPOINTMENT_TIME.replace(" AM", "am")}` },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },
@@ -175,20 +197,6 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             />
           )}
 
-          {/* The general CTA, on every state. The GP follow-up is booked
-              from Home. Janelle, 11 Sep: "the general CTA should not be book
-              a follow up appt"; 12 Sep: "still be there as a general one". */}
-          {(
-            <button
-              type="button"
-              onClick={onOpenFhm}
-              className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none w-fit"
-              style={{ background: BLUE }}
-            >
-              <span className="text-[13px] font-semibold text-white">Manage my health assessments</span>
-              <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
-            </button>
-          )}
         </div>
 
         {/* The blurb the PM asked for: what the programme is, in the words of

@@ -29,6 +29,9 @@ export const monthShort = (d: Date) => MONTHS[d.getMonth()].slice(0, 3);
 export const dayShort = (d: Date) => DAYS[d.getDay()].slice(0, 3);
 /** 16 September 2026 */
 export const long = (d: Date) => `${d.getDate()} ${monthName(d)} ${d.getFullYear()}`;
+// Month and year only, for the line under a card title. Janelle, 14 Sep:
+// "no need for the DD only MM/year".
+export const monthYear = (d: Date) => `${monthName(d)} ${d.getFullYear()}`;
 /** 16 September */
 export const dayMonth = (d: Date) => `${d.getDate()} ${monthName(d)}`;
 /** Wednesday 16 September 2026 */
