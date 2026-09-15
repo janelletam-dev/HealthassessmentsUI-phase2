@@ -20,7 +20,7 @@ const CARD = "#fbfbfb";
 
 // NO FRAME for the values: the frame holds merge tags. These mirror the demo
 // booking so the email and the Booking confirmed screen agree.
-const BOOKING = ["Corporate Advanced", "Latchmere Pharmacy, London", weekdayLong(APPOINTMENT), APPOINTMENT_TIME];
+const BOOKING = ["Corporate Advanced Health Screen", "Latchmere Pharmacy, London", weekdayLong(APPOINTMENT), APPOINTMENT_TIME];
 
 function TickList({ items }: { items: string[] }) {
   return (

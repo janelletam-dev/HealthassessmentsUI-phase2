@@ -81,7 +81,7 @@ export const EMAIL_STEPS: { title: string; body?: string; link?: { text: string;
     title: "4. Further support if needed*",
     // 449:528. "Health Screen", not "Health Assessment": Janelle, 15 Sep,
     // carrying Maya's naming into the invitation email.
-    body: "You may be offered a free, more in-depth Health Screen - this can include blood tests and health measurements, all at no cost to you.",
+    body: "You may be offered a free Corporate Advanced Health Screen - this can include blood tests and health measurements, all at no cost to you.",
   },
 ];
 
@@ -167,7 +167,7 @@ export const RESULTS_EMAIL = {
   // The arrow is inside the label in the frame, not a separate icon.
   cta: "View report →",
   // "Health Screen", not "Health Assessment": Anushka's content deck, 15 Sep.
-  closing: "If a more in-depth Health Screen has been recommended for you, your report will explain it and you'll be able to book from there.",
+  closing: "If a Corporate Advanced Health Screen has been recommended for you, your report will explain it and you'll be able to book from there.",
 };
 
 // ─── Pharmacy appointment confirmation ─────────────────────────────────────
@@ -190,7 +190,7 @@ export const APPOINTMENT_EMAIL = {
   greeting: "Hi Jane,",
   // 449:1576, rewritten as a reminder in Anushka's content deck, 15 Sep:
   // "This is a reminder that your Health Screen appointment is booked for".
-  lead: "This is a reminder that your Health Screen appointment is booked for:",
+  lead: "This is a reminder that your Corporate Advanced Health Screen appointment is booked for:",
   // 449:1576, the four label cells. Their values are the booking's.
   labels: ["Type:", "Location:", "Date:", "Time:"],
   // 449:1576
@@ -225,7 +225,11 @@ export const APPOINTMENT_EMAIL = {
   ],
   // 449:1576
   changeHeading: "Need to change your appointment?",
-  changeLead: "You can reschedule or cancel via our dedicated Health Assessments Customer Support team on ",
+  // "DCA Protect", replacing "Health Assessments", following the app's own
+  // Need help card. The team name itself stays Customer Support: rescheduling
+  // and cancelling is a support job, not an escalation. Janelle, 15 Sep:
+  // "follow the need help card, DCA Protect customer support team is fine".
+  changeLead: "You can reschedule or cancel via our dedicated DCA Protect Customer Support team on ",
   changePhone: "0330 088 4980",
   changeTail: ". Lines are open 09:00–17:30, Monday to Friday.",
 };
@@ -240,7 +244,8 @@ export const APPOINTMENT_EMAIL = {
 // frame. Kept as drawn.
 export const ADVANCED_RESULTS_EMAIL = {
   // 468:2616
-  title: "Your health assessment results are ready",
+  // Janelle, 15 Sep: the emails name the product in full, headings included.
+  title: "Your Corporate Advanced Health Screen results are ready",
   // 468:2616. Greeting and paragraph are one centred block, as in the others.
   body: "Hi Jane,\n\nYour Corporate Advanced Health Screen is complete and your clinician-reviewed report is ready to view — with clear, personalised insights on where you stand and what to do next.",
   // 468:2616
@@ -291,7 +296,7 @@ export const MAILBOX = {
   },
   advancedResults: {
     // NO FRAME, same reason, for 468:2616.
-    subject: "Your health assessment results are ready",
+    subject: "Your Corporate Advanced Health Screen results are ready",
     date: "08:26",
   },
   results: {

@@ -82,7 +82,7 @@ const SLOTS = [
 
 const PRODUCT = {
   // 27011:15640
-  name: "Corporate Advanced",
+  name: "Corporate Advanced Health Screen",
   // The frame's two lines, with the product renamed. Maya's deck adds three
   // more sentences here (where the measurements happen, posting the sample,
   // the clinician review and the email); Janelle, 15 Sep, reverted this block

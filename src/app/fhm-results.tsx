@@ -60,6 +60,8 @@ type Tone = "alert" | "attention" | "info" | "clear";
 type Stage = {
   reportName: string;
   date: string;
+  /** Under the report's name, as the platform draws it. */
+  status: string;
   pdf: "prescreen" | "advanced";
   noteTone: Tone;
   note: string[];
@@ -69,8 +71,12 @@ type Stage = {
 };
 const STAGES = {
   green: {
-    reportName: "Health Insights Assessment",
+    // "My Health Insights Assessment", with the date above it and the status
+    // below. Janelle's render of the live page, 15 Sep: "for the amber / green
+    // results show this".
+    reportName: "My Health Insights Assessment",
     date: usShort(SUBMITTED),
+    status: "Status: Report Returned",
     pdf: "prescreen" as const,
     noteTone: "clear" as const,
     // Same opening as Anushka's amber note; Janelle, 14 Sep: "use it on the
@@ -92,32 +98,42 @@ const STAGES = {
     ],
   },
   prescreen: {
-    reportName: "Health Insights Assessment",
+    reportName: "My Health Insights Assessment",
     date: usShort(SUBMITTED),
+    status: "Status: Report Returned",
     pdf: "prescreen" as const,
     noteTone: "attention" as const,
     // NO FRAME. Anushka's drafted note, PowerPoint comment 11 Sep; Janelle,
     // 14 Sep: "change to this 2nd paragraph".
     note: [
       "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
-      "Based on your answers, we'd like to take a closer look at some areas together - this is a normal next step for many people and doesn't mean there's a problem.",
-      "Please use the link below to arrange your next stage of testing. This will include some further questionnaires as well as blood tests and physical measurements.",
+      "Based on your answers, further assessment would normally be recommended at this stage. Since this is an internal pilot, further testing is not currently included. Information about further testing will be shared if available in due course. In the meantime, please do book an appointment for further discussion with a DCA GP (via \u2018health check follow up\u2019 health concern) or see your NHS GP to discuss whether you would benefit from further blood tests.",
     ],
     // NO FRAME. PM, 10 Sep: the reviewer note links to the next steps page.
-    // The note's last paragraph already introduces the link, so no lead.
+    // No lead sentence, because the note used to end by introducing it.
+    //
+    // IT NO LONGER DOES, AND THIS IS DELIBERATE. Since 15 Sep the note says
+    // further testing is not included in the pilot, so the page offers a link
+    // to arrange something it has just said is unavailable. Janelle, 15 Sep:
+    // "keep the link for now". Everything after this point in the journey
+    // hangs off it, the next steps page, the pharmacy booking, the
+    // pre-appointment questionnaire and the advanced report, so removing it
+    // would make about a third of the prototype unreachable. Revisit when the
+    // pilot's scope is settled.
     link: { lead: "", label: "Arrange your next stage of testing", target: "nextSteps" as const },
     sections: [
       { label: "Summary", tone: "attention" as const },
       { label: "Family History", tone: "attention" as const },
+      { label: "Lifestyle Factors", tone: "attention" as const },
       { label: "Demographics", tone: "info" as const },
       { label: "Known Medical Conditions", tone: "info" as const },
-      { label: "Lifestyle Factors", tone: "info" as const },
       { label: "Body Metrics", tone: "info" as const },
     ],
   },
   advanced: {
-    reportName: "Corporate Advanced Health Screen",
+    reportName: "My Corporate Advanced Health Screen",
     date: usShort(ADVANCED_REPORT),
+    status: "Status: Report Returned",
     pdf: "advanced" as const,
     noteTone: "alert" as const,
     note: [
@@ -217,7 +233,7 @@ export function NextStepExplainer({ onBook }: { onBook?: () => void }) {
       <div className="px-[24px] pt-[26px] pb-[22px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
         <p className="font-semibold text-[24px] leading-[32px]" style={{ color: "#111827" }}>Corporate Advanced Health Screen</p>
         <p className="text-[15px] leading-[22px] mt-[10px] max-w-[600px] mx-auto" style={{ color: "#374151" }}>
-          Based on your Health Insights Assessment, we recommend an in-depth Health Screen to build a clearer picture of your health. The assessment is fully funded by your employer.
+          Based on your Health Insights Assessment, we recommend a Corporate Advanced Health Screen to build a clearer picture of your health. The assessment is fully funded by your employer.
         </p>
       </div>
 
@@ -344,10 +360,13 @@ export function FhmResults({ stage = "prescreen", onExit, onNextSteps, onSleep }
               <p className="flex items-center gap-[10px] font-bold text-[16px] tracking-[0.03em]" style={{ color: BLUE }}>
                 <ClipboardList size={18} strokeWidth={2} /> YOUR LATEST RESULTS
               </p>
-              {/* Which report this is, said out loud: the lifestyle
-                  questionnaire and the Advanced HA are different artefacts. */}
-              <p className="font-semibold text-[15px] mt-[8px]" style={{ color: "#111827" }}>{data.reportName}</p>
-              <p className="text-[14px] mt-[2px]" style={{ color: INK }}>{data.date}</p>
+              {/* Date, then which report this is, then its status, in the
+                  platform's own order. The questionnaire and the Advanced
+                  Health Screen are different artefacts, so the name is said
+                  out loud rather than left to context. */}
+              <p className="text-[14px] mt-[8px]" style={{ color: INK }}>{data.date}</p>
+              <p className="font-semibold text-[15px] mt-[2px]" style={{ color: "#111827" }}>{data.reportName}</p>
+              <p className="font-semibold text-[15px]" style={{ color: "#111827" }}>{data.status}</p>
             </div>
 
             <div className="px-[28px] py-[22px]" style={{ borderBottom: `1px solid ${RULE}` }}>

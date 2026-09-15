@@ -4577,6 +4577,14 @@ function Footer({ brand }: { brand: BrandId }) {
 
 // ─── Main shell – exact Figma two-column card ─────────────────────────────────
 
+/* Full Health Medical's own dashboard, opened in its own window by "Manage my
+   health assessments". It is not a step in the journey: it exists so that when
+   somebody in a demo asks where that button goes, there is an answer.
+   "insights" shows the Health Insights Assessment report, "advanced" the
+   Corporate Advanced Health Screen one, which is what the patient's latest
+   report would be at each point. */
+const FHM_WINDOW = new URLSearchParams(window.location.search).get("fhm");
+
 export default function App() {
   const [brand, setBrand] = useState<BrandId>("dca");
   const BRAND_THEMES: Record<BrandId, BrandTheme> = { dca: BRAND_DCA, axa: BRAND_AXA };
@@ -4607,8 +4615,9 @@ export default function App() {
   const [ssoStep, setSsoStep] = useState(0);
   const [step, setStep] = useState(0);
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
-  // "the email should be the first screen inside the prototype".
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "sleep" | "fhmResults" | "fhmResultsAmber" | "nextSteps" | "dcaLogin" | "dcaLoginPending" | "portalPending" | "bookAppointment" | "orgReport">("email");
+  // "the email should be the first screen inside the prototype". The one
+  // exception is the FHM window below, which boots straight into the report.
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "sleep" | "fhmResults" | "fhmResultsAmber" | "nextSteps" | "dcaLogin" | "dcaLoginPending" | "portalPending" | "bookAppointment" | "orgReport">(FHM_WINDOW === "advanced" ? "fhmResults" : FHM_WINDOW ? "fhmResultsAmber" : "email");
   // The global back arrow retraces screens. Janelle, 10 Sep: "the back arrow
   // on each page", then "could they go back one page please and not back to
   // the start?". A screen is the phase plus the activation step (landing,
@@ -4696,7 +4705,7 @@ export default function App() {
   // Which report the FHM results page shows. PM ruling, 4 Sep: patients view
   // reports on FHM, not DCA Uploads, because the advanced process only exists
   // on the FHM platform.
-  const [resultsStage, setResultsStage] = useState<"green" | "prescreen" | "advanced">("green");
+  const [resultsStage, setResultsStage] = useState<"green" | "prescreen" | "advanced">(FHM_WINDOW === "advanced" ? "advanced" : "green");
   const [profileDone, setProfileDone] = useState(false);
   const [planNotice, setPlanNotice] = useState<keyof typeof PLAN_NOTICES | undefined>(undefined);
   const [profileStep, setProfileStep] = useState(0);
@@ -4948,7 +4957,13 @@ export default function App() {
             else if (portalReturn === "portalAdvanced") { setPortalAdvancedTab("Uploads"); setPhase("portalAdvanced"); }
             else setPhase("portal");
           }}
-          onOpenFhm={() => { setBookingStart("about"); setPhase("booking"); }}
+          // FHM opens in its own window, as it would with a real SSO hop, so
+          // the journey in this one is not disturbed. Janelle, 15 Sep: "so
+          // that when they want to demo or someone asks where that leads to,
+          // they know where it would show up, even though it's not part of
+          // the flow". The path is "/" and not the current one, or a window
+          // opened from /demo-fastforward would start the driver again.
+          onOpenFhm={() => window.open(`/?fhm=${portalReturn === "portalAdvanced" ? "advanced" : "insights"}`, "_blank", "noopener")}
           onBack={() => setPhase(portalReturn)}
         />
         {/* While the report is pending there is nothing here to press, so the
