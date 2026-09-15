@@ -361,7 +361,7 @@ export function BookAppointment({ onBack, onDone }: { onBack: () => void; onDone
           <CircleCheck size={56} color="#16a34a" strokeWidth={1.5} />
           <p className="text-[24px] font-bold" style={{ color: INK }}>Appointment booked</p>
           <p className="text-[15px] leading-[22px]" style={{ color: "#374151" }}>
-            Your video GP appointment is booked for today, {slot}. Your clinician will have your Advanced Health Assessment results to hand.
+            Your video GP appointment is booked for today, {slot}. Your clinician will have your Health Screen results to hand.
           </p>
           <p className="flex items-center gap-[8px] text-[13px]" style={{ color: "#6b7280" }}>
             <FileText size={14} strokeWidth={2} /> Blood Test Review · Health Check Follow-Up

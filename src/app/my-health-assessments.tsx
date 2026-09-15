@@ -44,7 +44,7 @@ export type AssessmentsStage = "pending" | "insights" | "advanced";
 const HOW_IT_WORKS = [
   { title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
   { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 working days." },
-  { title: "Advanced Corporate Health Assessment", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
+  { title: "Corporate Advanced Health Screen", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
 ];
 
 // One line per thing that has happened, as the D2C view draws them: a green
@@ -192,7 +192,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
 
           {stage === "advanced" && (
             <AssessmentCard
-              title="Advanced Corporate Health Assessment"
+              title="Corporate Advanced Health Screen"
               when={monthYear(APPOINTMENT)}
               statuses={[
                 { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}, ${APPOINTMENT_TIME.replace(" AM", "am")}` },

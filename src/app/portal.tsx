@@ -91,7 +91,7 @@ const HA_TILE: Record<PortalStage, { title: string; body: string }> = {
  * sample's own. Janelle, 4 Sep: "again change the name to Jane Smith".
  */
 const ADVANCED_FILE = {
-  name: "Advanced Health Assessment Report",
+  name: "Advanced Health Screen Report",
   pages: 32,
   // The results-ready email arrives at 08:26, so the file lands then too. The
   // appointment was Wed 16 Sep; two days for the samples and review.

@@ -37,7 +37,7 @@ const GREY = rgb(0x37 / 255, 0x41 / 255, 0x51 / 255);
 export async function patchReport(bytes: Uint8Array, kind: ReportKind, dates: ReportDates): Promise<Uint8Array> {
   const doc = await PDFDocument.load(bytes);
   // The viewer's toolbar shows the title, not the object URL's id.
-  doc.setTitle(kind === "prescreen" ? "Health Insights Assessment Report" : "Advanced Health Assessment Report");
+  doc.setTitle(kind === "prescreen" ? "Health Insights Assessment Report" : "Advanced Health Screen Report");
   const regular = await doc.embedFont(StandardFonts.Helvetica);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
   const pages = doc.getPages();

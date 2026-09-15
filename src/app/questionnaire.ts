@@ -210,10 +210,12 @@ export const SUBMITTED = {
       body: "Within the next 5 working days, you will receive a report with practical health and lifestyle recommendations tailored to you.",
     },
     {
-      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
-      title: "Advanced Health Assessment (if recommended)",
-      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
-      body: "If clinically appropriate, you may be invited to book a free Advanced Corporate Health Assessment, fully funded by your employer.",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka. Renamed
+      // from "Assessment" to "Screen" by Janelle, 15 Sep.
+      title: "Advanced Health Screen (if recommended)",
+      // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka. Janelle,
+      // 15 Sep: "to book a free Corporate Advanced Health Screen".
+      body: "If clinically appropriate, you may be invited to book a free Corporate Advanced Health Screen, fully funded by your employer.",
     },
   ],
   // NO FRAME. Transcribed from Janelle's image, 3 Sep.

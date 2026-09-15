@@ -1,4 +1,4 @@
-// Your next steps, on FHM: the Advanced Corporate Health Assessment
+// Your next steps, on FHM: the Corporate Advanced Health Screen
 // introduction on its own page. PM, 10 Sep: "remove the next steps section
 // from the report page and make it as a separate page (link for this is
 // red/amber report -> reviewer notes)".
@@ -26,7 +26,7 @@ export function NextStepsPage({ onBack, onBook }: { onBack: () => void; onBook: 
       {/* PM, 10 Sep: a mock video on "Full health assessment recommended and
           next steps page". Below the content: Janelle, 11 Sep, "the contents
           should be this, you could put the video at the bottom". */}
-      <MockVideo title="What happens at an Advanced Corporate Health Assessment" duration="1 min" />
+      <MockVideo title="What happens at a Corporate Advanced Health Screen" duration="1 min" />
     </FhmShell>
   );
 }

@@ -104,10 +104,10 @@ export const DEMO_SCRIPT: DemoStep[] = [
 
   // ── 6. The Health Insights Assessment ─────────────────────────────────────
   { kind: "scene", label: "Profile complete" },
-  { kind: "waitFor", text: "Start your DCA Protect journey" },
+  { kind: "waitFor", text: "Profile complete" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Profile done. The assessment takes a few minutes, and a clinician reviews every answer" },
-  { kind: "click", label: "Start your Health Insights Assessment" },
+  { kind: "click", label: "Continue to questionnaire" },
   { kind: "scene", label: "Health Insights Assessment" },
   { kind: "waitFor", text: "DEMOGRAPHICS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
@@ -287,7 +287,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "zoom", text: "My health assessments: each report, its status, and the way to it" },
   { kind: "pause", ms: 600 },
   { kind: "click", label: "View report in Uploads" },
-  { kind: "waitFor", text: "Advanced Health Assessment Report", timeoutMs: 8000 },
+  { kind: "waitFor", text: "Advanced Health Screen Report", timeoutMs: 8000 },
   { kind: "pause", ms: 800 },
   { kind: "zoom", text: "Uploads: both reports filed as PDFs in the patient's own account" },
   { kind: "pause", ms: 800 },
@@ -295,7 +295,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // have been seen. Janelle, 12 Sep: "the advanced corporate should be shown
   // after we show the amber/red results ... when we show that the uploads
   // have been added then open there, once done, we show the corporate".
-  { kind: "click", label: "Advanced Health Assessment Report" },
+  { kind: "click", label: "Advanced Health Screen Report" },
   { kind: "pause", ms: 900 },
   { kind: "pdfPage", page: 2 },
   { kind: "pause", ms: 3200 },

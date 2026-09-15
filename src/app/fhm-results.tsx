@@ -116,12 +116,12 @@ const STAGES = {
     ],
   },
   advanced: {
-    reportName: "Advanced Corporate Health Assessment",
+    reportName: "Corporate Advanced Health Screen",
     date: usShort(ADVANCED_REPORT),
     pdf: "advanced" as const,
     noteTone: "alert" as const,
     note: [
-      "Your Advanced Corporate Health Assessment is complete and your clinician-reviewed report is ready to view, with clear, personalised insights on where you stand and what to do next.",
+      "Your Corporate Advanced Health Screen is complete and your clinician-reviewed report is ready to view, with clear, personalised insights on where you stand and what to do next.",
       "You have a free Video GP appointment included. Book a time to discuss your results and next steps with a doctor, via the \u2018health check follow up\u2019 health concern on your Doctor Care Anywhere account.",
     ],
     sections: [
@@ -168,14 +168,14 @@ function Chip({ tone }: { tone: Tone }) {
  */
 const FEATURES = [
   { Icon: FlaskConical, title: "Comprehensive Testing", body: "Blood tests and health measurements." },
-  { Icon: ListChecks, title: "Advanced Health Assessment", body: "Detailed health and lifestyle questions." },
+  { Icon: ListChecks, title: "Questionnaire", body: "Detailed health and lifestyle questions." },
   { Icon: Stethoscope, title: "Clinician Review", body: "A clinician reviews all of your results." },
   { Icon: FileHeart, title: "Personalised Health Report", body: "Clear results and recommended next steps." },
 ];
 
 const HOW_IT_WORKS = [
   { title: "Attend a pharmacy appointment", body: "Choose a pharmacy, date and time that suit you." },
-  { title: "Complete your Advanced Health Assessment", body: "Before your appointment, so your results can be processed." },
+  { title: "Complete your questionnaire", body: "Before your appointment, so your results can be processed." },
   { title: "Clinician review", body: "A qualified clinician reviews your test results and assessment answers." },
   { title: "Receive your personalised report", body: "Detailed insights and recommended next steps." },
 ];
@@ -196,7 +196,7 @@ const WHY_TAKE_PART = [
   "Take proactive steps for a healthier future",
 ];
 
-// The Introduction page of the Advanced Corporate Health Assessment, as the
+// The Introduction page of the Corporate Advanced Health Screen, as the
 // clinical partner draws it: left-aligned sections in two columns, rules
 // between them, the closing line in plain text. Janelle, 11 Sep: "change the
 // advanced health assessments screen (FHM side) to the 1st image". With
@@ -215,7 +215,7 @@ export function NextStepExplainer({ onBook }: { onBook?: () => void }) {
   return (
     <div className="bg-white rounded-[6px] overflow-hidden" style={{ border: `1px solid ${RULE}`, fontFamily: WS }}>
       <div className="px-[24px] pt-[26px] pb-[22px] text-center" style={{ borderBottom: `1px solid ${RULE}` }}>
-        <p className="font-semibold text-[24px] leading-[32px]" style={{ color: "#111827" }}>Advanced Corporate Health Assessment</p>
+        <p className="font-semibold text-[24px] leading-[32px]" style={{ color: "#111827" }}>Corporate Advanced Health Screen</p>
         <p className="text-[15px] leading-[22px] mt-[10px] max-w-[600px] mx-auto" style={{ color: "#374151" }}>
           Based on your Health Insights Assessment, we recommend an in-depth Health Screen to build a clearer picture of your health. The assessment is fully funded by your employer.
         </p>
@@ -277,7 +277,7 @@ export function NextStepExplainer({ onBook }: { onBook?: () => void }) {
           ))}
         </div>
         <p className="text-[15px] leading-[22px] mt-[22px]" style={{ color: "#374151" }}>
-          Ready to get started? Book your Advanced Corporate Health Assessment at a pharmacy near you.
+          Ready to get started? Book your Corporate Advanced Health Screen at a pharmacy near you.
         </p>
         {onBook && (
           <button

@@ -83,14 +83,13 @@ const SLOTS = [
 const PRODUCT = {
   // 27011:15640
   name: "Corporate Advanced",
-  // Anushka's content deck, 15 Sep. "Advanced Health Screen" is the deck's
-  // name for the product here, and the last two lines are new: where the
-  // samples go, and what comes back afterwards.
+  // The frame's two lines, with the product renamed. Maya's deck adds three
+  // more sentences here (where the measurements happen, posting the sample,
+  // the clinician review and the email); Janelle, 15 Sep, reverted this block
+  // to the original, so those three are not on this screen.
   lines: [
-    "Your corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
-    "On the next screen, you can select your preferred pharmacy location where these measurements and blood tests will take place.",
-    "Please note, you will have to post your pre-packaged blood test to the laboratory. This ensures that the test gets processed quickly and reduces the risk of errors.",
-    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 working days. Your report and recommended next steps will be shared via email.",
+    "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
+    "On the next screen, you can select your preferred pharmacy location.",
   ],
 };
 
@@ -755,7 +754,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
         </div>
       </Card>
 
-      <Card label="WHAT YOU HAVE BOOKED"><ProductRow /></Card>
+      <Card label="WHAT YOU'VE BOOKED"><ProductRow /></Card>
     </FhmShell>
   );
 }

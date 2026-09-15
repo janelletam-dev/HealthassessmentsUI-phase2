@@ -311,10 +311,11 @@ const LANDING_STEPS = [
   // 5446:12374
   { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
   // 5446:12622
-  // "Corporate Advanced Health Screen". Deepali's 14 Sep ruling was the
-  // generic lowercase "health screen", as a holding position while naming was
-  // open; Janelle, 15 Sep, settled it on the product's own name once Maya's
-  // marked-up content deck landed.
+  // "Corporate Advanced Health Screen", one word order everywhere. Deepali's
+  // 14 Sep ruling was the generic lowercase "health screen", a holding
+  // position while naming was open; Janelle settled it on 15 Sep once Maya's
+  // marked-up content deck landed: "so all should be Corporate Advanced
+  // Health Screen".
   { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
 ];
 
@@ -3814,10 +3815,7 @@ const COMPLETE_STEPS = [
   // NO FRAME. Anushka's content deck, 15 Sep.
   { Icon: CheckCheck, text: "Receive your report and recommended next steps." },
   // Frame 4
-  // "Corporate Advanced Health Screen". Deepali's 14 Sep ruling was the
-  // generic lowercase "health screen", as a holding position while naming was
-  // open; Janelle, 15 Sep, settled it on the product's own name once Maya's
-  // marked-up content deck landed.
+  // "Corporate Advanced Health Screen", as on the landing page above.
   { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
 ];
 
@@ -3839,11 +3837,12 @@ function ProfileComplete({ theme, onContinue }: {
       </div>
 
       <div className="flex flex-col gap-[4px] items-center w-full text-center">
-        {/* NO FRAME. Anushka's content deck, 15 Sep: "Start your DCA Protect
-            journey". The frame says "Start your Health Assessment journey";
-            DCA Protect is the programme name the deck puts in front of it. */}
+        {/* "Profile complete", as the frame has it. The 15 Sep content deck
+            renders this page under "Start your DCA Protect journey", which I
+            took for the heading; Janelle, 15 Sep: the Figma file is the one to
+            follow here. */}
         <p className="text-[24px] font-semibold leading-[32px]" style={{ color: "#133595" }}>
-          Start your DCA Protect journey
+          Profile complete
         </p>
         <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
           You&rsquo;re all set to start your Health Insights Assessment.
@@ -3898,7 +3897,7 @@ function ProfileComplete({ theme, onContinue }: {
               className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] px-[16px] py-[12px] text-[14px] font-semibold leading-[20px] cursor-pointer"
               style={{ background: "#135CFF", color: "#EDF6FF", border: "none", boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)" }}
             >
-              Start your Health Insights Assessment
+              Continue to questionnaire
             </button>
           </div>
         </div>

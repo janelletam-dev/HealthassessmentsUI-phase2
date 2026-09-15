@@ -79,8 +79,9 @@ export const EMAIL_STEPS: { title: string; body?: string; link?: { text: string;
   {
     // 449:528
     title: "4. Further support if needed*",
-    // 449:528
-    body: "You may be offered a free, more in-depth Health Assessment - this can include blood tests and health measurements, all at no cost to you.",
+    // 449:528. "Health Screen", not "Health Assessment": Janelle, 15 Sep,
+    // carrying Maya's naming into the invitation email.
+    body: "You may be offered a free, more in-depth Health Screen - this can include blood tests and health measurements, all at no cost to you.",
   },
 ];
 
@@ -241,7 +242,7 @@ export const ADVANCED_RESULTS_EMAIL = {
   // 468:2616
   title: "Your health assessment results are ready",
   // 468:2616. Greeting and paragraph are one centred block, as in the others.
-  body: "Hi Jane,\n\nYour Advanced Corporate Health Assessment is complete and your clinician-reviewed report is ready to view — with clear, personalised insights on where you stand and what to do next.",
+  body: "Hi Jane,\n\nYour Corporate Advanced Health Screen is complete and your clinician-reviewed report is ready to view — with clear, personalised insights on where you stand and what to do next.",
   // 468:2616
   cta: "View my report →",
   // 468:2616
