@@ -185,12 +185,14 @@ export function missingAnswers(answers: Answers): string[] {
  * "Need to come back and finish later?" row, which is gone.
  */
 export const SUBMITTED = {
-  // NO FRAME. FHM screenshot via Jack, 14 Sep.
-  banner: "Your questionnaire has been submitted",
+  // NO FRAME. FHM screenshot via Jack, 14 Sep; renamed in Anushka's content
+  // deck, 15 Sep.
+  banner: "Your Health insights assessment has been submitted",
   // NO FRAME. FHM screenshot via Jack, 14 Sep.
   title: "Thank you!",
-  // NO FRAME. FHM screenshot via Jack, 14 Sep.
-  lead: "Your Health Questionnaire has been submitted successfully.",
+  // NO FRAME. FHM screenshot via Jack, 14 Sep; renamed in Anushka's content
+  // deck, 15 Sep.
+  lead: "Your Health insights assessment has been submitted successfully.",
   // NO FRAME. FHM screenshot via Jack, 14 Sep.
   nextHeading: "What happens next?",
   next: [

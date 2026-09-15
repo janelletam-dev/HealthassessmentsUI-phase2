@@ -311,10 +311,11 @@ const LANDING_STEPS = [
   // 5446:12374
   { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
   // 5446:12622
-  // "health screen", lowercase, generic on purpose so the page is not tied to
-  // one product. Anushka asked for the landing to pick up the programme; it
-  // cannot for now, so Deepali, 14 Sep: "We will change it to health screen".
-  { Icon: MapPin, text: "If advised to book a health screen, you can easily schedule your appointment at a nearby location." },
+  // "Corporate Advanced Health Screen". Deepali's 14 Sep ruling was the
+  // generic lowercase "health screen", as a holding position while naming was
+  // open; Janelle, 15 Sep, settled it on the product's own name once Maya's
+  // marked-up content deck landed.
+  { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
 ];
 
 // Slide duration must match lhsBarFill animation duration in fonts.css
@@ -2900,7 +2901,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
           Create your account
         </p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-          Let&rsquo;s get you set up and ready to book your first health assessment.
+          Let&rsquo;s get you set up and ready to book your first health insights assessment.
         </p>
       </div>
 
@@ -3800,17 +3801,24 @@ function LandingTaskCard({ badge, borderColor, icon, title, description, cta, on
 // 0041CC for the three step icons, which is a deeper blue than the 166534 green
 // on the landing's four. Both are from their own frame's CSS; they are not
 // meant to match.
+// Four bullets, not three: Anushka's content deck, 15 Sep, splits the clinical
+// review and the report into separate steps so the 5 working days sits on the
+// review rather than on the thing the patient receives.
 const COMPLETE_STEPS = [
-  // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep.
-  { Icon: ListTodo, text: "Complete a short Health Insights Assessment to help us assess your current health." },
-  // Frame 5. "Within 2 days" was the placeholder (PM, 10 Sep, "then Anushka
-  // can tell us whether that's correct"); Anushka, 11 Sep: 5 working days.
-  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 5 working days you receive your report, with your results and recommended next steps." },
+  // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep; "Fill in" and
+  // "current health status" are the deck's words, 15 Sep.
+  { Icon: ListTodo, text: "Fill in a short Health insights assessment to help us assess your current health status." },
+  // NO FRAME. Anushka's content deck, 15 Sep. "Within 2 days" was the earlier
+  // placeholder (PM, 10 Sep); Anushka, 11 Sep: 5 working days.
+  { Icon: UserCheck, text: "Our clinical team will review your answers and develop your personalised report within 5 working days." },
+  // NO FRAME. Anushka's content deck, 15 Sep.
+  { Icon: CheckCheck, text: "Receive your report and recommended next steps." },
   // Frame 4
-  // "health screen", lowercase, generic on purpose so the page is not tied to
-  // one product. Anushka asked for the landing to pick up the programme; it
-  // cannot for now, so Deepali, 14 Sep: "We will change it to health screen".
-  { Icon: MapPin, text: "If advised to book a health screen, you can easily schedule your appointment at a nearby location." },
+  // "Corporate Advanced Health Screen". Deepali's 14 Sep ruling was the
+  // generic lowercase "health screen", as a holding position while naming was
+  // open; Janelle, 15 Sep, settled it on the product's own name once Maya's
+  // marked-up content deck landed.
+  { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
 ];
 
 function ProfileComplete({ theme, onContinue }: {
@@ -3831,8 +3839,11 @@ function ProfileComplete({ theme, onContinue }: {
       </div>
 
       <div className="flex flex-col gap-[4px] items-center w-full text-center">
+        {/* NO FRAME. Anushka's content deck, 15 Sep: "Start your DCA Protect
+            journey". The frame says "Start your Health Assessment journey";
+            DCA Protect is the programme name the deck puts in front of it. */}
         <p className="text-[24px] font-semibold leading-[32px]" style={{ color: "#133595" }}>
-          Profile complete
+          Start your DCA Protect journey
         </p>
         <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
           You&rsquo;re all set to start your Health Insights Assessment.
@@ -3872,20 +3883,12 @@ function ProfileComplete({ theme, onContinue }: {
               </div>
             </div>
 
-            {/* NO FRAME. Setting expectations, per PM, 10 Sep: a report comes
-                back, clinicians review it, there is a timeline, and some
-                people go on to the full assessment. Wording is a placeholder
-                until Anushka's content lands. */}
-            {/* What the advanced assessment IS comes from the journey's own
-                sources: the invitation email (blood tests and health
-                measurements, at no cost) and the FHM results page (pharmacy
-                appointment, clinician review, personalised report).
-                "health screen" and "physical measurements" are Anushka's
-                words from the content review; Janelle, 14 Sep: "change to
-                Health screen here also". */}
-            <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
-              The assessment takes a few minutes. Our clinicians review your answers and send your report within 5 working days. For most people, that is the end. If clinically appropriate, you will be invited to a health screen, funded by your employer: blood tests and physical measurements at a pharmacy, with a clinician-reviewed report.
-            </p>
+            {/* The paragraph that sat here was a placeholder, written on
+                10 Sep to set expectations "until Anushka's content lands".
+                It has landed: the four bullets above are it, and they say the
+                same things (clinician review, 5 working days, a report, a
+                health screen if advised). Deleted rather than left to repeat
+                them. Anushka's content deck, 15 Sep, lists no paragraph here. */}
           </div>
 
           <div className="px-[24px]">
@@ -4488,7 +4491,7 @@ function ProfileNeedHelpCard() {
       <div className="flex flex-col gap-[4px] px-[24px] py-[24px]">
         <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>Need help?</p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
-          {"If you need any support, our team is here to help. Please contact our dedicated Health Assessments PX team on "}
+          {"If you need any support, our team is here to help. Please contact our dedicated DCA Protect PX team on "}
           <ContactLink href={`tel:${HA_PX_PHONE.replace(/\s/g, "")}`} hint="Calls the Patient Experience team" className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</ContactLink>
           {". Lines are open 09:00 – 17:30, Monday to Friday, or email "}
           <ContactLink href={`mailto:${HA_PX_EMAIL}`} hint={`Opens your email app · ${HA_PX_EMAIL}`} className="font-semibold underline break-all" style={{ color: "#135CFF" }}>{HA_PX_EMAIL}</ContactLink>

@@ -104,7 +104,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
 
   // ── 6. The Health Insights Assessment ─────────────────────────────────────
   { kind: "scene", label: "Profile complete" },
-  { kind: "waitFor", text: "Profile complete" },
+  { kind: "waitFor", text: "Start your DCA Protect journey" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Profile done. The assessment takes a few minutes, and a clinician reviews every answer" },
   { kind: "click", label: "Start your Health Insights Assessment" },
@@ -217,7 +217,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
 
   // ── 10. The Advanced Health Assessment, before the appointment ────────────
   { kind: "scene", label: "Advanced Health Assessment" },
-  { kind: "click", label: "Complete Advanced Health Assessment now" },
+  { kind: "click", label: "Complete questionnaire now" },
   { kind: "waitFor", text: "MEDICAL HISTORY" },
   { kind: "pause", ms: 500 },
   { kind: "zoom", text: "Before the appointment: the Advanced Health Assessment questionnaire" },

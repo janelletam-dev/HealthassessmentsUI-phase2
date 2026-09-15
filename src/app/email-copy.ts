@@ -165,7 +165,8 @@ export const RESULTS_EMAIL = {
   body: "Hi Jane,\n\nYour clinician-reviewed results are ready to view. Your report explains what we found and your recommended next steps — in clear language, not just raw data.",
   // The arrow is inside the label in the frame, not a separate icon.
   cta: "View report →",
-  closing: "If a more in-depth Health Assessment has been recommended for you, your report will explain it and you'll be able to book from there.",
+  // "Health Screen", not "Health Assessment": Anushka's content deck, 15 Sep.
+  closing: "If a more in-depth Health Screen has been recommended for you, your report will explain it and you'll be able to book from there.",
 };
 
 // ─── Pharmacy appointment confirmation ─────────────────────────────────────
@@ -186,8 +187,9 @@ export const APPOINTMENT_EMAIL = {
   title: "Your appointment is booked",
   // 449:1576. The frame greets {{first_name}}; Jane, as everywhere else.
   greeting: "Hi Jane,",
-  // 449:1576
-  lead: "Great news — your pharmacy appointment for your Health Assessment is now booked:",
+  // 449:1576, rewritten as a reminder in Anushka's content deck, 15 Sep:
+  // "This is a reminder that your Health Screen appointment is booked for".
+  lead: "This is a reminder that your Health Screen appointment is booked for:",
   // 449:1576, the four label cells. Their values are the booking's.
   labels: ["Type:", "Location:", "Date:", "Time:"],
   // 449:1576
@@ -197,12 +199,15 @@ export const APPOINTMENT_EMAIL = {
     "Make sure to drink plenty of water before your visit. Being well hydrated can make sample collection easier and supports accurate readings.",
     "Wear clothing that allows easy access to your arm.",
     "Arrive a few minutes early to check in (have your booking reference handy, you may be asked for it).",
-    "Please complete your Advanced Health Assessment (about [X minutes]), if you haven't yet done so.",
+    "Please complete your questionnaire (about [X minutes]), if you haven't yet done so.",
   ],
   // 449:1576. The bracketed [X minutes] above is the frame's own placeholder,
   // left in because marketing has not filled it and inventing a duration would
   // put a number on screen that nobody has agreed.
-  cta: "Complete your Advanced Health Assessment →",
+  // "questionnaire", matching the Booking confirmed screen the email points
+  // at. Anushka's content deck, 15 Sep: the reminder carries the same content
+  // as the confirmation.
+  cta: "Complete your questionnaire →",
   // 449:1576
   importantHeading: "Important health information",
   important: "Please let the clinician know if you are taking blood-thinning medication, have a history of fainting, needle phobia, or any relevant medical conditions.",

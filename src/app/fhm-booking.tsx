@@ -83,9 +83,14 @@ const SLOTS = [
 const PRODUCT = {
   // 27011:15640
   name: "Corporate Advanced",
+  // Anushka's content deck, 15 Sep. "Advanced Health Screen" is the deck's
+  // name for the product here, and the last two lines are new: where the
+  // samples go, and what comes back afterwards.
   lines: [
-    "Your Corporate Advanced Health Assessment includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
-    "On the next screen, you can select your preferred pharmacy location.",
+    "Your corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
+    "On the next screen, you can select your preferred pharmacy location where these measurements and blood tests will take place.",
+    "Please note, you will have to post your pre-packaged blood test to the laboratory. This ensures that the test gets processed quickly and reduces the risk of errors.",
+    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 working days. Your report and recommended next steps will be shared via email.",
   ],
 };
 
@@ -277,7 +282,7 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
       {/* Full width, edge to edge, not inside the column. */}
       <div className="w-full px-[16px] py-[14px]" style={{ background: "#dcf5f2" }} role="status">
         <p className="text-[16px] leading-[24px]" style={{ color: "#111827" }}>
-          Your Advanced Health Assessment has been successfully submitted.
+          Your questionnaire has been successfully submitted.
         </p>
       </div>
 
@@ -701,7 +706,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
       footer={
         <StickyBar>
           <BackLink label="Back to my account" onClick={onExit} />
-          <PrimaryButton label="Complete Advanced Health Assessment" onClick={() => setStep("questionnaire")} />
+          <PrimaryButton label="Complete questionnaire" onClick={() => setStep("questionnaire")} />
         </StickyBar>
       }
     >
@@ -709,9 +714,11 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
         <div className="m-[24px] p-[16px] flex gap-[12px] items-start" style={{ background: "#fdfce9", borderLeft: "4px solid #facc14" }}>
           <ClipboardList size={18} color="#a16207" strokeWidth={2} className="shrink-0 mt-[2px]" />
           <div className="flex flex-col gap-[8px] flex-1">
-            <p className="font-bold text-[15px] leading-[22px]" style={{ color: "#713f12" }}>Complete your Advanced Health Assessment</p>
+            {/* "questionnaire", not "Advanced Health Assessment": Anushka's
+                content deck, 15 Sep. */}
+            <p className="font-bold text-[15px] leading-[22px]" style={{ color: "#713f12" }}>Complete your questionnaire</p>
             <p className="text-[15px] leading-[22px]" style={{ color: "#713f12" }}>
-              It&apos;s important that you complete the Advanced Health Assessment before your appointment to ensure we can process your results.
+              It&apos;s important that you complete the questionnaire before your appointment to ensure we can process your results.
             </p>
             <button
               type="button"
@@ -720,7 +727,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
               className="w-full rounded-[2px] py-[8px] text-[15px] leading-[22px] border-none mt-[4px] cursor-pointer"
               style={{ background: "#facc14", color: "#713f12" }}
             >
-              Complete Advanced Health Assessment now
+              Complete questionnaire now
             </button>
           </div>
         </div>
@@ -748,7 +755,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
         </div>
       </Card>
 
-      <Card label="WHAT YOU'VE BOOKED"><ProductRow /></Card>
+      <Card label="WHAT YOU HAVE BOOKED"><ProductRow /></Card>
     </FhmShell>
   );
 }
