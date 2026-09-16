@@ -43,7 +43,7 @@ export type AssessmentsStage = "pending" | "insights" | "advanced";
 // 14 Sep: "figma has no icons on the left, can you align?".
 const HOW_IT_WORKS = [
   { title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
-  { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 days." },
+  { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 2 days." },
   { title: "Corporate Advanced Health Screen", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
 ];
 
@@ -176,7 +176,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
               // "review and results come together".
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
-                { done: false, label: "Awaiting clinician review and your report, within 5 days" },
+                { done: false, label: "Awaiting clinician review and your report, within 2 days" },
               ]}
             />
           ) : (

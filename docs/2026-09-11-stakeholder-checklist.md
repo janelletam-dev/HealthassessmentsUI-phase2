@@ -11,7 +11,7 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 | Profile complete card rewritten: no partner mention, sets expectations, the supplied paragraph | Done | Profile complete |
 | Remove the single sign-on handover pages | Done | Profile complete goes straight to the assessment |
 | Questionnaire titles as "Jane Smith - Health Insights Assessment" | Done | Both questionnaires |
-| Thank-you page: the report, a timeline, one report or a full assessment; no Come back later or Back to Dashboard; arrows | Done. Timeline now "within 5 working days" (content review, 11 Sep) | After Submit |
+| Thank-you page: the report, a timeline, one report or a full assessment; no Come back later or Back to Dashboard; arrows | Done. Timeline now "within 2 days" (Janelle, 16 Sep) | After Submit |
 | Remove the follow-up booking as a health assessment step | Done. The GP follow-up is booked from Home's Book an appointment (11 Sep), outside the demo flow | Home, Book now |
 | What the patient sees on Doctor Care Anywhere while the report is pending: sign in, Home tile, My health assessments | Done | Scene 10 |
 | My health assessments, new version: blurb, status per assessment, no cancellation card, one way to anything live | Done. Statuses copied from the D2C view; the help box no longer mentions cancelling; the button reads Manage my health assessments | Scenes 10 and 22 |
@@ -38,7 +38,7 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 
 ## Still open, and whose call
 
-- The report timeline: confirmed as 5 working days in the content review, 11 Sep; shortened to "5 days" by Janelle, 16 Sep.
+- The report timeline: confirmed as 5 working days in the content review, 11 Sep; now "within 2 days" everywhere, Janelle, 16 Sep.
 - The final name for the Advanced assessment: with the product team.
 - The My health assessments design: Irina's designs to follow; this is the first pass.
 - The videos: clips to come from the clinical team; placeholders until then.

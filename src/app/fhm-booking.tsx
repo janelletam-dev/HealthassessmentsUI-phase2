@@ -95,12 +95,12 @@ const PRODUCT = {
   ],
   // Booking confirmed carries Maya's fuller version, dictated by Janelle from
   // the slide on 16 Sep. Hyphens, not dashes: "so the word dash should be like
-  // a hyphen". The slide says "5 working days"; this says "5 days", the term
+  // a hyphen". The slide says "5 working days"; this says "2 days", the term
   // Janelle settled on the same morning and the one the other ten places use.
   confirmed: [
     "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
     "Please note - you will have to post your pre-packaged blood test to the laboratory - this ensures that the test gets processed quickly and reduces the risk of errors.",
-    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 days. Your report and recommended next steps will be shared via email.",
+    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 2 days. Your report and recommended next steps will be shared via email.",
   ],
 };
 

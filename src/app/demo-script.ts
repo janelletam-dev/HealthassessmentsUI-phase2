@@ -117,7 +117,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "click", label: "Submit" },
   { kind: "waitFor", text: "has been submitted" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "Submitted. The patient is told what happens next: a clinician review, and a report within 5 days" },
+  { kind: "zoom", text: "Submitted. The patient is told what happens next: a clinician review, and a report within 2 days" },
   { kind: "pause", ms: 1200 },
 
   // ── 6b. The DCA account while the report is being prepared ───────────────
@@ -138,7 +138,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "click", label: "Open my health assessments" },
   { kind: "waitFor", text: "Awaiting clinician review" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "My health assessments: submitted, and the clinician's review and report follow together within 5 days" },
+  { kind: "zoom", text: "My health assessments: submitted, and the clinician's review and report follow together within 2 days" },
   { kind: "pause", ms: 1000 },
 
   // ── 7. The clinician's side ───────────────────────────────────────────────

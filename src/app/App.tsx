@@ -3810,11 +3810,11 @@ const COMPLETE_STEPS = [
   // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep; "Fill in" and
   // "current health status" are the deck's words, 15 Sep.
   { Icon: ListTodo, text: "Fill in a short Health insights assessment to help us assess your current health status." },
-  // Frame 5. "Within 2 days" was the placeholder (PM, 10 Sep); Anushka,
-  // 11 Sep: 5 days. Janelle wrote "5 days" on 16 Sep; kept as
-  // "5 days", the term she signed off and the one the other ten
-  // places in the journey use.
-  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 5 days you receive your report, with your results and recommended next steps." },
+  // Frame 5. The timeline has moved three times: "within 2 days" was the
+  // 10 Sep placeholder, Anushka's content review set 5 working days on
+  // 11 Sep, and Janelle went to 5 days and then back to "within 2 days" on
+  // 16 Sep after the CEO walkthrough. All nine places say the same thing.
+  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
   // Frame 4
   // "Corporate Advanced Health Screen", as on the landing page above.
   { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
@@ -3886,7 +3886,7 @@ function ProfileComplete({ theme, onContinue }: {
             {/* The paragraph that sat here was a placeholder, written on
                 10 Sep to set expectations "until Anushka's content lands".
                 It has landed: the four bullets above are it, and they say the
-                same things (clinician review, 5 days, a report, a
+                same things (clinician review, 2 days, a report, a
                 health screen if advised). Deleted rather than left to repeat
                 them. Anushka's content deck, 15 Sep, lists no paragraph here. */}
           </div>

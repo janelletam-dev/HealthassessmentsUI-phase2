@@ -433,7 +433,7 @@ function UploadsBody({ stage, onOpenFile, onBook }: {
             // NO FRAME. The live portal shows an empty table here; this says
             // what will fill it and when, which is the point of the visit.
             <p className="text-[14px] leading-[22px] py-[20px]" style={{ color: BODY }}>
-              No documents yet. Your Health Insights Assessment report will appear here within 5 days, and we will email you when it does.
+              No documents yet. Your Health Insights Assessment report will appear here within 2 days, and we will email you when it does.
             </p>
           )}
           {rows.map((file) => (
