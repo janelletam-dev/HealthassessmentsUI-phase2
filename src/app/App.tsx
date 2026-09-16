@@ -747,7 +747,7 @@ function GetSupportModal({ onClose, linkColor }: { onClose: () => void; linkColo
               className="text-[14px] font-semibold leading-[20px]"
               style={{ color }}
             >
-              Contact the Patient Experience team
+              Contact DCA Protect customer support team
             </a>
           </div>
         </div>
@@ -820,7 +820,7 @@ function ReminderModal({ onClose, linkColor }: { onClose: () => void; linkColor?
               <p className="text-[13px] leading-[20px]" style={{ color: "#6b7280" }}>Need support?</p>
               <a href="https://doctorcareanywhere.com/contact" target="_blank" rel="noopener noreferrer"
                 className="text-[14px] font-semibold leading-[20px]" style={{ color }}>
-                Contact the Patient Experience team
+                Contact DCA Protect customer support team
               </a>
             </div>
           </div>
@@ -831,7 +831,7 @@ function ReminderModal({ onClose, linkColor }: { onClose: () => void; linkColor?
               Request a reminder
             </p>
             <p className="text-[14px] leading-[20px]" style={{ color: "#4b5563" }}>
-              If your email is associated with an activation code, you will receive an email shortly (please remember to also check your spam folder). If the email doesn't arrive within a few minutes, or you simply need more help signing up, the Patient Experience team is here for you.
+              If your email is associated with an activation code, you will receive an email shortly (please remember to also check your spam folder). If the email doesn't arrive within a few minutes, or you simply need more help signing up, our DCA Protect customer support team is here for you.
             </p>
 
             {/* Email field */}
@@ -872,7 +872,7 @@ function ReminderModal({ onClose, linkColor }: { onClose: () => void; linkColor?
                 <p className="text-[13px] leading-[20px]" style={{ color: "#6b7280" }}>Need support?</p>
                 <a href="https://doctorcareanywhere.com/contact" target="_blank" rel="noopener noreferrer"
                   className="text-[14px] font-semibold leading-[20px]" style={{ color }}>
-                  Contact the Patient Experience team
+                  Contact DCA Protect customer support team
                 </a>
               </div>
               <button
@@ -1723,7 +1723,7 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
             New here? Begin your journey
           </p>
           <p className="[word-break:break-word] font-normal leading-[24px] text-[16px] w-full" style={{ color: "#030712" }}>
-            Starting your health assessment journey is simple:
+            Starting your DCA Protect journey is simple:
           </p>
         </div>
 
@@ -2938,7 +2938,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
               className="font-semibold underline"
               style={{ color: "#135CFF" }}
             >
-              contact the Patient Experience team
+              contact our DCA Protect customer support team
             </a>
             .
           </>
@@ -3029,7 +3029,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
         // 2171:121004, inline at x=0. Red, not amber: nothing was saved.
         <InlineErrorBox
           title="Account creation failed"
-          body="This is usually temporary. Please check your connection, or try again later. If this issue persists, the Patient Experience team is here to help: +44 (0)330 088 4980."
+          body="This is usually temporary. Please check your connection, or try again later. If this issue persists, our DCA Protect customer support team is here to help: 02046 466 290."
         />
       )}
       <button
@@ -3178,7 +3178,7 @@ function Step4({ onRestart, onStartProfile, onStartVerification }: { onRestart: 
       <div className="flex flex-col gap-[8px] px-[32px] py-[20px]">
         <p className="text-[15px] font-semibold" style={{ color: "#1b1b1a" }}>Need help?</p>
         <p className="text-[13px] leading-[18px]" style={{ color: "#1b1b1a" }}>
-          The Patient Experience team is here for you.
+          Our DCA Protect customer support team is here for you.
         </p>
         <button className="flex items-center gap-[4px] text-[13px] font-semibold w-fit" style={{ color: "#135cff" }}>
           Contact us
@@ -3802,18 +3802,19 @@ function LandingTaskCard({ badge, borderColor, icon, title, description, cta, on
 // 0041CC for the three step icons, which is a deeper blue than the 166534 green
 // on the landing's four. Both are from their own frame's CSS; they are not
 // meant to match.
-// Four bullets, not three: Anushka's content deck, 15 Sep, splits the clinical
-// review and the report into separate steps so the 5 working days sits on the
-// review rather than on the thing the patient receives.
+// Three bullets. The 15 Sep content deck split the clinical review and the
+// report into two, making four; Janelle, 16 Sep: "the prototype has 4 next
+// steps, which should be removed, it's just three supposedly", with the review
+// and the report merged back into one line as the frame has them.
 const COMPLETE_STEPS = [
   // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep; "Fill in" and
   // "current health status" are the deck's words, 15 Sep.
   { Icon: ListTodo, text: "Fill in a short Health insights assessment to help us assess your current health status." },
-  // NO FRAME. Anushka's content deck, 15 Sep. "Within 2 days" was the earlier
-  // placeholder (PM, 10 Sep); Anushka, 11 Sep: 5 working days.
-  { Icon: UserCheck, text: "Our clinical team will review your answers and develop your personalised report within 5 working days." },
-  // NO FRAME. Anushka's content deck, 15 Sep.
-  { Icon: CheckCheck, text: "Receive your report and recommended next steps." },
+  // Frame 5. "Within 2 days" was the placeholder (PM, 10 Sep); Anushka,
+  // 11 Sep: 5 days. Janelle wrote "5 days" on 16 Sep; kept as
+  // "5 days", the term she signed off and the one the other ten
+  // places in the journey use.
+  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 5 days you receive your report, with your results and recommended next steps." },
   // Frame 4
   // "Corporate Advanced Health Screen", as on the landing page above.
   { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
@@ -3885,7 +3886,7 @@ function ProfileComplete({ theme, onContinue }: {
             {/* The paragraph that sat here was a placeholder, written on
                 10 Sep to set expectations "until Anushka's content lands".
                 It has landed: the four bullets above are it, and they say the
-                same things (clinician review, 5 working days, a report, a
+                same things (clinician review, 5 days, a report, a
                 health screen if advised). Deleted rather than left to repeat
                 them. Anushka's content deck, 15 Sep, lists no paragraph here. */}
           </div>
@@ -3907,6 +3908,14 @@ function ProfileComplete({ theme, onContinue }: {
       <div className="relative w-full rounded-[32px] overflow-hidden flex" style={{ height: 400 }}>
         <LhsPanel theme={theme} />
       </div>
+
+      {/* Janelle, 16 Sep: "Profile complete screen, add Need help section at
+          bottom", with the render she sent showing Trustpilot under it too.
+          That matches the rule the rest of the app follows, that everything
+          from create account onwards carries both; this screen is drawn by its
+          own branch and was the one that missed out. */}
+      <ProfileNeedHelpCard />
+      <TrustpilotBadge />
     </div>
   );
 }
@@ -4396,7 +4405,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
           <div className="flex flex-wrap gap-[4px] items-center justify-center w-full">
             <span className="text-[12px] leading-[16px]" style={{ color: "#4b5563" }}>Trouble verifying?</span>
             <button type="button" className="text-[12px] font-semibold leading-[16px]" style={{ color: "#135cff" }}>
-              Contact the Patient Experience team
+              Contact DCA Protect customer support team
             </button>
           </div>
         </div>
@@ -4446,7 +4455,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
         <div className="flex flex-wrap gap-[4px] items-center justify-center w-full">
           <span className="text-[12px] leading-[16px]" style={{ color: "#4b5563" }}>Don&rsquo;t have a mobile number?</span>
           <button type="button" className="text-[12px] font-semibold leading-[16px]" style={{ color: "#135cff" }}>
-            Contact the Patient Experience team
+            Contact DCA Protect customer support team
           </button>
         </div>
       </div>
@@ -4464,9 +4473,11 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
 // Written bare, and that took three passes on 3 Sep: 02046 469 390 came across
 // with the scaffold, Janelle corrected it to 0330 088 4980, then to
 // "+44 (0)330 088 4980", then "sorry should just be this: 0330 088 4980".
-// The bare form is also what the invitation email's footer draws, so the app
-// and the email agree, which they did not in between.
-const HA_PX_PHONE = "0330 088 4980";
+// Superseded on 16 Sep, bare form kept: "sorry for the phone number should be
+// this: DCA Protect PX team on 02046 466 290". Her 4 Sep rule still holds, that
+// every support number in the prototype is the same one, so this one number is
+// drawn by the app, the email footer and the reschedule line alike.
+const HA_PX_PHONE = "02046 466 290";
 // The line cannot go 24/7: PX would need more people on the dashboard, which
 // raises the risk of human error (Holly via Frank, 14 Sep). So the hours stay
 // and the team leader escalations inbox, which is watched round the clock,
@@ -4490,8 +4501,8 @@ function ProfileNeedHelpCard() {
       <div className="flex flex-col gap-[4px] px-[24px] py-[24px]">
         <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>Need help?</p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
-          {"If you need any support, our team is here to help. Please contact our dedicated DCA Protect PX team on "}
-          <ContactLink href={`tel:${HA_PX_PHONE.replace(/\s/g, "")}`} hint="Calls the Patient Experience team" className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</ContactLink>
+          {"If you need any support, our team is here to help. Please contact our dedicated DCA Protect customer support team on "}
+          <ContactLink href={`tel:${HA_PX_PHONE.replace(/\s/g, "")}`} hint="Calls the DCA Protect customer support team" className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</ContactLink>
           {". Lines are open 09:00 – 17:30, Monday to Friday, or email "}
           <ContactLink href={`mailto:${HA_PX_EMAIL}`} hint={`Opens your email app · ${HA_PX_EMAIL}`} className="font-semibold underline break-all" style={{ color: "#135CFF" }}>{HA_PX_EMAIL}</ContactLink>
           {" at any time."}

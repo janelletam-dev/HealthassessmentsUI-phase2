@@ -26,13 +26,13 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 | 11 | Clinician review | The clinical queue and the detail page | Behind the scenes: every assessment is reviewed by a clinician before anything reaches the patient | Approve, then Dispatch. Dispatch is the step that sends the email and files the report. |
 | 12 | Results email | The results-ready email | The patient is emailed the moment the report is ready | |
 | 13 | Results: no concerns | Green results, PDF report, sleep guide | A clear result: every section green, and the clinician's note points to a 10 week sleep guide | Most people end here, with something useful to do. |
-| 14 | Results: further assessment | Amber and red flags, next steps page | The other outcome: amber and red flags, and the clinician recommends the Advanced Health Assessment | The next steps page explains the assessment before asking anyone to book. |
-| 15 | Booking the Advanced Health Assessment | Pharmacy, date, time, confirmation | Booked in three steps: a pharmacy near the patient, a date and a time | Funded by the employer; the patient pays nothing. |
-| 16 | Advanced Health Assessment | The pre-appointment questionnaire | Before the appointment: the Advanced Health Assessment questionnaire | |
+| 14 | Results: further assessment | Amber and red flags, next steps page | The other outcome: amber and red flags, and the clinician recommends the Corporate Advanced Health Screen | The next steps page explains the assessment before asking anyone to book. |
+| 15 | Booking the Corporate Advanced Health Screen | Pharmacy, date, time, confirmation | Booked in three steps: a pharmacy near the patient, a date and a time | Funded by the employer; the patient pays nothing. |
+| 16 | The pre-appointment questionnaire | The pre-appointment questionnaire | Before the appointment: the Corporate Advanced Health Screen questionnaire | |
 | 17 | Appointment email | The confirmation email | The confirmation email: where to go, what to bring, and a short video on what to expect | The video is a placeholder; the clinical team are producing the clips. |
 | 18 | Clinician review, advanced | Blood results and measurements, flagged | After the pharmacy visit, the blood results and measurements get the same clinician review | QRISK3, blood pressure, BMI, HbA1c, lipids, liver, heart rate. |
 | 19 | Advanced results email | The second results email | The second results email, with a free video GP appointment included to talk it through | |
-| 20 | Advanced results | The advanced results page, every section flagged | The Advanced Health Assessment results: clinician-reviewed, with every flag explained | The report PDF itself is opened at scene 22, in Uploads. |
+| 20 | Advanced results | The advanced results page, every section flagged | The Corporate Advanced Health Screen results: clinician-reviewed, with every flag explained | The report PDF itself is opened at scene 22, in Uploads. |
 | 21 | Back to the account | Doctor Care Anywhere sign in | Back on Doctor Care Anywhere, where both reports now live | |
 | 22 | Reports in the account | Home, My health assessments, Uploads, the Advanced report | Uploads: both reports filed as PDFs in the patient's own account | The Advanced report opens here, once, after the amber and red results. The free GP follow-up is booked from Home's Book an appointment; show it by hand if asked, it is not a scene. |
 | 23 | Employer's view | The employer's dashboard, both programmes | The employer's dashboard: 119 took the Health Insights Assessment, 110 reports dispatched | Uptake by age, dispatch times, and the anonymised health picture. Never an individual. |
@@ -40,7 +40,7 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 ## Things not to say
 
 - The clinical partner is not named to patients anywhere in the journey, and the captions follow suit. Say "our clinical team".
-- The report timeline is "within 5 working days", confirmed by the product team's content review on 11 September.
+- The report timeline is "within 5 days". The content review on 11 September said 5 working days; Janelle shortened it to 5 days on 16 September, and every screen, email and caption says the same.
 - "Advanced Corporate Health Assessment" is the working name; the final name is still with the product team.
 - The employer dashboard numbers are sample data.
 - Cancelling an assessment is not shown; the help box on My health assessments points to the Patient Experience team.

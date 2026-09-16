@@ -62,6 +62,8 @@ export function EmailShell({ smallPrint, padBottom = 15, title, children }: {
         <div className="flex flex-col items-center gap-[8px] w-full">
           <p className="font-medium text-center" style={{ fontSize: 24, color: "#ffffff" }}>{EMAIL_FOOTER.heading}</p>
           <p className="text-center" style={{ fontSize: 14, lineHeight: 1.38, color: "#ffffff" }}>
+            {EMAIL_FOOTER.team}
+            <br />
             <span className="underline">{EMAIL_FOOTER.email}</span>
             <br />
             {EMAIL_FOOTER.phone}

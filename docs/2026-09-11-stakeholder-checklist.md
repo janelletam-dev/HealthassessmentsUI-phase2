@@ -38,7 +38,7 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 
 ## Still open, and whose call
 
-- The report timeline: confirmed as 5 working days in the content review, 11 Sep.
+- The report timeline: confirmed as 5 working days in the content review, 11 Sep; shortened to "5 days" by Janelle, 16 Sep.
 - The final name for the Advanced assessment: with the product team.
 - The My health assessments design: Irina's designs to follow; this is the first pass.
 - The videos: clips to come from the clinical team; placeholders until then.

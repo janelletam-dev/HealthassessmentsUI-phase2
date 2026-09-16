@@ -289,7 +289,7 @@ function QuestionnaireSubmitted({ location, day, slot, onExit }: {
         <div className="w-full max-w-[770px] flex flex-col gap-[24px]">
           <p className="text-[20px] leading-[28px]" style={{ color: "#111827" }}>Hello, Jane</p>
 
-          <Card label="CORPORATE ADVANCED">
+          <Card label="CORPORATE ADVANCED HEALTH SCREEN">
             <div className="px-[24px] py-[20px] flex flex-col gap-[6px]">
               <div className="flex items-start justify-between">
                 <p className="text-[16px] leading-[24px]" style={{ color: "#111827" }}>Product</p>

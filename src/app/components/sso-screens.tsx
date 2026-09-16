@@ -110,7 +110,7 @@ export function SsoHelpBar() {
       <div className="mx-[32px] mb-[24px] rounded-[10px] px-[16px] py-[12px]" style={{ background: "rgba(19,92,255,0.04)", border: "1px solid rgba(19,92,255,0.12)" }}>
         <p className="text-[12px] leading-[18px]" style={{ color: grey, fontFamily: ws }}>
           <span className="font-semibold" style={{ color: "#0f37be" }}>Something unusual? </span>
-          Talk to the Patient Experience team. We'll see where you got to, so you won't have to explain from the start.
+          Talk to our DCA Protect customer support team. We'll see where you got to, so you won't have to explain from the start.
         </p>
       </div>
     </div>
@@ -392,7 +392,7 @@ export function SsoReclaimLadder({
 
         <div className="h-px" style={{ background: "#f2f2f2" }} />
 
-        <TextLink onClick={onContact}>Contact the Patient Experience team</TextLink>
+        <TextLink onClick={onContact}>Contact DCA Protect customer support team</TextLink>
       </div>
       <SsoHelpBar />
     </div>

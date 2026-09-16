@@ -112,14 +112,15 @@ const STAGES = {
     // NO FRAME. PM, 10 Sep: the reviewer note links to the next steps page.
     // No lead sentence, because the note used to end by introducing it.
     //
-    // IT NO LONGER DOES, AND THIS IS DELIBERATE. Since 15 Sep the note says
-    // further testing is not included in the pilot, so the page offers a link
-    // to arrange something it has just said is unavailable. Janelle, 15 Sep:
-    // "keep the link for now". Everything after this point in the journey
-    // hangs off it, the next steps page, the pharmacy booking, the
-    // pre-appointment questionnaire and the advanced report, so removing it
-    // would make about a third of the prototype unreachable. Revisit when the
-    // pilot's scope is settled.
+    // IT NO LONGER DOES, AND THE LINK STAYS ANYWAY. Since 15 Sep the note
+    // carries the pilot's own wording, that further testing is not currently
+    // included. The link under it is not a leftover: the amber result is in
+    // this prototype precisely so the Corporate Advanced Health Screen journey
+    // can be shown, and this link is the way into it. Janelle, 15 Sep: "we
+    // show amber notes for the advanced health screen to be shown, so link to
+    // arrange is fine". Everything after this point hangs off it: the next
+    // steps page, the pharmacy booking, the pre-appointment questionnaire and
+    // the advanced report.
     link: { lead: "", label: "Arrange your next stage of testing", target: "nextSteps" as const },
     sections: [
       { label: "Summary", tone: "attention" as const },

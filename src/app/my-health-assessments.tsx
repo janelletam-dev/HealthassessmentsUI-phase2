@@ -43,7 +43,7 @@ export type AssessmentsStage = "pending" | "insights" | "advanced";
 // 14 Sep: "figma has no icons on the left, can you align?".
 const HOW_IT_WORKS = [
   { title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
-  { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 working days." },
+  { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 5 days." },
   { title: "Corporate Advanced Health Screen", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
 ];
 
@@ -174,7 +174,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
               // "review and results come together".
               statuses={[
                 { done: true, label: "Health Insights Assessment submitted" },
-                { done: false, label: "Awaiting clinician review and your report, within 5 working days" },
+                { done: false, label: "Awaiting clinician review and your report, within 5 days" },
               ]}
             />
           ) : (
@@ -228,20 +228,28 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             <div className="flex flex-col gap-[8px]">
               <p className="text-[16px] font-bold leading-[19px]" style={{ color: HEADING }}>Questions about your health assessment?</p>
               <p className="text-[14px] leading-[19px]" style={{ color: "#414141" }}>
-                Our Patient Experience team can help with anything about your assessment or your report.
+                Our DCA Protect customer support team can help with anything about your assessment or your report.
               </p>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-[14px] shrink-0">
+          {/* Fixed width, so the long contact label wraps onto two lines the
+              way 27160:33911 draws it. Left to size itself it took the whole
+              sentence on one line and squeezed the heading beside it into a
+              four-line column. */}
+          <div className="flex flex-col items-start gap-[14px] shrink-0 w-[240px] text-left">
             <ContactLink
               href={`mailto:${PX_EMAIL}`}
               hint={`Opens your email app · ${PX_EMAIL}`}
-              className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline"
+              className="flex items-start gap-[6px] text-[16px] font-bold leading-[19px] underline"
               style={{ color: LINK }}
             >
-              <Headphones size={22} strokeWidth={2} /> Contact Patient Experience
+              {/* items-start, not items-center: the label wraps to two lines and
+                  a vertically centred icon floats between them. */}
+              <Headphones size={22} strokeWidth={2} className="shrink-0" /> Contact DCA Protect customer support team
             </ContactLink>
-            <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>Health assessment FAQs</a>
+            {/* Indented by the icon and its gap, so both links share one left
+                edge rather than stepping in and out. */}
+            <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-[16px] font-bold leading-[20px] underline pl-[28px]" style={{ color: LINK }}>Health assessment FAQs</a>
           </div>
         </div>
       </div>

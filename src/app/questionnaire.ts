@@ -206,8 +206,8 @@ export const SUBMITTED = {
       // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka.
       title: "Personalised recommendations",
       // NO FRAME. Anushka's PowerPoint comment, 11 Sep, relayed by Janelle
-      // 14 Sep: "within the next 5 working days".
-      body: "Within the next 5 working days, you will receive a report with practical health and lifestyle recommendations tailored to you.",
+      // 14 Sep: "within the next 5 days".
+      body: "Within the next 5 days, you will receive a report with practical health and lifestyle recommendations tailored to you.",
     },
     {
       // NO FRAME. FHM screenshot via Jack, 14 Sep; content Anushka. Renamed

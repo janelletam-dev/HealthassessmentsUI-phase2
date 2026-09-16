@@ -44,7 +44,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // No code entry in this journey: the invite carries the code by email and it
   // is used later, for the questionnaire.
   { kind: "scene", label: "Welcome page" },
-  { kind: "waitFor", text: "Find the right assessment for you" },
+  { kind: "waitFor", text: "New here? Begin your journey" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "The link lands on Doctor Care Anywhere, with the four steps ahead spelled out" },
   { kind: "click", label: "Get started" },
@@ -117,7 +117,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "click", label: "Submit" },
   { kind: "waitFor", text: "has been submitted" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "Submitted. The patient is told what happens next: a clinician review, and a report within 5 working days" },
+  { kind: "zoom", text: "Submitted. The patient is told what happens next: a clinician review, and a report within 5 days" },
   { kind: "pause", ms: 1200 },
 
   // ── 6b. The DCA account while the report is being prepared ───────────────
@@ -138,7 +138,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "click", label: "Open my health assessments" },
   { kind: "waitFor", text: "Awaiting clinician review" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "My health assessments: submitted, and the clinician's review and report follow together within 5 working days" },
+  { kind: "zoom", text: "My health assessments: submitted, and the clinician's review and report follow together within 5 days" },
   { kind: "pause", ms: 1000 },
 
   // ── 7. The clinician's side ───────────────────────────────────────────────
@@ -189,16 +189,16 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "jumpPhase", phase: "fhmResultsAmber" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "The other outcome: amber and red flags, and the clinician recommends the Advanced Health Assessment" },
+  { kind: "zoom", text: "The other outcome: amber and red flags, and the clinician recommends the Corporate Advanced Health Screen" },
   { kind: "pause", ms: 1200 },
-  { kind: "click", label: "Read your next steps and book" },
+  { kind: "click", label: "Arrange your next stage of testing" },
   { kind: "waitFor", text: "You may receive recommendations for" },
   { kind: "scrollThrough", ms: 3000 },
-  { kind: "zoom", text: "Next steps on their own page: what the Advanced Health Assessment involves, and the button to book it" },
+  { kind: "zoom", text: "Next steps on their own page: what the Corporate Advanced Health Screen involves, and the button to book it" },
   { kind: "click", label: "Book Appointment" },
 
   // ── 9. Booking the advanced assessment ────────────────────────────────────
-  { kind: "scene", label: "Booking the Advanced Health Assessment" },
+  { kind: "scene", label: "Booking the Corporate Advanced Health Screen" },
   { kind: "waitFor", text: "Choose a location", timeoutMs: 8000 },
   { kind: "zoom", text: "Booked in three steps: a pharmacy near the patient, a date and a time" },
   { kind: "pause", ms: 600 },
@@ -215,12 +215,12 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "waitFor", text: "Booking confirmed" },
   { kind: "zoom", text: "Booking confirmed, funded by the employer" },
 
-  // ── 10. The Advanced Health Assessment, before the appointment ────────────
-  { kind: "scene", label: "Advanced Health Assessment" },
+  // ── 10. The questionnaire, before the appointment ─────────────────────────
+  { kind: "scene", label: "The pre-appointment questionnaire" },
   { kind: "click", label: "Complete questionnaire now" },
   { kind: "waitFor", text: "MEDICAL HISTORY" },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "Before the appointment: the Advanced Health Assessment questionnaire" },
+  { kind: "zoom", text: "Before the appointment: the Corporate Advanced Health Screen questionnaire" },
   { kind: "answerAll", perQuestionMs: 70 },
   { kind: "click", label: "Submit" },
   { kind: "waitFor", text: "successfully submitted" },
@@ -249,7 +249,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "click", label: "Dispatch" },
 
   { kind: "scene", label: "Advanced results email" },
-  { kind: "waitFor", text: "Your health assessment results are ready" },
+  { kind: "waitFor", text: "Your Corporate Advanced Health Screen results are ready" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "The second results email, with a free video GP appointment included to talk it through" },
   { kind: "scrollThrough", ms: 2200 },
@@ -262,7 +262,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Advanced results" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "The Advanced Health Assessment results: clinician-reviewed, with every flag explained" },
+  { kind: "zoom", text: "The Corporate Advanced Health Screen results: clinician-reviewed, with every flag explained" },
   { kind: "scrollThrough", ms: 3200 },
   { kind: "click", label: "Profile" },
 
@@ -299,7 +299,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 900 },
   { kind: "pdfPage", page: 2 },
   { kind: "pause", ms: 3200 },
-  { kind: "zoom", text: "The Advanced Health Assessment report, filed in the account the day it was dispatched" },
+  { kind: "zoom", text: "The Corporate Advanced Health Screen report, filed in the account the day it was dispatched" },
   { kind: "pause", ms: 1200 },
 
   // The GP follow-up is booked from Home's Book an appointment, by hand in a
@@ -322,7 +322,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 2200 },
   { kind: "click", label: "Advanced Health Assessment" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "And the Advanced Health Assessment cohort: 7 so far, with uptake by age" },
+  { kind: "zoom", text: "And the Corporate Advanced Health Screen cohort: 7 so far, with uptake by age" },
   { kind: "pause", ms: 2200 },
   { kind: "click", label: "Health insights" },
   { kind: "waitFor", text: "Report flags" },

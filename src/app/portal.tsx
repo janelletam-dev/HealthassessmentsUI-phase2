@@ -96,7 +96,7 @@ const ADVANCED_FILE = {
   // The results-ready email arrives at 08:26, so the file lands then too. The
   // appointment was Wed 16 Sep; two days for the samples and review.
   when: `${shortComma(ADVANCED_REPORT)}, 8:26am`,
-  addedBy: "Added by Patient Experience Team",
+  addedBy: "Added by Customer Support Team",
   uploadedFor: "Uploaded for Jane Smith",
   pdf: "advanced" as ReportKind,
 };
@@ -107,7 +107,7 @@ const FILES = [
     pages: 14,
     // The results email is timestamped 16:02, so the report lands at 16:02.
     when: `${shortComma(SUBMITTED)}, 4:02pm`,
-    addedBy: "Added by Patient Experience Team",
+    addedBy: "Added by Customer Support Team",
     uploadedFor: "Uploaded for Jane Smith",
     pdf: "prescreen" as ReportKind,
   },
@@ -433,7 +433,7 @@ function UploadsBody({ stage, onOpenFile, onBook }: {
             // NO FRAME. The live portal shows an empty table here; this says
             // what will fill it and when, which is the point of the visit.
             <p className="text-[14px] leading-[22px] py-[20px]" style={{ color: BODY }}>
-              No documents yet. Your Health Insights Assessment report will appear here within 5 working days, and we will email you when it does.
+              No documents yet. Your Health Insights Assessment report will appear here within 5 days, and we will email you when it does.
             </p>
           )}
           {rows.map((file) => (

@@ -8,11 +8,18 @@
 // version of one, on the journey's own photography.
 
 import { Play } from "lucide-react";
-import poster from "../assets/slide-3-woman.jpg";
+// The Chief Medical Officer's headshot stands in for every clip. Janelle,
+// 14 Sep: "placeholder image should be of our CMO", "keep the gradient shader
+// like our dca bit too", so it takes the tile's navy tint like the journey's
+// own photography did; 16 Sep: "so all the placeholder show Anushka's face",
+// so it is the default rather than one tile's override. A stand-in only: the
+// clinical team is making the real clips. The file is named for the role, not
+// the person.
+import poster from "../assets/cmo-poster.jpg";
 
 const WS = "'Work Sans', sans-serif";
 
-export function MockVideo({ title, duration, poster: posterSrc = poster, posterPosition = "50% 18%" }: {
+export function MockVideo({ title, duration, poster: posterSrc = poster, posterPosition = "50% 32%" }: {
   title: string; duration: string;
   /** The still behind the play button; the journey's photo unless a clip has its own presenter. */
   poster?: string;

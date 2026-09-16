@@ -62,9 +62,10 @@ export const EMAIL_STEPS: { title: string; body?: string; link?: { text: string;
     title: "1. Complete your Health Insights Assessment",
     // 449:528
     body: "You'll need your height, weight and, if possible, your waist measurement. Guidance on measuring your waist can be found here: ",
-    // Anushka, 11 Sep: "is this a hyperlink?". It is now. The target is the
-    // one Deepali gave; Janelle, 14 Sep: "for now use this".
-    link: { text: "NHS – how to measure your waist", href: "https://www.nhs.uk/health-assessment-tools/calculate-your-waist-to-height-ratio" },
+    // Anushka, 11 Sep: "is this a hyperlink?". It is now. Janelle, 16 Sep,
+    // corrected the target from the calculator to the how-to page under it,
+    // which is the bit that actually shows you where to put the tape.
+    link: { text: "NHS – how to measure your waist", href: "https://www.nhs.uk/health-assessment-tools/calculate-your-waist-to-height-ratio/how-to-measure-your-waist" },
   },
   {
     // 449:528
@@ -127,8 +128,13 @@ const LEGAL = [
 
 export const EMAIL_FOOTER = {
   heading: "Need help?",
-  email: "contactus@doctorcareanywhere.com",
-  phone: "0330 088 4980",
+  // The same sentence and the same inbox as the app's own Need help card, so
+  // the email and the product send a patient to one place. Janelle, 16 Sep:
+  // "for the email marketing change it to the teamleaderescalation email
+  // address and the dedicated DCA Protect customer support team line".
+  team: "Please contact our dedicated DCA Protect customer support team on",
+  email: "teamleaderescalations@doctorcareanywhere.com",
+  phone: "02046 466 290",
   // 449:528 opens the small print with the footnote, because its step 4 carries
   // an asterisk. No other email has one.
   smallPrintMarketing: ["*If recommended by the Clinician.", ...LEGAL],
@@ -179,9 +185,9 @@ export const RESULTS_EMAIL = {
 // THE SUPPORT NUMBER IS CORRECTED, NOT THE FRAME'S. The frame's body says
 // 02046 469 390 for the "Health Assessments Customer Support team" while its
 // own footer says 0330 088 4980. Raised, and Janelle ruled on 4 Sep: "again
-// 0330 088 4980 is what needs to be followed". So every support number in this
-// prototype is 0330 088 4980, whatever team name sits in front of it, and
-// 02046 469 390 appears nowhere. The frame still disagrees; flagged for
+// 0330 088 4980 is what needs to be followed", and on 16 Sep replaced that
+// with 02046 466 290. The rule is the durable part: every support number in
+// this prototype is the same one, whatever team name sits in front of it. The frame still disagrees; flagged for
 // marketing to fix at source.
 export const APPOINTMENT_EMAIL = {
   // 449:1576
@@ -230,7 +236,7 @@ export const APPOINTMENT_EMAIL = {
   // and cancelling is a support job, not an escalation. Janelle, 15 Sep:
   // "follow the need help card, DCA Protect customer support team is fine".
   changeLead: "You can reschedule or cancel via our dedicated DCA Protect Customer Support team on ",
-  changePhone: "0330 088 4980",
+  changePhone: "02046 466 290",
   changeTail: ". Lines are open 09:00–17:30, Monday to Friday.",
 };
 
