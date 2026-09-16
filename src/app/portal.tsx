@@ -79,7 +79,11 @@ const HA_TILE: Record<PortalStage, { title: string; body: string }> = {
 
 // One row, because this patient has just joined for the assessment. The frame's
 // four are Janelle's own history. Janelle, 4 Sep: "change to Health Insights
-// Pre-screen test results", "Uploaded by the Patient Experience Team".
+// Pre-screen test results", "Uploaded by the Patient Experience Team". Both
+// have since been superseded: "Pre-screen" is not a word the patient meets
+// anywhere else in the journey and came out of the FHM introduction on 14 Sep,
+// and the team is Customer Support from 16 Sep. The file now carries the same
+// name as the PDF's own title, as the advanced one does.
 /*
  * Newest first, like the live portal. The advanced report exists only after
  * the appointment, so it is not in this list: UploadsBody prepends it when the
@@ -103,7 +107,7 @@ const ADVANCED_FILE = {
 
 const FILES = [
   {
-    name: "Health Insights Pre-screen test results",
+    name: "Health Insights Assessment Report",
     pages: 14,
     // The results email is timestamped 16:02, so the report lands at 16:02.
     when: `${shortComma(SUBMITTED)}, 4:02pm`,
