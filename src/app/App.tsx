@@ -3812,8 +3812,10 @@ const COMPLETE_STEPS = [
   { Icon: ListTodo, text: "Fill in a short Health insights assessment to help us assess your current health status." },
   // Frame 5. The timeline has moved three times: "within 2 days" was the
   // 10 Sep placeholder, Anushka's content review set 5 working days on
-  // 11 Sep, and Janelle went to 5 days and then back to "within 2 days" on
-  // 16 Sep after the CEO walkthrough. All nine places say the same thing.
+  // 11 Sep, and it is "within 2 days" again from 16 Sep. That last move is
+  // not a revert to the placeholder by accident: ELT reviewed and approved
+  // 5 to 2 days (Janelle, 16 Sep), so it supersedes the content review.
+  // All nine places say the same thing.
   { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
   // Frame 4
   // "Corporate Advanced Health Screen", as on the landing page above.
