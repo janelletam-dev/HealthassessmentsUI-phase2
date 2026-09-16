@@ -83,13 +83,24 @@ const SLOTS = [
 const PRODUCT = {
   // 27011:15640
   name: "Corporate Advanced Health Screen",
-  // The frame's two lines, with the product renamed. Maya's deck adds three
-  // more sentences here (where the measurements happen, posting the sample,
-  // the clinician review and the email); Janelle, 15 Sep, reverted this block
-  // to the original, so those three are not on this screen.
+  // Two descriptions, and they are deliberately different lengths.
+  //
+  // Review & confirm keeps the frame's short pair: it is a screen you read to
+  // check a date and a pharmacy. Sharing one list put the postal note and the
+  // report timeline there too, which doubled that screen's height, and Janelle
+  // had it reverted on 15 Sep: "why did this screen get prolonged?".
   lines: [
     "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
     "On the next screen, you can select your preferred pharmacy location.",
+  ],
+  // Booking confirmed carries Maya's fuller version, dictated by Janelle from
+  // the slide on 16 Sep. Hyphens, not dashes: "so the word dash should be like
+  // a hyphen". The slide says "5 working days"; this says "5 days", the term
+  // Janelle settled on the same morning and the one the other ten places use.
+  confirmed: [
+    "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
+    "Please note - you will have to post your pre-packaged blood test to the laboratory - this ensures that the test gets processed quickly and reduces the risk of errors.",
+    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 days. Your report and recommended next steps will be shared via email.",
   ],
 };
 
@@ -166,13 +177,13 @@ export function PrimaryButton({ label, onClick, disabled }: { label: string; onC
   );
 }
 
-function ProductRow() {
+function ProductRow({ lines }: { lines: readonly string[] }) {
   return (
     <div className="m-[24px] rounded-[4px] p-[16px] flex gap-[12px] items-start" style={{ border: `1px solid ${BORDER}` }}>
       <CircleCheck size={18} color="#10b981" strokeWidth={2.5} className="shrink-0 mt-[2px]" />
       <div className="flex flex-col gap-[4px]">
         <p className="font-bold text-[16px] leading-[24px]" style={{ color: "#111827" }}>{PRODUCT.name}</p>
-        {PRODUCT.lines.map((line) => (
+        {lines.map((line) => (
           <p key={line} className="text-[15px] leading-[22px]" style={{ color: INK }}>{line}</p>
         ))}
       </div>
@@ -652,7 +663,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
           </StickyBar>
         }
       >
-        <Card label="WHAT YOU ARE BOOKING"><ProductRow /></Card>
+        <Card label="WHAT YOU ARE BOOKING"><ProductRow lines={PRODUCT.lines} /></Card>
 
         <Card label="YOUR APPOINTMENT">
           <div className="px-[24px] py-[16px] flex items-start justify-between" style={{ borderBottom: `1px solid ${BORDER}` }}>
@@ -754,7 +765,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
         </div>
       </Card>
 
-      <Card label="WHAT YOU'VE BOOKED"><ProductRow /></Card>
+      <Card label="WHAT YOU'VE BOOKED"><ProductRow lines={PRODUCT.confirmed} /></Card>
     </FhmShell>
   );
 }

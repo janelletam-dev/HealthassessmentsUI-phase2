@@ -12,7 +12,7 @@
 // Figma 5048:37958 for the chrome (header, strip, title band); the body is
 // NO FRAME until Irina's designs land.
 
-import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, Headphones } from "lucide-react";
+import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, Headphones, CircleHelp } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
 import { ContactLink } from "./contact-link.tsx";
 import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, monthYear, dayMonth } from "./demo-dates.ts";
@@ -240,16 +240,17 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             <ContactLink
               href={`mailto:${PX_EMAIL}`}
               hint={`Opens your email app · ${PX_EMAIL}`}
-              className="flex items-start gap-[6px] text-[16px] font-bold leading-[19px] underline"
+              className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline"
               style={{ color: LINK }}
             >
-              {/* items-start, not items-center: the label wraps to two lines and
-                  a vertically centred icon floats between them. */}
+              {/* Centred against the whole two-line label, 27194:31866. */}
               <Headphones size={22} strokeWidth={2} className="shrink-0" /> Contact DCA Protect customer support team
             </ContactLink>
-            {/* Indented by the icon and its gap, so both links share one left
-                edge rather than stepping in and out. */}
-            <a href={FAQS_URL} target="_blank" rel="noreferrer" className="text-[16px] font-bold leading-[20px] underline pl-[28px]" style={{ color: LINK }}>Health assessment FAQs</a>
+            {/* Its own question mark, 27194:31866, which is also what lines the
+                two links up: each is icon, gap, label. */}
+            <a href={FAQS_URL} target="_blank" rel="noreferrer" className="flex items-center gap-[6px] text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>
+              <CircleHelp size={22} strokeWidth={2} className="shrink-0" /> Health assessment FAQs
+            </a>
           </div>
         </div>
       </div>
