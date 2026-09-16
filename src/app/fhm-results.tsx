@@ -107,20 +107,19 @@ const STAGES = {
     // 14 Sep: "change to this 2nd paragraph".
     note: [
       "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
-      "Based on your answers, further assessment would normally be recommended at this stage. Since this is an internal pilot, further testing is not currently included. Information about further testing will be shared if available in due course. In the meantime, please do book an appointment for further discussion with a DCA GP (via \u2018health check follow up\u2019 health concern) or see your NHS GP to discuss whether you would benefit from further blood tests.",
+      "Based on your answers, we'd like to take a closer look at some areas together - this is a normal next step for many people and doesn't mean there's a problem.",
+      "Please use the link below to arrange your next stage of testing. This will include some further questionnaires as well as blood tests and physical measurements.",
     ],
     // NO FRAME. PM, 10 Sep: the reviewer note links to the next steps page.
-    // No lead sentence, because the note used to end by introducing it.
+    // The note's last paragraph introduces the link, so no lead.
     //
-    // IT NO LONGER DOES, AND THE LINK STAYS ANYWAY. Since 15 Sep the note
-    // carries the pilot's own wording, that further testing is not currently
-    // included. The link under it is not a leftover: the amber result is in
-    // this prototype precisely so the Corporate Advanced Health Screen journey
-    // can be shown, and this link is the way into it. Janelle, 15 Sep: "we
-    // show amber notes for the advanced health screen to be shown, so link to
-    // arrange is fine". Everything after this point hangs off it: the next
-    // steps page, the pharmacy booking, the pre-appointment questionnaire and
-    // the advanced report.
+    // The internal-pilot wording that sat here from 15 to 16 Sep is gone: it
+    // said further testing was not currently included while the link beneath
+    // it offered to arrange exactly that, and the PM flagged it. Janelle,
+    // 16 Sep. The amber result exists in this prototype so the Corporate
+    // Advanced Health Screen journey can be shown, and everything after this
+    // point hangs off this link: the next steps page, the pharmacy booking,
+    // the pre-appointment questionnaire and the advanced report.
     link: { lead: "", label: "Arrange your next stage of testing", target: "nextSteps" as const },
     sections: [
       { label: "Summary", tone: "attention" as const },
