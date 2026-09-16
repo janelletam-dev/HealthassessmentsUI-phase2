@@ -159,7 +159,9 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           </div>
           {/* The feed behind the statuses is hours old at worst. Irina, Figma
               comment #157: "info icon about out of real time". */}
-          <p className="flex items-center gap-[6px] text-[13px] leading-[18px] mt-[-8px]" style={{ color: MUTED }}>
+          {/* #030712, not the muted grey: 27194:31866 draws this line and its
+              icon in the same near-black as the card's status rows. */}
+          <p className="flex items-center gap-[6px] text-[13px] leading-[18px] mt-[-8px]" style={{ color: "#030712" }}>
             <Info size={14} strokeWidth={2} /> Statuses can take a few hours to update.
           </p>
 
@@ -224,7 +226,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
           style={{ border: "1px solid #d2d2d2" }}
         >
           <div className="flex gap-[8px] items-start flex-1">
-            <Info size={20} color="#00008f" strokeWidth={2} className="shrink-0 mt-[3px]" />
+            <Info size={20} color="#030712" strokeWidth={2} className="shrink-0 mt-[3px]" />
             <div className="flex flex-col gap-[8px]">
               <p className="text-[16px] font-bold leading-[19px]" style={{ color: HEADING }}>Questions about your health assessment?</p>
               <p className="text-[14px] leading-[19px]" style={{ color: "#414141" }}>

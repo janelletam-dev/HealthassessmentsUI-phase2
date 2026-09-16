@@ -85,10 +85,10 @@ const PRODUCT = {
   name: "Corporate Advanced Health Screen",
   // Two descriptions, and they are deliberately different lengths.
   //
-  // Review & confirm keeps the frame's short pair: it is a screen you read to
-  // check a date and a pharmacy. Sharing one list put the postal note and the
-  // report timeline there too, which doubled that screen's height, and Janelle
-  // had it reverted on 15 Sep: "why did this screen get prolonged?".
+  // Kept for now but drawn nowhere: Janelle asked on 16 Sep for the full
+  // description on Review & confirm as well, so both screens use `confirmed`.
+  // This short pair is the frame's own, and what that screen showed between
+  // 15 and 16 Sep after "why did this screen get prolonged?".
   lines: [
     "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
     "On the next screen, you can select your preferred pharmacy location.",
@@ -663,7 +663,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
           </StickyBar>
         }
       >
-        <Card label="WHAT YOU ARE BOOKING"><ProductRow lines={PRODUCT.lines} /></Card>
+        <Card label="WHAT YOU ARE BOOKING"><ProductRow lines={PRODUCT.confirmed} /></Card>
 
         <Card label="YOUR APPOINTMENT">
           <div className="px-[24px] py-[16px] flex items-start justify-between" style={{ borderBottom: `1px solid ${BORDER}` }}>
