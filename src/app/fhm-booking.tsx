@@ -95,12 +95,17 @@ const PRODUCT = {
   ],
   // Booking confirmed carries Maya's fuller version, dictated by Janelle from
   // the slide on 16 Sep. Hyphens, not dashes: "so the word dash should be like
-  // a hyphen". The slide says "5 working days"; this says "2 days", the term
-  // Janelle settled on the same morning and the one the other ten places use.
+  // a hyphen".
+  //
+  // FIVE DAYS HERE, TWO EVERYWHERE ELSE, AND THAT IS THE POINT. Deepali,
+  // 17 Sep: the two day turnaround "is only for Insights report. The advanced
+  // one timeline stays 5 days." This sentence is the only one in the prototype
+  // describing the Corporate Advanced Health Screen report; every other
+  // timeline is the Health Insights Assessment's. Do not sweep them together.
   confirmed: [
     "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
     "Please note - you will have to post your pre-packaged blood test to the laboratory - this ensures that the test gets processed quickly and reduces the risk of errors.",
-    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 2 days. Your report and recommended next steps will be shared via email.",
+    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 days. Your report and recommended next steps will be shared via email.",
   ],
 };
 
@@ -574,6 +579,12 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
               {WEEKDAYS.map((label, i) => (
                 <p key={i} className="text-[12px] leading-[18px] text-center pb-[6px]" style={{ color: MUTED }}>{label}</p>
               ))}
+              {/* The guide arrow points at the day the story books, which moves
+                  with the calendar (demo-dates.ts). It was hardcoded to 16 and
+                  went stale overnight on 17 Sep: the 16th fell into the past,
+                  its button disabled, and the arrow had nothing to press, so
+                  the walkthrough stopped dead on this screen. demo-script.ts
+                  already used APPOINTMENT.getDate(). */}
               {cells.map((d, i) => {
                 if (d === null) return <div key={`b${i}`} className="h-[30px]" />;
                 const open = AVAILABLE.includes(d);
@@ -583,7 +594,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
                     key={d}
                     type="button"
                     disabled={!open}
-                    data-guide-primary={(!day && d === 16) || undefined}
+                    data-guide-primary={(!day && d === APPOINTMENT.getDate()) || undefined}
                     onClick={() => { setDay(d); setSlot(undefined); }}
                     className="h-[30px] w-[30px] relative text-[13px] leading-[18px] border-none"
                     style={{

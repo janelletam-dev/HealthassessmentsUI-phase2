@@ -3815,7 +3815,9 @@ const COMPLETE_STEPS = [
   // 11 Sep, and it is "within 2 days" again from 16 Sep. That last move is
   // not a revert to the placeholder by accident: ELT reviewed and approved
   // 5 to 2 days (Janelle, 16 Sep), so it supersedes the content review.
-  // All nine places say the same thing.
+  // Every Health Insights timeline says the same thing. The Corporate Advanced
+  // Health Screen keeps 5 days and is stated once, on the booking screens.
+  // Deepali, 17 Sep: two days "is only for Insights report".
   { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
   // Frame 4
   // "Corporate Advanced Health Screen", as on the landing page above.

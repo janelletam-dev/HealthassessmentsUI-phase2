@@ -38,7 +38,7 @@ Status as of 11 September 2026, for the stakeholders who asked. Everything below
 
 ## Still open, and whose call
 
-- The report timeline: confirmed as 5 working days in the content review, 11 Sep; now "within 2 days" everywhere, approved by ELT and applied 16 Sep.
+- The report timelines: Health Insights is "within 2 days", approved by ELT and applied 16 Sep. The Corporate Advanced Health Screen stays at 5 days (Deepali, 17 Sep); it is stated once, on the booking screens.
 - The final name for the Advanced assessment: with the product team.
 - The My health assessments design: Irina's designs to follow; this is the first pass.
 - The videos: clips to come from the clinical team; placeholders until then.

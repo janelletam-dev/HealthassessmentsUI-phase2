@@ -40,7 +40,7 @@ The prototype plays the whole Health Assessment journey on its own, in the brows
 ## Things not to say
 
 - The clinical partner is not named to patients anywhere in the journey, and the captions follow suit. Say "our clinical team".
-- The report timeline is "within 2 days" on every screen, email and caption. The content review on 11 September set 5 working days; ELT reviewed and approved 5 to 2 days, and it changed on 16 September. If anyone asks in a demo, 2 days is the approved figure, not the old placeholder.
+- Two timelines, not one. The **Health Insights** report is "within 2 days" on every screen and caption; the **Corporate Advanced Health Screen** report is "within 5 days", stated once, in the product description on the booking screens. Deepali, 17 Sep: the two day turnaround "is only for Insights report". The content review on 11 September set 5 working days; ELT reviewed and approved 5 to 2 days, and it changed on 16 September. If anyone asks in a demo, 2 days is the approved figure, not the old placeholder.
 - "Advanced Corporate Health Assessment" is the working name; the final name is still with the product team.
 - The employer dashboard numbers are sample data.
 - Cancelling an assessment is not shown; the help box on My health assessments points to the Patient Experience team.
