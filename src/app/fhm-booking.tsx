@@ -97,15 +97,17 @@ const PRODUCT = {
   // the slide on 16 Sep. Hyphens, not dashes: "so the word dash should be like
   // a hyphen".
   //
-  // FIVE DAYS HERE, TWO EVERYWHERE ELSE, AND THAT IS THE POINT. Deepali,
-  // 17 Sep: the two day turnaround "is only for Insights report. The advanced
-  // one timeline stays 5 days." This sentence is the only one in the prototype
-  // describing the Corporate Advanced Health Screen report; every other
-  // timeline is the Health Insights Assessment's. Do not sweep them together.
+  // FIVE WORKING DAYS HERE, TWO EVERYWHERE ELSE, AND THAT IS THE POINT.
+  // Deepali, 17 Sep: the two day turnaround "is only for Insights report. The
+  // advanced one timeline stays 5 days."; Janelle, 22 Sep: "for the advanced
+  // is within 5 working days", so working days, not calendar days. This
+  // sentence is the only one in the prototype describing the Corporate
+  // Advanced Health Screen report; every other timeline is the Health
+  // Insights Assessment's. Do not sweep them together.
   confirmed: [
     "Your Corporate Advanced Health Screen includes an in-person pharmacy visit for physical measurements and a comprehensive range of blood tests.",
     "Please note - you will have to post your pre-packaged blood test to the laboratory - this ensures that the test gets processed quickly and reduces the risk of errors.",
-    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 days. Your report and recommended next steps will be shared via email.",
+    "Following this, the information from your questionnaire, bloods and physical measurements will be reviewed by a clinician within 5 working days. Your report and recommended next steps will be shared via email.",
   ],
 };
 
