@@ -3887,12 +3887,16 @@ function ProfileComplete({ theme, onContinue }: {
               </div>
             </div>
 
-            {/* The paragraph that sat here was a placeholder, written on
-                10 Sep to set expectations "until Anushka's content lands".
-                It has landed: the four bullets above are it, and they say the
-                same things (clinician review, 2 days, a report, a
-                health screen if advised). Deleted rather than left to repeat
-                them. Anushka's content deck, 15 Sep, lists no paragraph here. */}
+            {/* NO FRAME. Deleted in 334e776 as a placeholder the bullets
+                repeated; Janelle, 22 Sep: "do not remove it .. return it on
+                the prototype". Restored with the copy the rest of the app now
+                carries, not the 15 Sep wording: the Insights report is "within
+                2 days" (ELT, 16 Sep) and the product is the Corporate Advanced
+                Health Screen, so the old "5 working days" and "a health
+                screen" would contradict every other screen. */}
+            <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
+              The assessment takes a few minutes. Our clinicians review your answers and send your report within 2 days. For most people, that is the end. If clinically appropriate, you will be invited to a Corporate Advanced Health Screen, funded by your employer: blood tests and physical measurements at a pharmacy, with a clinician-reviewed report.
+            </p>
           </div>
 
           <div className="px-[24px]">
