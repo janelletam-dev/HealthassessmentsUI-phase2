@@ -36,8 +36,8 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Invitation email" },
   { kind: "waitFor", text: "your Health Insights Assessment is ready for you" },
   { kind: "pause", ms: 800 },
-  { kind: "zoom", text: "It starts with an email from the employer's programme: a free Health Insights Assessment that takes a few minutes" },
-  { kind: "scrollThrough", ms: 3000 },
+  { kind: "zoom", text: "An invitation from the employer: a free Health Insights Assessment", ms: 3200 },
+  { kind: "scrollThrough", ms: 2000 },
   { kind: "click", label: "Create account" },
 
   // ── 2. The landing ─────────────────────────────────────────────────────────
@@ -46,13 +46,13 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Welcome page" },
   { kind: "waitFor", text: "New here? Begin your journey" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "The link lands on Doctor Care Anywhere, with the four steps ahead spelled out" },
+  { kind: "zoom", text: "The link lands on Doctor Care Anywhere, four steps spelled out", ms: 3200 },
   { kind: "click", label: "Get started" },
 
   // ── 3. Create the account ──────────────────────────────────────────────────
   { kind: "scene", label: "Create account" },
   { kind: "waitFor", text: "Create your account" },
-  { kind: "zoom", text: "A Doctor Care Anywhere account in one form: name, date of birth, email and password" },
+  { kind: "zoom", text: "One form: name, date of birth, email, password", ms: 3200 },
   { kind: "type", field: "e.g., Jane", text: "Jane" },
   { kind: "type", field: "e.g., Smith", text: "Smith" },
   { kind: "type", field: "jane.doe@mail.com", text: "jane.smith@mail.com" },
@@ -64,7 +64,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // ── 4. Profile: contact info with the OTP ─────────────────────────────────
   { kind: "scene", label: "Mobile number" },
   { kind: "waitFor", text: "Send verification code" },
-  { kind: "zoom", text: "Profile, step 1 of 4: a mobile number, verified by text message" },
+  { kind: "zoom", text: "Step 1 of 4: a mobile number, verified by text", ms: 3200 },
   { kind: "type", field: "07123 456 789", text: "07700 900123" },
   { kind: "click", label: "Send verification code" },
   { kind: "waitFor", text: "Enter the code sent to" },
@@ -74,8 +74,8 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // ── 5. Profile: the remaining steps ───────────────────────────────────────
   { kind: "scene", label: "Personal details" },
   { kind: "waitFor", text: "Next: GP details", timeoutMs: 12000 },
-  { kind: "pause", ms: 400 },
-  { kind: "zoom", text: "Step 2 of 4: sex at birth and home address" },
+  { kind: "pause", ms: 200 },
+  { kind: "zoom", text: "Step 2 of 4: sex at birth and home address", ms: 3200 },
   { kind: "click", label: "Female" },
   // The address is manual-only (no lookup service yet), so fillAll types
   // line 1, town and postcode itself.
@@ -84,8 +84,8 @@ export const DEMO_SCRIPT: DemoStep[] = [
 
   { kind: "scene", label: "GP details" },
   { kind: "waitFor", text: "Next: emergency contact" },
-  { kind: "pause", ms: 400 },
-  { kind: "zoom", text: "Step 3 of 4: the patient's GP, NHS or private, found by postcode" },
+  { kind: "pause", ms: 200 },
+  { kind: "zoom", text: "Step 3 of 4: the patient's GP, found by postcode", ms: 3200 },
   { kind: "click", label: "I want to provide my GP" },
   { kind: "fillAll" },
   { kind: "click", label: "Find address" },
@@ -95,8 +95,8 @@ export const DEMO_SCRIPT: DemoStep[] = [
 
   { kind: "scene", label: "Emergency contact" },
   { kind: "waitFor", text: "Finish profile setup" },
-  { kind: "pause", ms: 400 },
-  { kind: "zoom", text: "Step 4 of 4: an emergency contact, optional" },
+  { kind: "pause", ms: 200 },
+  { kind: "zoom", text: "Step 4 of 4: an emergency contact, optional", ms: 3200 },
   { kind: "click", label: "I want to provide emergency contact details" },
   { kind: "fillAll" },
   { kind: "pick", trigger: "Select an option" },
@@ -106,19 +106,22 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Profile complete" },
   { kind: "waitFor", text: "Profile complete" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "Profile done. The assessment takes a few minutes, and a clinician reviews every answer" },
+  { kind: "zoom", text: "Profile done. A clinician reviews every answer" },
+  // Janelle, 22 Sep: five more seconds here, to explain what the assessment is.
+  { kind: "pause", ms: 5000 },
   { kind: "click", label: "Continue to questionnaire" },
   { kind: "scene", label: "Health Insights Assessment" },
   { kind: "waitFor", text: "DEMOGRAPHICS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "The Health Insights Assessment: demographics, medical history, lifestyle, family history and body metrics" },
+  { kind: "zoom", text: "The Health Insights Assessment: history, lifestyle, family, body metrics" },
   { kind: "answerAll", perQuestionMs: 90 },
   { kind: "fillAll" },
   { kind: "click", label: "Submit" },
   { kind: "waitFor", text: "has been submitted" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "Submitted. The patient is told what happens next: a clinician review, and a report within 2 days" },
-  { kind: "pause", ms: 1200 },
+  { kind: "zoom", text: "Submitted. A clinician reviews it, report within 2 days" },
+  // Janelle, 22 Sep: three more seconds on the thank-you page.
+  { kind: "pause", ms: 4200 },
 
   // ── 6b. The DCA account while the report is being prepared ───────────────
   // PM, 10 Sep: "if patient logs in what would they see": login, Home, My
@@ -127,18 +130,18 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "jumpPhase", phase: "dcaLoginPending" },
   { kind: "waitFor", text: "Sign in with your email address" },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "Meanwhile, if the patient signs in to Doctor Care Anywhere" },
+  { kind: "zoom", text: "Meanwhile, the patient signs in to Doctor Care Anywhere" },
   { kind: "type", field: "Email Address", text: "jane.smith@mail.com" },
   { kind: "type", field: "Password", text: "Demo123!" },
   { kind: "click", label: "Sign in" },
   // 27052:15761, the Home greeting: a waitFor target, not new copy.
   { kind: "waitFor", text: "What can we help you with?" },
   { kind: "pause", ms: 800 },
-  { kind: "zoom", text: "Home shows only what has happened: the assessment is in, and the report is on its way" },
+  { kind: "zoom", text: "Home shows only what has happened so far" },
   { kind: "click", label: "Open my health assessments" },
   { kind: "waitFor", text: "Awaiting clinician review" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "My health assessments: submitted, and the clinician's review and report follow together within 2 days" },
+  { kind: "zoom", text: "Submitted. The review and report arrive together, within 2 days" },
   { kind: "pause", ms: 1000 },
 
   // ── 7. The clinician's side ───────────────────────────────────────────────
@@ -146,14 +149,17 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // No real control crosses from the patient's account to the clinician's.
   { kind: "jumpPhase", phase: "clinician" },
   { kind: "waitFor", text: "Ready for approval" },
-  { kind: "zoom", text: "Behind the scenes: every assessment is reviewed by a clinician before anything reaches the patient" },
+  { kind: "zoom", text: "Behind the scenes: a clinician reviews every assessment" },
   { kind: "click", label: "Jane Smith" },
   { kind: "waitFor", text: "Lifestyle Factors" },
   { kind: "pause", ms: 900 },
-  { kind: "zoom", text: "The clinician sees each section flagged, writes the note, and approves or rejects" },
+  { kind: "zoom", text: "Each section flagged, the note written, then approved" },
+  // Janelle, 22 Sep: eleven more seconds across approval and dispatch, split
+  // so there is time on the review itself and time on the approved state.
+  { kind: "pause", ms: 6000 },
   { kind: "click", label: "Approve" },
-  { kind: "pause", ms: 1200 },
-  { kind: "zoom", text: "Approved. Dispatch sends the results email and files the report in the patient's account" },
+  { kind: "pause", ms: 6200 },
+  { kind: "zoom", text: "Dispatch emails the patient and files the report" },
   { kind: "click", label: "Dispatch" },
 
   // ── 8. Results arrive and the report is read ──────────────────────────────
@@ -165,42 +171,35 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Results: no concerns" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  // The report first: popup open, the clinician's letter and summary, close.
-  // Janelle, 4 Sep: "go through popup pdf close it and then scroll down to
-  // show the message then book", with the narration card after the PDF,
-  // not before it.
-  { kind: "click", label: "View report" },
-  { kind: "pause", ms: 700 },
-  { kind: "pdfPage", page: 2 },
-  { kind: "pause", ms: 3400 },
-  { kind: "pdfPage", page: 5 },
-  { kind: "pause", ms: 2200 },
-  { kind: "click", label: "Close report" },
+  // The Health Insights PDF is not opened here. Janelle, 22 Sep: it is not in
+  // the self-serve journey, and the report is read on the partner site, so the
+  // popup was cut from the demo. The Advanced PDF is still opened once, at
+  // scene 22, in Uploads.
   // Two outcomes, in a line. PM, 10 Sep: first the green note with the sleep
   // guide, then the amber note with the next steps.
-  { kind: "zoom", text: "A clear result: every section green, and the clinician's note points to a 10 week sleep guide" },
-  { kind: "pause", ms: 1400 },
+  { kind: "zoom", text: "Every section green, with a 10 week sleep guide" },
+  { kind: "pause", ms: 6400 },
   { kind: "click", label: "Open your sleep guide" },
   { kind: "waitFor", text: "Live page" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "The sleep guide: clinician-written content the patient can act on straight away" },
-  { kind: "pause", ms: 2000 },
+  { kind: "zoom", text: "The sleep guide: something to act on straight away" },
+  { kind: "pause", ms: 5000 },
   { kind: "scene", label: "Results: further assessment" },
   { kind: "jumpPhase", phase: "fhmResultsAmber" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "The other outcome: amber and red flags, and the clinician recommends the Corporate Advanced Health Screen" },
+  { kind: "zoom", text: "The other outcome: amber and red flags, a Corporate Advanced Health Screen recommended" },
   { kind: "pause", ms: 1200 },
   { kind: "click", label: "Arrange your next stage of testing" },
   { kind: "waitFor", text: "You may receive recommendations for" },
   { kind: "scrollThrough", ms: 3000 },
-  { kind: "zoom", text: "Next steps on their own page: what the Corporate Advanced Health Screen involves, and the button to book it" },
+  { kind: "zoom", text: "What the Corporate Advanced Health Screen involves, and how to book" },
   { kind: "click", label: "Book Appointment" },
 
   // ── 9. Booking the advanced assessment ────────────────────────────────────
   { kind: "scene", label: "Booking the Corporate Advanced Health Screen" },
   { kind: "waitFor", text: "Choose a location", timeoutMs: 8000 },
-  { kind: "zoom", text: "Booked in three steps: a pharmacy near the patient, a date and a time" },
+  { kind: "zoom", text: "Three steps: a pharmacy, a date, a time" },
   { kind: "pause", ms: 600 },
   { kind: "click", label: "Choose" },
   { kind: "waitFor", text: "Select date and time" },
@@ -231,38 +230,43 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "scene", label: "Appointment email" },
   { kind: "waitFor", text: "Your appointment is booked" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "The confirmation email: where to go, what to bring, and a short video on what to expect" },
+  { kind: "zoom", text: "The confirmation: where to go and what to bring" },
   { kind: "scrollThrough", ms: 3200 },
+  // Janelle, 22 Sep: twenty seconds here, to say that the next step happens at
+  // the pharmacy, outside the platform, before the results come back.
+  { kind: "pause", ms: 20000 },
   { kind: "click", label: "Newer message" },
 
   // ── The second review: the advanced results, same gate ────────────────────
   { kind: "scene", label: "Clinician review, advanced" },
   { kind: "waitFor", text: "Ready for approval" },
   { kind: "pause", ms: 700 },
-  { kind: "zoom", text: "After the pharmacy visit, the blood results and measurements get the same clinician review" },
+  { kind: "zoom", text: "After the pharmacy visit, the same clinician review" },
   { kind: "click", label: "Jane Smith" },
   { kind: "waitFor", text: "Blood Pressure" },
   { kind: "pause", ms: 1100 },
-  { kind: "zoom", text: "QRISK3, blood pressure, BMI, HbA1c and lipids, each flagged, then approved and dispatched" },
+  { kind: "zoom", text: "QRISK3, blood pressure, BMI, HbA1c and lipids, each flagged" },
+  // Janelle, 22 Sep: eleven more seconds here too, same split as scene 11.
+  { kind: "pause", ms: 6000 },
   { kind: "click", label: "Approve" },
-  { kind: "pause", ms: 1200 },
+  { kind: "pause", ms: 6200 },
   { kind: "click", label: "Dispatch" },
 
   { kind: "scene", label: "Advanced results email" },
   { kind: "waitFor", text: "Your Corporate Advanced Health Screen results are ready" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "The second results email, with a free video GP appointment included to talk it through" },
+  { kind: "zoom", text: "The second email, with a free video GP appointment" },
   { kind: "scrollThrough", ms: 2200 },
   { kind: "click", label: "View my report" },
 
   // ── 12. The advanced results ──────────────────────────────────────────────
-  // The report itself was opened once already, at scene 8; the second report
-  // is shown as its results page, not the popup again. Janelle, 11 Sep: "on
+  // Shown as its results page, not a popup: the only PDF in the demo is the
+  // Advanced report, opened once at scene 22 in Uploads. Janelle, 11 Sep: "on
   // showing the pdfs, it seems like they have been repeated 2-3x".
   { kind: "scene", label: "Advanced results" },
   { kind: "waitFor", text: "YOUR LATEST RESULTS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },
-  { kind: "zoom", text: "The Corporate Advanced Health Screen results: clinician-reviewed, with every flag explained" },
+  { kind: "zoom", text: "The Corporate Advanced Health Screen results, every flag explained" },
   { kind: "scrollThrough", ms: 3200 },
   { kind: "click", label: "Profile" },
 
@@ -280,16 +284,16 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // 27052:15761, the Home greeting: a waitFor target, not new copy.
   { kind: "waitFor", text: "What can we help you with?" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "Home: both assessments done, and where the reports are" },
+  { kind: "zoom", text: "Home: both assessments done" },
   { kind: "click", label: "Open my health assessments" },
   { kind: "waitFor", text: "your results and report are ready" },
   { kind: "pause", ms: 800 },
-  { kind: "zoom", text: "My health assessments: each report, its status, and the way to it" },
+  { kind: "zoom", text: "Each report, its status, and the way to it" },
   { kind: "pause", ms: 600 },
   { kind: "click", label: "View report in Uploads" },
   { kind: "waitFor", text: "Advanced Health Screen Report", timeoutMs: 8000 },
   { kind: "pause", ms: 800 },
-  { kind: "zoom", text: "Uploads: both reports filed as PDFs in the patient's own account" },
+  { kind: "zoom", text: "Uploads: both reports filed as PDFs" },
   { kind: "pause", ms: 800 },
   // The advanced report is opened here, once, after the amber and red results
   // have been seen. Janelle, 12 Sep: "the advanced corporate should be shown
@@ -299,7 +303,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "pause", ms: 900 },
   { kind: "pdfPage", page: 2 },
   { kind: "pause", ms: 3200 },
-  { kind: "zoom", text: "The Corporate Advanced Health Screen report, filed in the account the day it was dispatched" },
+  { kind: "zoom", text: "The Corporate Advanced Health Screen report, filed the day it was dispatched" },
   { kind: "pause", ms: 1200 },
 
   // The GP follow-up is booked from Home's Book an appointment, by hand in a
@@ -318,11 +322,11 @@ export const DEMO_SCRIPT: DemoStep[] = [
   // Uptake for both programmes, then the health insights view. PM, 10 Sep:
   // "in the end we can show both, this is how the health insights looks like,
   // and this is how the advanced one looks like, for corporate".
-  { kind: "zoom", text: "The employer's dashboard: 119 took the Health Insights Assessment, 110 reports dispatched" },
+  { kind: "zoom", text: "The employer's dashboard: 119 assessments, 110 reports dispatched" },
   { kind: "pause", ms: 2200 },
   { kind: "click", label: "Advanced Health Assessment" },
   { kind: "pause", ms: 600 },
-  { kind: "zoom", text: "And the Corporate Advanced Health Screen cohort: 7 so far, with uptake by age" },
+  { kind: "zoom", text: "The Corporate Advanced Health Screen cohort: 7, with uptake by age" },
   { kind: "pause", ms: 2200 },
   { kind: "click", label: "Health insights" },
   { kind: "waitFor", text: "Report flags" },

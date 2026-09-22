@@ -24,7 +24,7 @@ export const IS_DEMO =
   window.location.pathname === "/demo-fastforward" ||
   new URLSearchParams(window.location.search).get("demo") === "fastforward";
 
-const TYPE_MS = 26;
+const TYPE_MS = 16;
 
 function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, value: string) {
   const proto = el instanceof HTMLSelectElement
@@ -283,7 +283,7 @@ export function DemoDriver() {
           }
           case "zoom": {
             setZoom(step.text);
-            await sleep(step.ms ?? 1900);
+            await sleep(step.ms ?? 4900);
             setZoom(undefined);
             await sleep(250);
             break;
