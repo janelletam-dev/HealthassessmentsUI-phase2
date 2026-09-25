@@ -37,22 +37,10 @@ const FAQS_URL = "https://doctorcareanywhere.com/faqs";
 // goes, because the label does not. Janelle, 14 Sep.
 const PX_EMAIL = "teamleaderescalations@doctorcareanywhere.com";
 
-// The states from the PM's My HA requirements and call, 25 Sep, in journey
-// order. Only pending, insights and advanced sit on the demo journey; the rest
-// open with ?myha=<stage>. Referral and appointment-completed data exist (PM,
-// 25 Sep). "booked" is TBC: bookings can be rescheduled or cancelled without
-// us knowing, so it carries no pharmacy details, and cancelled and missed are
-// gone.
-export const ASSESSMENTS_STAGES = ["notStarted", "pending", "insights", "referred", "booked", "advSubmitted", "advCompleted", "advanced"] as const;
-export type AssessmentsStage = typeof ASSESSMENTS_STAGES[number];
-
-// The questionnaire links are single use, so a patient who has already
-// submitted lands on FHM's error page; the caveat says so without saying
-// that. PM, 25 Sep: "if you haven't filled it already, here's the link".
-const HIA_HINT = "If you have not completed it yet, you can start it here. Once submitted, it can take a few hours to show.";
-// Why it matters comes first. Deepali, 25 Sep: "it's very important you
-// fill this questionnaire as it is needed for your review along with bloods".
-const ADVANCED_HINT = "Your clinician needs your questionnaire responses, along with your blood results, to review your screen. If you have already completed it, it can take a few hours to show here.";
+// The states the demo journey shows. The full set from the PM's requirements
+// of 25 Sep lives in Figma only. Janelle, 25 Sep: "they should not be there if
+// not needed".
+export type AssessmentsStage = "pending" | "insights" | "advanced";
 
 // No icons: the Figma blurb (27160:34048) is title and line only. Janelle,
 // 14 Sep: "figma has no icons on the left, can you align?".
@@ -186,15 +174,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
             <Info size={14} strokeWidth={2} /> Statuses can take a few hours to update.
           </p>
 
-          {stage === "notStarted" ? (
-            <AssessmentCard
-              title="Health Insights Assessment"
-              when={monthYear(SUBMITTED)}
-              statuses={[{ done: false, label: HIA_HINT }]}
-              linkLabel="Start your questionnaire"
-              onLink={onOpenFhm}
-            />
-          ) : stage === "pending" ? (
+          {stage === "pending" ? (
             // Nothing to open yet, so no link. Janelle, 10 Sep: "there should
             // be no go to uploads as it should be the health Insights
             // assessment submitted".
@@ -218,47 +198,6 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
               ]}
               linkLabel="View report in Uploads"
               onLink={onOpenUploads}
-            />
-          )}
-
-          {/* The section appears only once they are referred, and the
-              questionnaire button stays until it is submitted. */}
-          {(stage === "referred" || stage === "booked") && (
-            <AssessmentCard
-              title="Corporate Advanced Health Screen"
-              // Referred when the first report lands.
-              when={monthYear(SUBMITTED)}
-              statuses={[
-                { done: false, label: stage === "referred" ? "Recommended by your clinician" : "Next step: your pharmacy visit for blood tests and health measurements" },
-                { done: false, label: ADVANCED_HINT },
-              ]}
-              linkLabel="Complete your questionnaire"
-              onLink={onOpenFhm}
-            />
-          )}
-
-          {stage === "advSubmitted" && (
-            <AssessmentCard
-              title="Corporate Advanced Health Screen"
-              when={monthYear(APPOINTMENT)}
-              // No timeline here: the 5 working days run from the pharmacy
-              // visit, not the questionnaire. PM, 25 Sep. The second line so
-              // it does not look empty. Deepali, 25 Sep.
-              statuses={[
-                { done: true, label: "Questionnaire submitted" },
-                { done: false, label: "A clinician will review your questionnaire responses along with your blood results." },
-              ]}
-            />
-          )}
-
-          {stage === "advCompleted" && (
-            <AssessmentCard
-              title="Corporate Advanced Health Screen"
-              when={monthYear(APPOINTMENT)}
-              statuses={[
-                { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}` },
-                { done: false, label: "Awaiting clinician review and your report, within 5 working days" },
-              ]}
             />
           )}
 
