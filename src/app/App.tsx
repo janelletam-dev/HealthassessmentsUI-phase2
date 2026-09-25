@@ -29,7 +29,7 @@ import { AppointmentEmail } from "./appointment-email.tsx";
 import { AdvancedResultsEmail } from "./advanced-results-email.tsx";
 import { ClinicianPortal } from "./clinician-portal.tsx";
 import { BookAppointment } from "./book-appointment.tsx";
-import { MyHealthAssessments } from "./my-health-assessments.tsx";
+import { MyHealthAssessments, ASSESSMENTS_STAGES } from "./my-health-assessments.tsx";
 import { SleepProgramme } from "./sleep-programme.tsx";
 import { NextStepsPage } from "./next-steps.tsx";
 import { FhmResults } from "./fhm-results.tsx";
@@ -4603,6 +4603,10 @@ function Footer({ brand }: { brand: BrandId }) {
    Corporate Advanced Health Screen one, which is what the patient's latest
    report would be at each point. */
 const FHM_WINDOW = new URLSearchParams(window.location.search).get("fhm");
+// ?myha=<stage> opens My health assessments in one of its states, for review
+// outside the demo journey (most states are not on it).
+const MYHA_PARAM = new URLSearchParams(window.location.search).get("myha");
+const MYHA_PREVIEW = ASSESSMENTS_STAGES.find((stage) => stage === MYHA_PARAM);
 
 export default function App() {
   const [brand, setBrand] = useState<BrandId>("dca");
@@ -4636,7 +4640,7 @@ export default function App() {
   // "email" is the invitation, the first thing a patient sees. Janelle, 3 Sep:
   // "the email should be the first screen inside the prototype". The one
   // exception is the FHM window below, which boots straight into the report.
-  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "sleep" | "fhmResults" | "fhmResultsAmber" | "nextSteps" | "dcaLogin" | "dcaLoginPending" | "portalPending" | "bookAppointment" | "orgReport">(FHM_WINDOW === "advanced" ? "fhmResults" : FHM_WINDOW ? "fhmResultsAmber" : "email");
+  const [phase, setPhase] = useState<"email" | "activate" | "profile" | "landing" | "questionnaire" | "submitted" | "resultsEmail" | "portal" | "booking" | "apptEmail" | "advancedResultsEmail" | "portalAdvanced" | "clinician" | "myAssessments" | "sleep" | "fhmResults" | "fhmResultsAmber" | "nextSteps" | "dcaLogin" | "dcaLoginPending" | "portalPending" | "bookAppointment" | "orgReport">(FHM_WINDOW === "advanced" ? "fhmResults" : FHM_WINDOW ? "fhmResultsAmber" : MYHA_PREVIEW ? "myAssessments" : "email");
   // The global back arrow retraces screens. Janelle, 10 Sep: "the back arrow
   // on each page", then "could they go back one page please and not back to
   // the start?". A screen is the phase plus the activation step (landing,
@@ -4970,7 +4974,7 @@ export default function App() {
     return (
       <>
         <MyHealthAssessments
-          stage={portalReturn === "portalPending" ? "pending" : portalReturn === "portalAdvanced" ? "advanced" : "insights"}
+          stage={MYHA_PREVIEW ?? (portalReturn === "portalPending" ? "pending" : portalReturn === "portalAdvanced" ? "advanced" : "insights")}
           onOpenUploads={() => {
             if (portalReturn === "portalPending") { setPortalPendingTab("Uploads"); setPhase("portalPending"); }
             else if (portalReturn === "portalAdvanced") { setPortalAdvancedTab("Uploads"); setPhase("portalAdvanced"); }
@@ -4983,6 +4987,7 @@ export default function App() {
           // the flow". The path is "/" and not the current one, or a window
           // opened from /demo-fastforward would start the driver again.
           onOpenFhm={() => window.open(`/?fhm=${portalReturn === "portalAdvanced" ? "advanced" : "insights"}`, "_blank", "noopener")}
+          onBookGp={() => setPhase("bookAppointment")}
           onBack={() => setPhase(portalReturn)}
         />
         {/* While the report is pending there is nothing here to press, so the

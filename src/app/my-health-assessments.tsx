@@ -15,7 +15,7 @@
 import { ArrowLeft, X, Info, ExternalLink, CircleCheckBig, Headphones, CircleHelp } from "lucide-react";
 import { Logo } from "./dca-logo.tsx";
 import { ContactLink } from "./contact-link.tsx";
-import { SUBMITTED, APPOINTMENT, APPOINTMENT_TIME, monthYear, dayMonth } from "./demo-dates.ts";
+import { SUBMITTED, APPOINTMENT, monthYear, dayMonth } from "./demo-dates.ts";
 
 const WS = "'Work Sans', sans-serif";
 const HEADER = "#334bf6";
@@ -37,14 +37,33 @@ const FAQS_URL = "https://doctorcareanywhere.com/faqs";
 // goes, because the label does not. Janelle, 14 Sep.
 const PX_EMAIL = "teamleaderescalations@doctorcareanywhere.com";
 
-export type AssessmentsStage = "pending" | "insights" | "advanced";
+// The states from the PM's My HA requirements and call, 25 Sep, in journey
+// order. Only pending, insights and advanced sit on the demo journey; the rest
+// open with ?myha=<stage>. Referral and appointment-completed data exist (PM,
+// 25 Sep). "booked" is TBC: bookings can be rescheduled or cancelled without
+// us knowing, so it carries no pharmacy details, and cancelled and missed are
+// gone.
+export const ASSESSMENTS_STAGES = ["notStarted", "pending", "insights", "referred", "booked", "advSubmitted", "advCompleted", "advanced"] as const;
+export type AssessmentsStage = typeof ASSESSMENTS_STAGES[number];
+
+// The questionnaire links are single use, so a patient who has already
+// submitted lands on FHM's error page; the caveat says so without saying
+// that. PM, 25 Sep: "if you haven't filled it already, here's the link".
+const HIA_HINT = "If you have not completed it yet, you can start it here. Once submitted, it can take a few hours to show.";
+// Why it matters comes first. Deepali, 25 Sep: "it's very important you
+// fill this questionnaire as it is needed for your review along with bloods".
+const ADVANCED_HINT = "Your clinician needs your questionnaire responses, along with your blood results, to review your screen. If you have already completed it, it can take a few hours to show here.";
 
 // No icons: the Figma blurb (27160:34048) is title and line only. Janelle,
 // 14 Sep: "figma has no icons on the left, can you align?".
 const HOW_IT_WORKS = [
   { title: "Health Insights Assessment", body: "A short assessment about your health and lifestyle." },
-  { title: "Clinician review", body: "A clinician reviews your answers and sends your report within 2 days." },
-  { title: "Corporate Advanced Health Screen", body: "If recommended: blood tests and health measurements at a pharmacy, with a second report." },
+  { title: "Clinician review", body: "A clinician reviews your responses and sends your report within 2 days." },
+  // The detail lives here, not on the card, so the card's status stays short.
+  // Wording from the booking email's "What to expect". Janelle, 25 Sep: "is
+  // this repetitive? should we not update the one on the component that is
+  // fixed?"
+  { title: "Corporate Advanced Health Screen", body: "If recommended: blood tests and health measurements with a trained professional at a local pharmacy or clinic, then an advanced screening report within 5 working days of your visit." },
 ];
 
 // One line per thing that has happened, as the D2C view draws them: a green
@@ -57,7 +76,7 @@ function StatusRow({ done, label }: Status) {
   const Icon = done ? CircleCheckBig : Info;
   return (
     <div className="flex items-center gap-[8px]">
-      <Icon size={16} color={colour} strokeWidth={1.33} />
+      <Icon size={16} color={colour} strokeWidth={1.33} className="shrink-0" />
       <span className="text-[12px] font-semibold leading-[16px]" style={{ color: colour }}>{label}</span>
     </div>
   );
@@ -99,12 +118,14 @@ function AssessmentCard({ title, when, statuses, linkLabel, onLink }: {
   );
 }
 
-export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }: {
+export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp, onBack }: {
   stage: AssessmentsStage;
   /** The report links: DCA's own Uploads, not FHM. PM, 10 Sep, relaying Laura. */
   onOpenUploads: () => void;
   /** The one button out to Full Health Medical, for anything still live there. */
   onOpenFhm: () => void;
+  /** The normal DCA booking journey; the tile names the concern to pick. */
+  onBookGp: () => void;
   onBack: () => void;
 }) {
   return (
@@ -165,10 +186,18 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             <Info size={14} strokeWidth={2} /> Statuses can take a few hours to update.
           </p>
 
-          {/* Nothing to open yet, so no link. Janelle, 10 Sep: "there should
-              be no go to uploads as it should be the health Insights
-              assessment submitted". */}
-          {stage === "pending" ? (
+          {stage === "notStarted" ? (
+            <AssessmentCard
+              title="Health Insights Assessment"
+              when={monthYear(SUBMITTED)}
+              statuses={[{ done: false, label: HIA_HINT }]}
+              linkLabel="Start your questionnaire"
+              onLink={onOpenFhm}
+            />
+          ) : stage === "pending" ? (
+            // Nothing to open yet, so no link. Janelle, 10 Sep: "there should
+            // be no go to uploads as it should be the health Insights
+            // assessment submitted".
             <AssessmentCard
               title="Health Insights Assessment"
               when={monthYear(SUBMITTED)}
@@ -192,12 +221,53 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             />
           )}
 
+          {/* The section appears only once they are referred, and the
+              questionnaire button stays until it is submitted. */}
+          {(stage === "referred" || stage === "booked") && (
+            <AssessmentCard
+              title="Corporate Advanced Health Screen"
+              // Referred when the first report lands.
+              when={monthYear(SUBMITTED)}
+              statuses={[
+                { done: false, label: stage === "referred" ? "Recommended by your clinician" : "Next step: your pharmacy visit for blood tests and health measurements" },
+                { done: false, label: ADVANCED_HINT },
+              ]}
+              linkLabel="Complete your questionnaire"
+              onLink={onOpenFhm}
+            />
+          )}
+
+          {stage === "advSubmitted" && (
+            <AssessmentCard
+              title="Corporate Advanced Health Screen"
+              when={monthYear(APPOINTMENT)}
+              // No timeline here: the 5 working days run from the pharmacy
+              // visit, not the questionnaire. PM, 25 Sep. The second line so
+              // it does not look empty. Deepali, 25 Sep.
+              statuses={[
+                { done: true, label: "Questionnaire submitted" },
+                { done: false, label: "A clinician will review your questionnaire responses along with your blood results." },
+              ]}
+            />
+          )}
+
+          {stage === "advCompleted" && (
+            <AssessmentCard
+              title="Corporate Advanced Health Screen"
+              when={monthYear(APPOINTMENT)}
+              statuses={[
+                { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}` },
+                { done: false, label: "Awaiting clinician review and your report, within 5 working days" },
+              ]}
+            />
+          )}
+
           {stage === "advanced" && (
             <AssessmentCard
               title="Corporate Advanced Health Screen"
               when={monthYear(APPOINTMENT)}
               statuses={[
-                { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}, ${APPOINTMENT_TIME.replace(" AM", "am")}` },
+                { done: true, label: `Appointment completed on ${dayMonth(APPOINTMENT)}` },
                 { done: true, label: "Reviewed by a clinician, your results and report are ready" },
               ]}
               linkLabel="View report in Uploads"
@@ -220,6 +290,35 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBack }:
             ))}
           </div>
         </div>
+
+        {/* Offered, not promoted: Anushka and Laura do not want the booking
+            journey pushed, so this is a quiet tile above Questions, only once
+            the advanced report is out. PM, 25 Sep. */}
+        {stage === "advanced" && (
+          <div className="bg-white rounded-[8px] w-[700px] p-[26px] flex flex-col gap-[14px]">
+            {/* Title and a Primary button on one row, as My health
+                assessments does above. Janelle, 25 Sep: "follow the pattern
+                at the top then the blue as primary button". */}
+            <div className="flex flex-wrap items-center justify-between gap-[16px]">
+              <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>Talk to a GP about your results</p>
+              <button
+                type="button"
+                onClick={onBookGp}
+                className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none shrink-0"
+                style={{ background: BLUE, fontFamily: WS }}
+              >
+                <span className="text-[13px] font-semibold text-white">Book a GP appointment</span>
+                <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
+              </button>
+            </div>
+            <div>
+              <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>Book a video GP appointment</p>
+              <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>
+                If you would like to discuss your report with a GP, you can book an appointment. When you book, choose Health Check Follow-Up, then Blood Test Review as your health concern.
+              </p>
+            </div>
+          </div>
+        )}
 
         <div
           className="flex items-start justify-between gap-[24px] bg-white rounded-[5px] w-[700px] px-[16px] py-[24px]"
