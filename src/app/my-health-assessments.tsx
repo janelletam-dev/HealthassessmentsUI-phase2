@@ -36,6 +36,7 @@ const FAQS_URL = "https://doctorcareanywhere.com/faqs";
 // The same inbox the Need help card carries. Hovering the link says where it
 // goes, because the label does not. Janelle, 14 Sep.
 const PX_EMAIL = "teamleaderescalations@doctorcareanywhere.com";
+const PX_PHONE = "02046 466 290";
 
 // The states the demo journey shows. The full set from the PM's requirements
 // of 25 Sep lives in Figma only. Janelle, 25 Sep: "they should not be there if
@@ -259,38 +260,26 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
           </div>
         )}
 
+        {/* The onboarding Need help copy, so the in-app page and sign-up say the
+            same thing. No contact-us or FAQs links: the number and inbox are in
+            the sentence, and the FAQs sit in the strip at the top. Deepali and
+            Janelle, 30 Sep. */}
         <div
-          className="flex items-start justify-between gap-[24px] bg-white rounded-[5px] w-[700px] px-[16px] py-[24px]"
+          className="flex gap-[8px] items-start bg-white rounded-[5px] w-[700px] px-[16px] py-[24px]"
           style={{ border: "1px solid #d2d2d2" }}
         >
-          <div className="flex gap-[8px] items-start flex-1">
-            <Info size={20} color="#030712" strokeWidth={2} className="shrink-0 mt-[3px]" />
-            <div className="flex flex-col gap-[8px]">
-              <p className="text-[16px] font-bold leading-[19px]" style={{ color: HEADING }}>Questions about your health assessment?</p>
-              <p className="text-[14px] leading-[19px]" style={{ color: "#414141" }}>
-                Our DCA Protect customer support team can help with anything about your assessment or your report.
-              </p>
-            </div>
-          </div>
-          {/* Fixed width, so the long contact label wraps onto two lines the
-              way 27160:33911 draws it. Left to size itself it took the whole
-              sentence on one line and squeezed the heading beside it into a
-              four-line column. */}
-          <div className="flex flex-col items-start gap-[14px] shrink-0 w-[240px] text-left">
-            <ContactLink
-              href={`mailto:${PX_EMAIL}`}
-              hint={`Opens your email app · ${PX_EMAIL}`}
-              className="flex items-center gap-[6px] text-[16px] font-bold leading-[19px] underline"
-              style={{ color: LINK }}
-            >
-              {/* Centred against the whole two-line label, 27194:31866. */}
-              <Headphones size={22} strokeWidth={2} className="shrink-0" /> Contact DCA Protect customer support team
-            </ContactLink>
-            {/* Its own question mark, 27194:31866, which is also what lines the
-                two links up: each is icon, gap, label. */}
-            <a href={FAQS_URL} target="_blank" rel="noreferrer" className="flex items-center gap-[6px] text-[16px] font-bold leading-[20px] underline" style={{ color: LINK }}>
-              <CircleHelp size={22} strokeWidth={2} className="shrink-0" /> Health assessment FAQs
-            </a>
+          <Info size={20} color="#030712" strokeWidth={2} className="shrink-0 mt-[3px]" />
+          <div className="flex flex-col gap-[8px] flex-1">
+            <p className="text-[16px] font-bold leading-[19px]" style={{ color: HEADING }}>Need help?</p>
+            <p className="text-[14px] leading-[19px]" style={{ color: "#414141" }}>
+              {"You can contact our dedicated "}
+              <span className="font-semibold">DCA Protect customer support team</span>
+              {" on "}
+              <ContactLink href={`tel:${PX_PHONE.replace(/\s/g, "")}`} hint="Calls the DCA Protect customer support team" className="font-semibold underline" style={{ color: BLUE }}>{PX_PHONE}</ContactLink>
+              {". Lines are open 09:00–17:30, Monday to Friday. Or "}
+              <ContactLink href={`mailto:${PX_EMAIL}`} hint={`Opens your email app · ${PX_EMAIL}`} className="font-semibold underline" style={{ color: BLUE }}>email us</ContactLink>
+              {" at any time."}
+            </p>
           </div>
         </div>
       </div>
