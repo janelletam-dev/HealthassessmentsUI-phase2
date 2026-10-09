@@ -335,3 +335,27 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "zoom", text: "The anonymised health picture of the workforce, never an individual" },
   { kind: "pause", ms: 2600 },
 ];
+
+// The sales cut at /demo: the run above without the two scenes set in the
+// clinician portal, the partner's own reviewer screens. Each is replaced by
+// the jump its Dispatch would have caused, so the story goes straight from
+// the pending account to the results email, and from the appointment email
+// to the advanced results email. The employer's dashboard stays as the end.
+// Janelle, 9 Oct 2026.
+const CLINICIAN_SCENES: Record<string, string> = {
+  "Clinician review": "resultsEmail",
+  "Clinician review, advanced": "advancedResultsEmail",
+};
+
+export const SALES_SCRIPT: DemoStep[] = (() => {
+  const out: DemoStep[] = [];
+  let skipping = false;
+  for (const step of DEMO_SCRIPT) {
+    if (step.kind === "scene") {
+      skipping = step.label in CLINICIAN_SCENES;
+      if (skipping) out.push({ kind: "jumpPhase", phase: CLINICIAN_SCENES[step.label] });
+    }
+    if (!skipping) out.push(step);
+  }
+  return out;
+})();

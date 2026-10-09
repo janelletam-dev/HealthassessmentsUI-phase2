@@ -82,7 +82,7 @@ const STAGES = {
     // Same opening as Anushka's amber note; Janelle, 14 Sep: "use it on the
     // green results page too".
     note: [
-      "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
+      "Thank you for completing your Health Insights Assessment, which looks at factors affecting your long-term cardiovascular and metabolic health.",
       "Based on your answers, your results are reassuring and no further assessment is needed at this time.",
     ],
     // NO FRAME. PM, 10 Sep: "add link here that has the sleep recommendations,
@@ -106,7 +106,7 @@ const STAGES = {
     // NO FRAME. Anushka's drafted note, PowerPoint comment 11 Sep; Janelle,
     // 14 Sep: "change to this 2nd paragraph".
     note: [
-      "Thank you for completing your DCA Protect Health Insights questionnaire, which looks at factors affecting your long-term cardiovascular and metabolic health.",
+      "Thank you for completing your Health Insights Assessment, which looks at factors affecting your long-term cardiovascular and metabolic health.",
       "Based on your answers, we'd like to take a closer look at some areas together - this is a normal next step for many people and doesn't mean there's a problem.",
       "Please use the link below to arrange your next stage of testing. This will include some further questionnaires as well as blood tests and physical measurements.",
     ],

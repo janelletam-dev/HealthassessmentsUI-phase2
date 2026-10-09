@@ -16,13 +16,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft, Pause, Play, Square } from "lucide-react";
-import { DEMO_SCRIPT } from "./demo-script.ts";
+import { DEMO_SCRIPT, SALES_SCRIPT } from "./demo-script.ts";
 
 /** Janelle, 4 Sep: "/demo-fastforward so all info are prefilled". The path is
     rewritten to the SPA by vercel.json; the query form works everywhere. */
+/** The sales cut, /demo (or ?demo=sales): the same run for prospective
+    clients, without the clinical partner's reviewer screens. Janelle, 9 Oct:
+    "no need for the FHM view that shows clinician side but ok to keep
+    corporate dashboard in the end". */
+export const IS_SALES =
+  window.location.pathname === "/demo" ||
+  new URLSearchParams(window.location.search).get("demo") === "sales";
 export const IS_DEMO =
+  IS_SALES ||
   window.location.pathname === "/demo-fastforward" ||
   new URLSearchParams(window.location.search).get("demo") === "fastforward";
+const SCRIPT = IS_SALES ? SALES_SCRIPT : DEMO_SCRIPT;
 
 const TYPE_MS = 16;
 
@@ -183,7 +192,7 @@ export function DemoDriver() {
 
     async function run() {
       let scenes = 0;
-      for (const [index, step] of DEMO_SCRIPT.entries()) {
+      for (const [index, step] of SCRIPT.entries()) {
         await gate();
         where.current = `step ${index} (${step.kind}${"label" in step ? ` ${step.label}` : "text" in step ? ` ${String(step.text).slice(0, 40)}` : "field" in step ? ` ${step.field}` : ""})`;
         switch (step.kind) {
@@ -431,7 +440,7 @@ export function DemoDriver() {
             ? `Demo stopped at ${failed}`
             : isStopped
               ? "Demo stopped. Refresh to restart"
-              : `Fast-forward demo ${sceneIndex ? `· ${sceneIndex}/${DEMO_SCRIPT.filter((s) => s.kind === "scene").length} ` : ""}· ${isPaused ? "Paused" : scene}`}
+              : `${IS_SALES ? "Demo" : "Fast-forward demo"} ${sceneIndex ? `· ${sceneIndex}/${SCRIPT.filter((s) => s.kind === "scene").length} ` : ""}· ${isPaused ? "Paused" : scene}`}
         </p>
         {!failed && !isStopped && scene !== "Demo complete" && (
           <>

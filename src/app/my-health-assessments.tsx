@@ -247,7 +247,7 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
                 className="flex items-center gap-[8px] rounded-full px-[20px] py-[10px] cursor-pointer border-none shrink-0"
                 style={{ background: BLUE, fontFamily: WS }}
               >
-                <span className="text-[13px] font-semibold text-white">Book a GP appointment</span>
+                <span className="text-[13px] font-semibold text-white">Book an appointment</span>
                 <ExternalLink size={14} color="#ffffff" strokeWidth={2} />
               </button>
             </div>

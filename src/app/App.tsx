@@ -54,10 +54,10 @@ import flagUk from "./assets/flag-uk.jpg";
 // carried 215MB of src/imports for eleven files; this repo takes the eleven.
 import svgPaths from "../assets/svg-paths";
 import imgLhs1 from "../assets/slide-1-couple.jpg";
-import imgLhs2 from "../assets/slide-2-group.jpg";
+import imgLhs2 from "../assets/slide-2-man-glasses.jpg";
 import imgLhs3 from "../assets/slide-3-woman.jpg";
-import imgLhs4 from "../assets/slide-4-father-daughter.jpg";
-import imgLhs5 from "../assets/slide-5-skipping.jpg";
+import imgLhs4 from "../assets/slide-4-man-outdoors.jpg";
+import imgLhs5 from "../assets/slide-5-video-call.jpg";
 import imgDoctorAvatar from "../assets/doctor-avatar.png";
 import imgUKFlag from "../assets/uk-flag.png";
 import imgCareLogo1 from "../assets/cqc-logo.png";
@@ -98,6 +98,7 @@ import {
 } from "lucide-react";
 
 import { Logo } from "./dca-logo.tsx";
+import { IS_DEMO, IS_SALES } from "./demo-driver.tsx";
 
 // ─── Brand system ─────────────────────────────────────────────────────────────
 
@@ -259,39 +260,41 @@ function Header({ brand, onExit }: {
 
 // ─── LHS carousel ────────────────────────────────────────────────────────────
 
-// Copy and photography both from the Health assessments file, section
-// 5066:125326 "Sign up or in - Web", the five Landing page frames at x=100.
+// Copy and photography both from the Health assessments file. Marketing's
+// update of 9 Oct 2026 lives in section 27288:33556 "B2B2C – Web", the five
+// Landing page frames at x=100: new copy on every slide, new photos on slides
+// 2, 4 and 5 (Janelle's exports). Slides 1 and 3 keep their photos.
 // Slide order is the file's, not the order the images were sent in chat: the
 // file opens on the couple, the chat message opened on the group. A carousel is
 // a loop so only the first slide actually differs, and the file wins.
 const CAROUSEL_SLIDES = [
   {
-    // 5066:125327
+    // 27288:33557
     heading: "See the full picture of your health",
-    sub: "Clinician-reviewed results. Not just raw data.",
+    sub: "Every result is reviewed by a clinician before it reaches you.",
     img: imgLhs1,
   },
   {
-    // 5066:125410
-    heading: "Find the right assessment for you",
-    sub: "From heart health and hormones to overall wellbeing. Each assessment is clinically designed.",
+    // 27288:34034
+    heading: "Catch risk factors early before symptoms appear",
+    sub: "Personalised insights into your health, with support to help you live a healthier, happier life.",
     img: imgLhs2,
   },
   {
-    // 5066:125466
-    heading: "Get answers you can actually use",
+    // 27288:34094
+    heading: "Results explained, not just reported",
     sub: "Every result is reviewed by a UK-licensed clinician, with clear next steps and optional GP follow-up.",
     img: imgLhs3,
   },
   {
-    // 5066:125501
-    heading: "Book around your life, not the other way round",
-    sub: "150+ UK locations. Appointments within three days, evenings and weekends included.",
+    // 27288:34132
+    heading: "Fast access, wherever you are",
+    sub: "150+ locations across the UK, with evening and weekend appointments available.",
     img: imgLhs4,
   },
   {
-    // 5066:125536
-    heading: "Know where you stand, and what to do next",
+    // 27288:34170
+    heading: "Clinically led, every stop of the way",
     sub: "If anything needs attention, we'll contact you directly.",
     img: imgLhs5,
   },
@@ -307,9 +310,10 @@ const LANDING_STEPS = [
   // 5066:125350. "Lifestyle questionnaire" is now "Health Insights Assessment"
   // everywhere DCA speaks: PM meeting, 10 Sep. The frame still carries the old
   // words; Irina updates the file after the prototype.
-  { Icon: UserCheck, text: "Complete a short Health Insights Assessment to help us assess your current health." },
+  // 27288:33557, marketing's wording of 9 Oct, casing as the frame has it.
+  { Icon: UserCheck, text: "Fill in a short Health insights assessment to help us assess your current health status." },
   // 5446:12374
-  { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
+  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
   // 5446:12622
   // "Corporate Advanced Health Screen", one word order everywhere. Deepali's
   // 14 Sep ruling was the generic lowercase "health screen", a holding
@@ -1723,7 +1727,7 @@ function Step0({ onValidate, onCodeRecognised, theme, initialCaptchaStatus, init
             New here? Begin your journey
           </p>
           <p className="[word-break:break-word] font-normal leading-[24px] text-[16px] w-full" style={{ color: "#030712" }}>
-            Starting your DCA Protect journey is simple:
+            Let’s get you set up and ready to book your first health insight assessment.
           </p>
         </div>
 
@@ -2902,7 +2906,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
           Create your account
         </p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-          Let&rsquo;s get you set up and ready to book your first health insights assessment.
+          Let&rsquo;s get you set up and ready to book your first Health Insights Assessment.
         </p>
       </div>
 
@@ -3809,7 +3813,8 @@ function LandingTaskCard({ badge, borderColor, icon, title, description, cta, on
 const COMPLETE_STEPS = [
   // I5066:125767 next steps, Frame 1. Renamed per PM, 10 Sep; "Fill in" and
   // "current health status" are the deck's words, 15 Sep.
-  { Icon: ListTodo, text: "Fill in a short Health insights assessment to help us assess your current health status." },
+  // 27288:34208, marketing and Irina, 9 Oct: title case, no "short".
+  { Icon: ListTodo, text: "Fill in a Health Insights Assessment to help us assess your current health." },
   // Frame 5. The timeline has moved three times: "within 2 days" was the
   // 10 Sep placeholder, Anushka's content review set 5 working days on
   // 11 Sep, and it is "within 2 days" again from 16 Sep. That last move is
@@ -3968,7 +3973,7 @@ function ProfileStep_EmergencyContact({ onFinish, onBack, theme, initialState }:
           Emergency contact (optional)
         </p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
-          We&rsquo;ll reach out to them only in a medical emergency, or if we can&rsquo;t reach you and we have reasonable concerns about your health and wellbeing.
+          We&rsquo;ll reach out to them only in a medical emergency, or if we can&rsquo;t reach you and we have concerns about your health and wellbeing.
         </p>
       </div>
 
@@ -4014,7 +4019,7 @@ function ProfileStep_EmergencyContact({ onFinish, onBack, theme, initialState }:
         error={!!errors.choice}
       >
         <p className="text-[12px] leading-[16px]" style={{ color: "#4b5563" }}>
-          We recommend having emergency contact details saved to your profile in case of a medical emergency, or if we can&rsquo;t reach you and we have reasonable concerns about your health and wellbeing.
+          We recommend having emergency contact details saved to your profile in case of a medical emergency, or if we can&rsquo;t reach you and we have concerns about your health and wellbeing.
         </p>
       </DsRadioCard>
 
@@ -4509,10 +4514,14 @@ function ProfileNeedHelpCard() {
       <div className="flex flex-col gap-[4px] px-[24px] py-[24px]">
         <p className="text-[20px] font-semibold leading-[28px]" style={{ color: "#133595" }}>Need help?</p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#4B5563" }}>
-          {"If you need any support, our team is here to help. Please contact our dedicated DCA Protect customer support team on "}
+          {/* Marketing's wording, 9 Oct 2026 (27288:33595): the team in bold
+              and the address behind "email us" again, as the file now draws it. */}
+          {"You can contact our dedicated "}
+          <span className="font-semibold">DCA Protect customer support team</span>
+          {" on "}
           <ContactLink href={`tel:${HA_PX_PHONE.replace(/\s/g, "")}`} hint="Calls the DCA Protect customer support team" className="font-semibold underline" style={{ color: "#135CFF" }}>{HA_PX_PHONE}</ContactLink>
-          {". Lines are open 09:00 – 17:30, Monday to Friday, or email "}
-          <ContactLink href={`mailto:${HA_PX_EMAIL}`} hint={`Opens your email app · ${HA_PX_EMAIL}`} className="font-semibold underline break-all" style={{ color: "#135CFF" }}>{HA_PX_EMAIL}</ContactLink>
+          {". Lines are open 09:00–17:30, Monday to Friday. Or "}
+          <ContactLink href={`mailto:${HA_PX_EMAIL}`} hint={`Opens your email app · ${HA_PX_EMAIL}`} className="font-semibold underline" style={{ color: "#135CFF" }}>email us</ContactLink>
           {" at any time."}
         </p>
       </div>
@@ -4701,10 +4710,7 @@ export default function App() {
   // control crosses personas from the patient's portal to the clinician's, so
   // in demo mode the driver may ask for a phase by event. Inert otherwise.
   useEffect(() => {
-    const isDemo =
-      window.location.pathname === "/demo-fastforward" ||
-      new URLSearchParams(window.location.search).get("demo") === "fastforward";
-    if (!isDemo) return;
+    if (!IS_DEMO) return;
     const jump = (e: Event) => setPhase((e as CustomEvent<typeof phase>).detail);
     window.addEventListener("demo:phase", jump);
     return () => window.removeEventListener("demo:phase", jump);
@@ -4914,7 +4920,8 @@ export default function App() {
     // The newer-message chevron stands for time passing: the appointment
     // happens, the labs come back, and the advanced report goes through the
     // same review before its email exists. PM via Janelle, 4 Sep.
-    return <AppointmentEmail onNext={() => { setReviewStage("advanced"); setPhase("clinician"); }} />;
+    // The sales cut skips the clinician portal, here and on the arrow below.
+    return <AppointmentEmail onNext={() => { if (IS_SALES) { setPhase("advancedResultsEmail"); return; } setReviewStage("advanced"); setPhase("clinician"); }} />;
   }
 
   if (phase === "advancedResultsEmail") {
@@ -4989,7 +4996,9 @@ export default function App() {
         {/* While the report is pending there is nothing here to press, so the
             arrow carries the story on to the clinician, as it does from Home. */}
         {portalReturn === "portalPending" && (
-          <GuideArrow onNext={() => { setReviewStage("prescreen"); setPhase("clinician"); }} nextLabel="Next: the clinician review" />
+          IS_SALES
+            ? <GuideArrow onNext={() => setPhase("resultsEmail")} nextLabel="Next: the results email" />
+            : <GuideArrow onNext={() => { setReviewStage("prescreen"); setPhase("clinician"); }} nextLabel="Next: the clinician review" />
         )}
       </>
     );

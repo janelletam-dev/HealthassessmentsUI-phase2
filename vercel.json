@@ -1,3 +1,12 @@
 {
-  "rewrites": [{ "source": "/demo-fastforward", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/demo-fastforward",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/demo",
+      "destination": "/index.html"
+    }
+  ]
 }
