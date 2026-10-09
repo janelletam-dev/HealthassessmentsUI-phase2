@@ -22,9 +22,9 @@ assert.ok(!isValidUkMobile("070000000000"), "twelve digits is too long");
 assert.equal(ukMobileProblem(""), "Please provide your mobile number.");
 assert.equal(ukMobileProblem("   "), "Please provide your mobile number.");
 
-// Each fault names itself rather than saying "not a valid number"
-assert.match(ukMobileProblem("07aaa") ?? "", /digits, spaces and a leading plus/);
-assert.match(ukMobileProblem("07123 45/6 789") ?? "", /digits, spaces and a leading plus/);
+// Bad characters take Figma's wording; every other fault names itself
+assert.match(ukMobileProblem("07aaa") ?? "", /is not a valid number/);
+assert.match(ukMobileProblem("07123 45/6 789") ?? "", /is not a valid number/);
 assert.match(ukMobileProblem("0207 946 0958") ?? "", /looks like a landline/);
 assert.match(ukMobileProblem("0300 123 4567") ?? "", /looks like a landline/);
 assert.match(ukMobileProblem("+1 555 0100") ?? "", /only text UK mobile numbers/);
@@ -50,7 +50,7 @@ assert.equal(
 
 // Each demo state raises exactly what it is named for
 assert.equal(DEMO_CONTACT_INFO.missingMobile.errors.mobile, "Please provide your mobile number.");
-assert.match(DEMO_CONTACT_INFO.lettersInMobile.errors.mobile ?? "", /digits, spaces/);
+assert.match(DEMO_CONTACT_INFO.lettersInMobile.errors.mobile ?? "", /is not a valid number/);
 assert.match(DEMO_CONTACT_INFO.landlineTyped.errors.mobile ?? "", /landline/);
 assert.match(DEMO_CONTACT_INFO.mobileTooShort.errors.mobile ?? "", /3 digits short/);
 assert.match(DEMO_CONTACT_INFO.mobileTooLong.errors.mobile ?? "", /1 digit too many/);

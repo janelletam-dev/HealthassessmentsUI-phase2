@@ -392,7 +392,7 @@ export function SsoReclaimLadder({
 
         <div className="h-px" style={{ background: "#f2f2f2" }} />
 
-        <TextLink onClick={onContact}>Contact DCA Protect customer support team</TextLink>
+        <TextLink onClick={onContact}>Contact the DCA Protect customer support team</TextLink>
       </div>
       <SsoHelpBar />
     </div>

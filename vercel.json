@@ -7,6 +7,10 @@
     {
       "source": "/demo",
       "destination": "/index.html"
+    },
+    {
+      "source": "/demo/fast-forward",
+      "destination": "/index.html"
     }
   ]
 }

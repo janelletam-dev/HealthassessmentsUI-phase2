@@ -155,7 +155,7 @@ export function CountrySelect({
           <input
             className="flex-1 min-w-0 text-[14px] leading-[20px] outline-none bg-transparent"
             style={{ fontFamily: "'Work Sans', sans-serif", color: value ? "#030712" : "#4b5563" }}
-            placeholder="Select country…"
+            placeholder="Select a country"
             value={query ?? value}
             onFocus={() => setOpen(true)}
             onClick={() => setOpen(true)}

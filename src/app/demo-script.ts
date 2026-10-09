@@ -55,7 +55,7 @@ export const DEMO_SCRIPT: DemoStep[] = [
   { kind: "zoom", text: "One form: name, date of birth, email, password", ms: 3200 },
   { kind: "type", field: "e.g., Jane", text: "Jane" },
   { kind: "type", field: "e.g., Smith", text: "Smith" },
-  { kind: "type", field: "jane.doe@mail.com", text: "jane.smith@mail.com" },
+  // The email arrives filled and locked from the invite, so nothing to type.
   { kind: "type", field: "Choose a strong password", text: "Demo123!" },
   { kind: "type", field: "DD/MM/YYYY", text: "01/01/1981" },
   { kind: "click", label: "I agree to the Terms" },
@@ -104,12 +104,12 @@ export const DEMO_SCRIPT: DemoStep[] = [
 
   // ── 6. The Health Insights Assessment ─────────────────────────────────────
   { kind: "scene", label: "Profile complete" },
-  { kind: "waitFor", text: "Profile complete" },
+  { kind: "waitFor", text: "You’re all set to start" },
   { kind: "pause", ms: 600 },
   { kind: "zoom", text: "Profile done. A clinician reviews every answer" },
   // Janelle, 22 Sep: five more seconds here, to explain what the assessment is.
   { kind: "pause", ms: 5000 },
-  { kind: "click", label: "Continue to questionnaire" },
+  { kind: "click", label: "Start your Health Insights Assessment" },
   { kind: "scene", label: "Health Insights Assessment" },
   { kind: "waitFor", text: "DEMOGRAPHICS", timeoutMs: 8000 },
   { kind: "pause", ms: 500 },

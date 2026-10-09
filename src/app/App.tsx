@@ -751,7 +751,7 @@ function GetSupportModal({ onClose, linkColor }: { onClose: () => void; linkColo
               className="text-[14px] font-semibold leading-[20px]"
               style={{ color }}
             >
-              Contact DCA Protect customer support team
+              Contact the DCA Protect customer support team
             </a>
           </div>
         </div>
@@ -824,7 +824,7 @@ function ReminderModal({ onClose, linkColor }: { onClose: () => void; linkColor?
               <p className="text-[13px] leading-[20px]" style={{ color: "#6b7280" }}>Need support?</p>
               <a href="https://doctorcareanywhere.com/contact" target="_blank" rel="noopener noreferrer"
                 className="text-[14px] font-semibold leading-[20px]" style={{ color }}>
-                Contact DCA Protect customer support team
+                Contact the DCA Protect customer support team
               </a>
             </div>
           </div>
@@ -876,7 +876,7 @@ function ReminderModal({ onClose, linkColor }: { onClose: () => void; linkColor?
                 <p className="text-[13px] leading-[20px]" style={{ color: "#6b7280" }}>Need support?</p>
                 <a href="https://doctorcareanywhere.com/contact" target="_blank" rel="noopener noreferrer"
                   className="text-[14px] font-semibold leading-[20px]" style={{ color }}>
-                  Contact DCA Protect customer support team
+                  Contact the DCA Protect customer support team
                 </a>
               </div>
               <button
@@ -1859,7 +1859,9 @@ function DsField({
   readOnly?: boolean;
 }) {
   const ws = "'Work Sans', sans-serif";
-  const borderColor = error ? "#991b1b" : "#b9daff";
+  // Locked (readOnly): the field carries a value the person cannot change,
+  // drawn paler throughout, as the Create account email is in 27288:33595.
+  const borderColor = error ? "#991b1b" : readOnly ? "#d7e9ff" : "#b9daff";
   return (
     <div className="flex flex-col isolate items-start relative w-full">
       {/* Label sits on the border, so it needs the white gradient behind it */}
@@ -1869,7 +1871,7 @@ function DsField({
       >
         {/* The label does NOT go red. 1946:150456 keeps it #0f37be and turns only
             the asterisk and the border. */}
-        <span className="text-[12px] font-semibold leading-[16px]" style={{ color: "#0f37be", fontFamily: ws }}>
+        <span className="text-[12px] font-semibold leading-[16px]" style={{ color: readOnly ? "#7d93d6" : "#0f37be", fontFamily: ws }}>
           {label}
         </span>
         {required && (
@@ -1880,17 +1882,18 @@ function DsField({
       <div className="flex flex-col gap-[8px] items-start w-full z-[1]">
         <div
           className="flex gap-[8px] items-center w-full rounded-[8px] px-[16px]"
-          style={{ height: 44, background: "#ffffff", border: `1px solid ${borderColor}`, boxShadow: "0px 1px 2px rgba(15,55,190,0.05)" }}
+          style={{ height: 44, background: readOnly ? "#f9fbff" : "#ffffff", border: `1px solid ${borderColor}`, boxShadow: "0px 1px 2px rgba(15,55,190,0.05)" }}
         >
           {leading}
           <input
             type={type}
             value={value}
             readOnly={readOnly}
+            aria-readonly={readOnly || undefined}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="flex-1 min-w-0 bg-transparent outline-none text-[12px] leading-[16px]"
-            style={{ color: value ? "#030712" : "#4b5563", fontFamily: ws }}
+            style={{ color: readOnly ? "#6b7280" : value ? "#030712" : "#4b5563", fontFamily: ws }}
           />
           {trailing}
         </div>
@@ -2777,7 +2780,9 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
   const [form, setForm] = useState({
     firstName: demo?.input.firstName ?? "",
     lastName: demo?.input.lastName ?? "",
-    email: demo?.input.email ?? "",
+    // The invite carries the address, so it arrives filled and locked
+    // (27288:33595, 9 Oct); changing it goes through support, as the helper says.
+    email: demo?.input.email ?? "jane.smith@mail.com",
     password: demo?.input.password ?? "",
   });
   const [dob, setDob] = useState(demo?.input.dob ?? "");
@@ -2896,7 +2901,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
           body={
             theme?.requiresPayment
               ? "Welcome to Doctor Care Anywhere! You\u2019ve created your account. Taking you to payment..."
-              : "Welcome to Doctor Care Anywhere! You\u2019ve created your account. Taking you to the next step..."
+              : "Welcome to Doctor Care Anywhere! You\u2019ve created your account. Next, take your health insights assessment..."
           }
         />
       )}
@@ -2929,7 +2934,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
         />
       )}
       <DsField
-        label="Email" required type="email"
+        label="Email" required type="email" readOnly={!demo}
         value={form.email} onChange={(v) => set("email", v)}
         placeholder="jane.doe@mail.com"
         helper={
@@ -2942,7 +2947,7 @@ function Step1({ onNext, theme, code = "ABC-12345", initialError, confirmedDob, 
               className="font-semibold underline"
               style={{ color: "#135CFF" }}
             >
-              contact our DCA Protect customer support team
+              contact the DCA Protect customer support team
             </a>
             .
           </>
@@ -3823,7 +3828,7 @@ const COMPLETE_STEPS = [
   // Every Health Insights timeline says the same thing. The Corporate Advanced
   // Health Screen keeps 5 days and is stated once, on the booking screens.
   // Deepali, 17 Sep: two days "is only for Insights report".
-  { Icon: CheckCheck, text: "Our clinicians review your answers. Within 2 days you receive your report, with your results and recommended next steps." },
+  { Icon: CheckCheck, text: "Receive your results and recommended next steps." },
   // Frame 4
   // "Corporate Advanced Health Screen", as on the landing page above.
   { Icon: MapPin, text: "If advised to book a Corporate Advanced Health Screen, you can easily schedule your appointment at a nearby location." },
@@ -3841,23 +3846,31 @@ function ProfileComplete({ theme, onContinue }: {
   const ws = "'Work Sans', sans-serif";
   return (
     <div className="flex flex-col gap-[24px] items-center w-full max-w-[672px] px-[20px] pt-[24px] pb-[32px] sm:px-0 sm:pt-0 sm:pb-0" style={{ fontFamily: ws }}>
-      {/* 48x48 ring, 24px check, both #133595 */}
-      <div className="flex items-center justify-center shrink-0 w-[48px] h-[48px] rounded-[9999px]" style={{ border: "1px solid #133595" }}>
-        <Check size={24} color="#133595" strokeWidth={2} />
-      </div>
+      {/* No tick ring: 27288:34208 opens on the journey stepper instead. */}
 
       <div className="flex flex-col gap-[4px] items-center w-full text-center">
         {/* "Profile complete", as the frame has it. The 15 Sep content deck
             renders this page under "Start your DCA Protect journey", which I
             took for the heading; Janelle, 15 Sep: the Figma file is the one to
             follow here. */}
+        {/* 27288:34208 now heads the page "Take assessment" (9 Oct 2026). */}
         <p className="text-[24px] font-semibold leading-[32px]" style={{ color: "#133595" }}>
-          Profile complete
+          Take assessment
         </p>
         <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
           You&rsquo;re all set to start your Health Insights Assessment.
         </p>
       </div>
+
+      {/* The finished task above the next one, as 27288:34208 draws it again
+          (9 Oct 2026). Janelle: "as long as it matches Figma". */}
+      <LandingTaskCard
+        badge="done"
+        borderColor="#d7e9ff"
+        icon={<CircleUser size={24} color="#133595" strokeWidth={1.67} />}
+        title="Set up your profile"
+        description="You’ll provide key contact and personal information, such as your mobile number, home address and an emergency contact."
+      />
 
       {/* The card is the only one on this screen with the primary border and
           the Next up badge, which is what marks it as the thing to do. */}
@@ -3892,16 +3905,6 @@ function ProfileComplete({ theme, onContinue }: {
               </div>
             </div>
 
-            {/* NO FRAME. Deleted in 334e776 as a placeholder the bullets
-                repeated; Janelle, 22 Sep: "do not remove it .. return it on
-                the prototype". Restored with the copy the rest of the app now
-                carries, not the 15 Sep wording: the Insights report is "within
-                2 days" (ELT, 16 Sep) and the product is the Corporate Advanced
-                Health Screen, so the old "5 working days" and "a health
-                screen" would contradict every other screen. */}
-            <p className="text-[16px] leading-[24px]" style={{ color: "#030712" }}>
-              The assessment takes a few minutes. Our clinicians review your answers and send your report within 2 days. For most people, that is the end. If clinically appropriate, you will be invited to a Corporate Advanced Health Screen, funded by your employer: blood tests and physical measurements at a pharmacy, with a clinician-reviewed report.
-            </p>
           </div>
 
           <div className="px-[24px]">
@@ -3911,7 +3914,10 @@ function ProfileComplete({ theme, onContinue }: {
               className="w-full flex items-center justify-center gap-[8px] rounded-[9999px] px-[16px] py-[12px] text-[14px] font-semibold leading-[20px] cursor-pointer"
               style={{ background: "#135CFF", color: "#EDF6FF", border: "none", boxShadow: "0px 10px 15px -3px rgba(15,55,190,0.05), 0px 4px 6px -4px rgba(15,55,190,0.05)" }}
             >
-              Continue to questionnaire
+              {/* 27288:34208, marketing's frame of 9 Oct; the paragraph that sat
+                  above this was removed the same day (Janelle: "this should
+                  have been removed"). */}
+              Start your Health Insights Assessment
             </button>
           </div>
         </div>
@@ -3970,7 +3976,7 @@ function ProfileStep_EmergencyContact({ onFinish, onBack, theme, initialState }:
 
       <div className="flex flex-col gap-[4px]">
         <p className="text-[18px] font-semibold leading-[28px]" style={{ color: theme?.lhsHeadingColor ?? "#133595" }}>
-          Emergency contact (optional)
+          Emergency contact
         </p>
         <p className="text-[14px] leading-[20px]" style={{ color: "#030712" }}>
           We&rsquo;ll reach out to them only in a medical emergency, or if we can&rsquo;t reach you and we have concerns about your health and wellbeing.
@@ -4057,7 +4063,8 @@ function ProfileStep_PersonalDetails({ onNext, onBack, theme, initialState }: {
   const demo = initialState ? DEMO_PERSONAL_DETAILS[initialState] : undefined;
 
   const [sex, setSex] = useState(demo?.input.sex ?? "");
-  const [country, setCountry] = useState(demo?.input.country ?? "United Kingdom");
+  // Empty until chosen: 27288:33867 shows "Select a country" (9 Oct).
+  const [country, setCountry] = useState(demo?.input.country ?? "");
   const [postcode, setPostcode] = useState(demo?.input.postcode ?? "");
   const [selectedAddress, setSelectedAddress] = useState(demo?.input.selectedAddress ?? "");
   const [lookupRun, setLookupRun] = useState(demo?.input.lookupRun ?? false);
@@ -4418,7 +4425,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
           <div className="flex flex-wrap gap-[4px] items-center justify-center w-full">
             <span className="text-[12px] leading-[16px]" style={{ color: "#4b5563" }}>Trouble verifying?</span>
             <button type="button" className="text-[12px] font-semibold leading-[16px]" style={{ color: "#135cff" }}>
-              Contact DCA Protect customer support team
+              Contact the DCA Protect customer support team
             </button>
           </div>
         </div>
@@ -4468,7 +4475,7 @@ function ProfileStep_ContactInfo({ onNext, theme, initialState, initialStage }: 
         <div className="flex flex-wrap gap-[4px] items-center justify-center w-full">
           <span className="text-[12px] leading-[16px]" style={{ color: "#4b5563" }}>Don&rsquo;t have a mobile number?</span>
           <button type="button" className="text-[12px] font-semibold leading-[16px]" style={{ color: "#135cff" }}>
-            Contact DCA Protect customer support team
+            Contact the DCA Protect customer support team
           </button>
         </div>
       </div>
@@ -4499,6 +4506,48 @@ const HA_PX_PHONE = "02046 466 290";
 // "so they can copy or it shows it?". Lowercase: addresses are not case
 // sensitive and it reads as one word less.
 const HA_PX_EMAIL = "teamleaderescalations@doctorcareanywhere.com";
+
+// ─── Journey stepper (above the card) ────────────────────────────────────────
+
+// Back on 9 Oct 2026: every marketing frame from Create account to Take
+// assessment (27288:33595 to 27288:34208) carries this three-part strip above
+// the card. It was removed on 2 Sep when the file had none. The look is the
+// one activationUI drew (2193:137724): a done section is primary with a
+// ticked circle, the current one secondary with an open circle, the rest
+// muted.
+const JOURNEY_STEPS = ["Create your account", "Set up your profile", "Take assessment"];
+
+function JourneyStepper({ current, theme }: { current: number; theme?: BrandTheme }) {
+  const ws = "'Work Sans', sans-serif";
+  const doneTone = theme?.primaryColor ?? "#135cff";
+  const currentTone = theme?.stepperActiveColor ?? "#a2c4ff";
+  return (
+    <div className="max-w-[448px] w-full px-[24px] sm:px-0" aria-label={`Step ${current + 1} of 3: ${JOURNEY_STEPS[current]}`}>
+      <div className="flex gap-[4px] items-start w-full">
+        {JOURNEY_STEPS.map((label, i) => {
+          const done = i < current;
+          const isCurrent = i === current;
+          const upcoming = !done && !isCurrent;
+          const tone = done ? doneTone : isCurrent ? currentTone : "#4b5563";
+          return (
+            <div key={label} className="flex-1 min-w-px relative flex flex-col items-center gap-[4px]" style={{ opacity: upcoming ? 0.5 : 1 }}>
+              <div className="h-[6px] rounded-[9999px] w-full relative flex items-center justify-center" style={{ background: tone, opacity: upcoming ? 0.5 : 1 }}>
+                <div className="absolute bg-white rounded-full flex items-center p-[1px]">
+                  {done
+                    ? <CircleCheckBig size={16} color={tone} strokeWidth={1.67} />
+                    : <Circle size={16} color={tone} strokeWidth={1.67} />}
+                </div>
+              </div>
+              <p className="text-[11px] font-semibold leading-[14px] text-center w-full min-h-[16px]" style={{ color: done ? doneTone : isCurrent ? "#030712" : "#4b5563", fontFamily: ws }}>
+                {label}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function ProfileNeedHelpCard() {
   const ws = "'Work Sans', sans-serif";
@@ -5147,13 +5196,11 @@ export default function App() {
           {/* Max width wrapper */}
           <div className="content-stretch flex flex-col isolate items-center gap-[24px] max-w-[1024px] relative shrink-0 w-full">
 
-            {/* NO STEPPER ABOVE THE CARD. activationUI drew a three-segment
-                "Activate your invite / Create your account / Set up your
-                account" strip here. Health assessments has no invite step and
-                no such strip: of the 48 frames in 5066:125326, the only
-                progress element is Progress bar/Linear ("Step 1 of 4") and it
-                appears on the four onboarding columns only, never on the
-                landing or create account. Janelle, 2 Sep: remove it. */}
+            {/* The journey stepper, from Create account onwards (not on the
+                landing): 27288:33595 onwards, 9 Oct 2026. */}
+            {!isLanding && (
+              <JourneyStepper current={phase === "landing" ? 2 : phase === "profile" ? 1 : 0} theme={brandTheme} />
+            )}
 
             {phase === "landing" ? (
               <ProfileComplete

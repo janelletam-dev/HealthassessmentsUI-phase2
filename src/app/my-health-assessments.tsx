@@ -217,21 +217,8 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
 
         </div>
 
-        {/* The blurb the PM asked for: what the programme is, in the words of
-            the landing page's own steps. */}
-        <div className="bg-white rounded-[8px] w-[700px] p-[26px]">
-          <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>How your health assessment works</p>
-          <div className="flex flex-col gap-[12px] mt-[14px]">
-            {HOW_IT_WORKS.map(({ title, body }) => (
-              <div key={title}>
-                <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
-                <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Offered, not promoted: Anushka and Laura do not want the booking
+        {/* Directly under the assessments, before How it works, as state 07
+            draws it (27299:52129, 9 Oct). Offered, not promoted: Anushka and Laura do not want the booking
             journey pushed, so this is a quiet tile above Questions, only once
             the advanced report is out. PM, 25 Sep. */}
         {stage === "advanced" && (
@@ -259,6 +246,21 @@ export function MyHealthAssessments({ stage, onOpenUploads, onOpenFhm, onBookGp,
             </div>
           </div>
         )}
+
+        {/* The blurb the PM asked for: what the programme is, in the words of
+            the landing page's own steps. */}
+        <div className="bg-white rounded-[8px] w-[700px] p-[26px]">
+          <p className="text-[16px] font-bold leading-[24px]" style={{ color: "#111827" }}>How your health assessment works</p>
+          <div className="flex flex-col gap-[12px] mt-[14px]">
+            {HOW_IT_WORKS.map(({ title, body }) => (
+              <div key={title}>
+                <p className="text-[14px] font-semibold leading-[20px]" style={{ color: INK }}>{title}</p>
+                <p className="text-[13px] leading-[18px]" style={{ color: MUTED }}>{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
 
         {/* The onboarding Need help copy, so the in-app page and sign-up say the
             same thing. No contact-us or FAQs links: the number and inbox are in

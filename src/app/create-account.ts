@@ -249,7 +249,7 @@ export function validateCreateAccount(
   else if (!isStrongPassword(input.password))
     e.password = "Password doesn't meet requirements.";
 
-  if (!input.termsChecked) e.terms = "Please accept the Terms and Conditions and Privacy Policy to continue.";
+  if (!input.termsChecked) e.terms = "Please accept the above terms.";
   return e;
 }
 

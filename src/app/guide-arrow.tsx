@@ -122,6 +122,16 @@ async function completeScreen() {
     (i) => visible(i) && !i.value && ["text", "email", "tel", "number", "password"].includes(i.type),
   )) {
     const ph = input.getAttribute("placeholder") ?? "";
+    if (ph.startsWith("Select a country")) {
+      // The address country starts empty, as 27288:33867 draws it: search
+      // the drawn picker for the UK and take the first row.
+      input.click();
+      setNativeValue(input, "United Kingdom");
+      await sleep(300);
+      document.querySelector<HTMLElement>('[data-row="0"]')?.click();
+      await sleep(200);
+      continue;
+    }
     const aria = input.getAttribute("aria-label") ?? "";
     const value =
       input.type === "number" ? numbers[numberSeq++ % numbers.length]

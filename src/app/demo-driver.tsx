@@ -20,17 +20,18 @@ import { DEMO_SCRIPT, SALES_SCRIPT } from "./demo-script.ts";
 
 /** Janelle, 4 Sep: "/demo-fastforward so all info are prefilled". The path is
     rewritten to the SPA by vercel.json; the query form works everywhere. */
-/** The sales cut, /demo (or ?demo=sales): the same run for prospective
-    clients, without the clinical partner's reviewer screens. Janelle, 9 Oct:
-    "no need for the FHM view that shows clinician side but ok to keep
-    corporate dashboard in the end". */
-export const IS_SALES =
-  window.location.pathname === "/demo" ||
-  new URLSearchParams(window.location.search).get("demo") === "sales";
+/** The sales cut, for prospective clients: the journey without the clinical
+    partner's reviewer screens, ending on the employer dashboard. Two ways in:
+    /demo is self-serve (the presenter clicks through with the arrows) and
+    /demo/fast-forward drives itself. Janelle, 9 Oct: "there should be the
+    self serve demo and then the fast-forward /demo (no fhm clinical)". */
+const PATH = window.location.pathname.replace(/\/+$/, "");
+const QUERY = new URLSearchParams(window.location.search).get("demo");
+export const IS_SALES = PATH === "/demo" || PATH === "/demo/fast-forward" || QUERY === "sales" || QUERY === "sales-fastforward";
+/** Whether the self-driving player runs. */
 export const IS_DEMO =
-  IS_SALES ||
-  window.location.pathname === "/demo-fastforward" ||
-  new URLSearchParams(window.location.search).get("demo") === "fastforward";
+  PATH === "/demo/fast-forward" || QUERY === "sales-fastforward" ||
+  PATH === "/demo-fastforward" || QUERY === "fastforward";
 const SCRIPT = IS_SALES ? SALES_SCRIPT : DEMO_SCRIPT;
 
 const TYPE_MS = 16;
@@ -335,6 +336,16 @@ export function DemoDriver() {
             );
             for (const input of inputs) {
               const ph = input.getAttribute("placeholder") ?? "";
+              if (ph.startsWith("Select a country")) {
+                // The address country starts empty, as 27288:33867 draws it: search
+                // the drawn picker for the UK and take the first row.
+                input.click();
+                setNativeValue(input, "United Kingdom");
+                await sleep(300);
+                document.querySelector<HTMLElement>('[data-row="0"]')?.click();
+                await sleep(200);
+                continue;
+              }
               // Height, weight and waist are the only bare number fields; the
               // exact figures do not matter to the demo, plausibility does.
               if (input.type === "number") {

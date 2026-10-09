@@ -51,7 +51,8 @@ export function ukMobileProblem(raw: string): string | null {
   if (!cleaned) return "Please provide your mobile number.";
 
   if (/[^0-9+]/.test(cleaned) || cleaned.lastIndexOf("+") > 0) {
-    return "Mobile numbers can only contain digits, spaces and a leading plus.";
+    // Figma 27288:33775 (9 Oct): "07aaa" gets the file's own wording.
+    return "Mobile number is not a valid number.";
   }
 
   const national = toNational(cleaned);
