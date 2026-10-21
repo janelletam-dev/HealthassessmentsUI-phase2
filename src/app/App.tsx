@@ -4946,7 +4946,9 @@ export default function App() {
   // questionnaire drops the patient on the landing, which is where the real
   // link goes.
   if (phase === "email") {
-    return <InvitationEmail onStart={() => { setPhase("activate"); setStep(0); }} />;
+    // The sales cut has no sign-up: the email's button goes straight to Take
+    // assessment. Janelle, 21 Oct 2026.
+    return <InvitationEmail onStart={() => { if (IS_SALES) { setPhase("landing"); return; } setPhase("activate"); setStep(0); }} />;
   }
 
   // FHM'S PLATFORM, NOT OURS. The questionnaire and its confirmation are handed

@@ -347,13 +347,18 @@ const CLINICIAN_SCENES: Record<string, string> = {
   "Clinician review, advanced": "advancedResultsEmail",
 };
 
+// No sign-up either: the invitation email goes straight to Take assessment
+// in the sales cut (App.tsx), so the welcome page and the account and profile
+// scenes are dropped with no jump. Janelle, 21 Oct 2026.
+const SIGN_UP_SCENES = new Set(["Welcome page", "Create account", "Mobile number", "Personal details", "GP details", "Emergency contact"]);
+
 export const SALES_SCRIPT: DemoStep[] = (() => {
   const out: DemoStep[] = [];
   let skipping = false;
   for (const step of DEMO_SCRIPT) {
     if (step.kind === "scene") {
-      skipping = step.label in CLINICIAN_SCENES;
-      if (skipping) out.push({ kind: "jumpPhase", phase: CLINICIAN_SCENES[step.label] });
+      skipping = step.label in CLINICIAN_SCENES || SIGN_UP_SCENES.has(step.label);
+      if (step.label in CLINICIAN_SCENES) out.push({ kind: "jumpPhase", phase: CLINICIAN_SCENES[step.label] });
     }
     if (!skipping) out.push(step);
   }
