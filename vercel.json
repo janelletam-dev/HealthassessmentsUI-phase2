@@ -11,6 +11,14 @@
     {
       "source": "/demo/fast-forward",
       "destination": "/index.html"
+    },
+    {
+      "source": "/demo/auto",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/full/auto",
+      "destination": "/index.html"
     }
   ]
 }

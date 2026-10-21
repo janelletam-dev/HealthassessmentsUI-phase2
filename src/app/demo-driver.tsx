@@ -27,11 +27,14 @@ import { DEMO_SCRIPT, SALES_SCRIPT } from "./demo-script.ts";
     self serve demo and then the fast-forward /demo (no fhm clinical)". */
 const PATH = window.location.pathname.replace(/\/+$/, "");
 const QUERY = new URLSearchParams(window.location.search).get("demo");
-export const IS_SALES = PATH === "/demo" || PATH === "/demo/fast-forward" || QUERY === "sales" || QUERY === "sales-fastforward";
+// The paths that say what they are, from 21 Oct 2026: /demo/auto plays the
+// sales demo, /full/auto the full journey. Janelle: the old two "seem
+// confusing"; they stay so links already sent keep working.
+export const IS_SALES = PATH === "/demo" || PATH === "/demo/auto" || PATH === "/demo/fast-forward" || QUERY === "sales" || QUERY === "sales-fastforward";
 /** Whether the self-driving player runs. */
 export const IS_DEMO =
-  PATH === "/demo/fast-forward" || QUERY === "sales-fastforward" ||
-  PATH === "/demo-fastforward" || QUERY === "fastforward";
+  PATH === "/demo/auto" || PATH === "/demo/fast-forward" || QUERY === "sales-fastforward" ||
+  PATH === "/full/auto" || PATH === "/demo-fastforward" || QUERY === "fastforward";
 const SCRIPT = IS_SALES ? SALES_SCRIPT : DEMO_SCRIPT;
 
 const TYPE_MS = 16;
