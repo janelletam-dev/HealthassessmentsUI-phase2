@@ -8,9 +8,11 @@
 // appointment is a weekday about twelve days on, and the advanced report
 // follows two working days after that.
 
-const DAY_MS = 86_400_000;
 const atMidnight = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-export const addDays = (d: Date, n: number) => atMidnight(new Date(d.getTime() + n * DAY_MS));
+// Calendar days, not 24-hour steps: on the day the clocks go back (25 hours
+// long) a 24-hour step lands back on the same date, so any date counted
+// across 25 Oct 2026 came out a day early.
+export const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
 /** Saturday and Sunday roll on to the Monday. */
 const weekday = (d: Date) => (d.getDay() === 6 ? addDays(d, 2) : d.getDay() === 0 ? addDays(d, 1) : d);
 
