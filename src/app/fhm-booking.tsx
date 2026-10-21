@@ -623,7 +623,7 @@ export function FhmBooking({ onExit, initialStep = "about" }: {
               <>
                 <div className="px-[16px] py-[12px]" style={{ borderBottom: `1px solid ${BORDER}` }}>
                   <p className="font-bold text-[13px] leading-[18px] tracking-[0.03em]" style={{ color: CARD_LABEL }}>
-                    {`${weekdayOf(day)}, ${String(day).padStart(2, "0")} SEP`}
+                    {`${weekdayOf(day)}, ${String(day).padStart(2, "0")} ${MONTH_SHORT.toUpperCase()}`}
                   </p>
                 </div>
                 <div className="max-h-[520px] overflow-y-auto">

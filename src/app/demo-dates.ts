@@ -5,7 +5,7 @@
 //
 // NO FRAME: these are dates, not copy. The shape of the story is fixed: the
 // Health Insights Assessment is submitted and reported today, the pharmacy
-// appointment is a weekday about twelve days on, and the advanced report
+// appointment is a weekday about fourteen days on, and the advanced report
 // follows two working days after that.
 
 const atMidnight = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -19,7 +19,9 @@ const weekday = (d: Date) => (d.getDay() === 6 ? addDays(d, 2) : d.getDay() === 
 export const TODAY = atMidnight(new Date());
 /** Submitted today, whatever day that is: a questionnaire needs no weekday. */
 export const SUBMITTED = TODAY;
-export const APPOINTMENT = weekday(addDays(TODAY, 12));
+// 14 days on, rolled to a weekday. Janelle, 21 Oct 2026: "+14 days for
+// their appt".
+export const APPOINTMENT = weekday(addDays(TODAY, 14));
 export const ADVANCED_REPORT = weekday(addDays(APPOINTMENT, 2));
 export const APPOINTMENT_TIME = "10:15 AM";
 
